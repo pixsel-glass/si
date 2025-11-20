@@ -1,0 +1,19 @@
+<file path="system/engine/loader.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function controller[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+
+$1function controller($2{
+		// SEO multilang code - begin
+		if (!defined('DIR_CATALOG')) {
+			$lm_data = $this->lm_replacecontroller($route);
+			if ($lm_data) {
+				return $lm_data;
+			}
+		}		
+		// SEO multilang code - end		
+
+    ]]></add>
+	</operation>
+
+</file>

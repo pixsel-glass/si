@@ -1,0 +1,16 @@
+{% if links_status and links %}
+	<ul class="list-unstyled mb-0 mt-3">
+		{% for link in links %}
+			<li class="row no-gutters pb-1">
+				<span class="col-auto">
+					<svg class="ft-icon-18 d-block text-gray-500 darker-on-hover mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+					</svg>
+				</span>
+				<span class="col">
+					<a class="text-dark" href="{{ link.href }}">{{ link.title }}</a>
+				</span>
+			</li>
+		{% endfor %}
+	</ul>
+{% endif %}

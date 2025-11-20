@@ -1,0 +1,23 @@
+{% if links_status and links %}
+<div id="ftHeaderLinks" class="text-center text-lg-right h-100 mw-100">
+	<div class="col-auto pl-0">
+			<button class="d-lg-none btn-group btn btn-light dropdown-toggle p-1 px-sm-2" data-toggle="dropdown">
+				<span class="row no-gutters align-items-center justify-content-center flex-nowrap">
+					<span class="col-auto">
+						<svg class="d-block ft-icon-24 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+						</svg>
+					</span>
+					<span class="col-auto pl-2 text-gray-500 darker-on-hover">{{ text_top_menu }}</span>
+				</span>
+			</button>
+			<div class="dropdown-menu dropdown-menu-left dropdown-menu-ft-links">
+				<ul class="list-inline d-inline-block my-0 mx-n1">
+					{% for link in links %}
+					<li class="list-inline-item mx-3 mx-sm-3 pt-1 pb-1"><a class="text-dark text-decoration-none border-bottom" href="{{ link.href }}">{{ link.title }}</a></li>
+					{% endfor %}
+				</ul>
+			</div>
+	</div>
+</div>
+{% endif %}

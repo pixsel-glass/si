@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{NAME}<div class='uf'></div></name>
+    <code>{MOD}</code>
+    <id>{MOD}</id>
+    <version>{VERSION}</version>
+    <vqmver required="true">2.4.0</vqmver>
+    <author>{AUTHOR}</author>
+    <link>{LINK}</link>
+
+<file path="catalog/controller/startup/maintenance.php" error="skip">
+	<operation error="skip">
+        <search position="before"><![CDATA[if ($this->config->get('config_maintenance')]]></search>
+        <add position="before"><![CDATA[
+			if (defined('VERSION')) {
+				if (!defined('SC_VERSION')) {
+					define('SC_VERSION', (int)substr(str_replace('.', '', VERSION), 0, 2));
+				}
+				if (!is_object($this->model_seolang_seolang)) {
+					$this->load->model('seolang/seolang');
+				}
+				if (!is_object($this->controller_seolang_seolanglib)) {
+					$this->model_seolang_seolang->control('seolang/seolanglib');
+				}
+				if (!$this->registry->get('seolanglib')) {
+					$this->registry->set('seolanglib', $this->controller_seolang_seolanglib);
+				}
+				if (isset($this->cache->lm_) && $this->registry) {
+					$this->cache->lm_setRegistry($this->registry);
+				}				
+			}
+    ]]></add>
+	</operation>
+</file>
+
+<file path="catalog/controller/common/maintenance.php" error="skip">
+	<operation error="skip">
+        <search position="before"><![CDATA[if ($this->config->get('config_maintenance')]]></search>
+        <add position="before"><![CDATA[
+			if (defined('VERSION')) {
+				if (!defined('SC_VERSION')) {
+					define('SC_VERSION', (int)substr(str_replace('.', '', VERSION), 0, 2));
+				}
+				if (!is_object($this->model_seolang_seolang)) {
+					$this->load->model('seolang/seolang');
+				}
+				if (!is_object($this->controller_seolang_seolanglib)) {
+					$this->model_seolang_seolang->control('seolang/seolanglib');
+				}
+				if (!$this->registry->get('seolanglib')) {
+					$this->registry->set('seolanglib', $this->controller_seolang_seolanglib);
+					if (SC_VERSION < 20) {
+		            	$this->config->set('seolanglib', $this->controller_seolang_seolanglib);
+					}
+				}
+			
+			}
+    ]]></add>
+	</operation>
+</file>
+
+
+
+</modification>

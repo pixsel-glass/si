@@ -1,0 +1,64 @@
+<div class="modal-dialog modal-dialog-center modal-lg">
+	<div class="modal-content border-0 rounded-lg mh-100 h-100">
+		<div class="modal-header no-gutters">
+			<div class="col">
+				<div class="h5 modal-title">{{ text_title_infakt_modal }}{{ order_id }}</div>
+			</div>
+			<div class="col-auto">
+            <a href="#" class="d-block ml-2" data-dismiss="modal">
+        			<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        				<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+        			</svg>
+        		</a>
+			</div>
+		</div>
+		<div class="modal-body dscmodal p-4">
+                <form id="editInfaktModalForm" method="post">
+                  <input type="hidden" name="order_id" value="{{ order_id }}">
+                  <input type="hidden" name="country_id" value="{{ country_id }}">
+                  <div class="form-group">
+                    <label>{{ text_infakt_language }}</label>
+                    <select name="infakt_language" id="input-infakt-language" class="form-control">
+                        <option value="pl" {% if infakt_language == 'pl' %}selected="selected"{% endif %}>Polski</option>
+                        <option value="en" {% if infakt_language == 'en' %}selected="selected"{% endif %}>English</option>
+                        <option value="pe" {% if infakt_language == 'pe' %}selected="selected"{% endif %}>Polski & English</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ text_infakt_currency }}</label>
+                    <select name="infakt_currency" id="input-infakt-currency" class="form-control">
+                        <option value="PLN" {% if infakt_currency == 'PLN' %}selected="selected"{% endif %}>PLN</option>
+                        <option value="EUR" {% if infakt_currency == 'EUR' %}selected="selected"{% endif %}>EUR</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>{{ text_infakt_pmethod }}</label>
+                    <select name="infakt_pmethod" id="input-infakt-pmethod" class="form-control">
+                        <option value="transfer" {% if infakt_pmethod == 'transfer' %}selected="selected"{% endif %}>Paribaz bank PL2416****0003</option>
+                        <option value="transfer_eur" {% if infakt_pmethod == 'transfer_eur' %}selected="selected"{% endif %}>Paribaz bank PL3716****0006</option>
+                        <option value="delivery" {% if infakt_pmethod == 'delivery' %}selected="selected"{% endif %}>Za pobraniem</option>
+                        <option value="przelewy24" {% if infakt_pmethod == 'przelewy24' %}selected="selected"{% endif %}>Przelew24</option>
+                        <option value="card" {% if infakt_pmethod == 'card' %}selected="selected"{% endif %}>Karta platnicza</option>
+                        <option value="cash" {% if infakt_pmethod == 'cash' %}selected="selected"{% endif %}>Gotowka</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="radio-inline"><input type="radio" name="infakt_vat" value="1" {% if infakt_vat == 1 %}checked="checked"{% endif %}> <b>Brutto</b></label>
+                    <label class="radio-inline"><input type="radio" name="infakt_vat" value="0" {% if infakt_vat == 0 %}checked="checked"{% endif %}> <b>Netto</b></label>
+                  </div>
+                </form>
+		</div>
+		<div class="modal-footer d-block px-0">
+			<div class="m-0 px-3">
+				<div class="row">
+					<div class="col-12 col-sm-4 ml-auto mr-auto">
+						<button type="button" id="save_infakt_fileds" data-loading="{{ text_loading }}" class="btn btn-primary btn-block text-truncate">{{ button_continue }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

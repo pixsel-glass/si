@@ -1,0 +1,124 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+             <fieldset>
+                  <label class="col-sm-2 control-label">{{ entry_display_multiple_prices }}</label>
+                  <div class="col-sm-10">
+                    <label class="radio-inline">
+                      {% if (cgp_display_multiple_prices) %} 
+                      <input type="radio" name="cgp_display_multiple_prices" value="1" checked="checked" />
+                      {{ text_yes }} 
+                      {% else %} 
+                      <input type="radio" name="cgp_display_multiple_prices" value="1" />
+                      {{ text_yes }} 
+                      {% endif %} 
+                    </label>
+                    <label class="radio-inline">
+                      {% if (not cgp_display_multiple_prices) %} 
+                      <input type="radio" name="cgp_display_multiple_prices" value="0" checked="checked" />
+                      {{ text_no }} 
+                      {% else %} 
+                      <input type="radio" name="cgp_display_multiple_prices" value="0" />
+                      {{ text_no }} 
+                      {% endif %} 
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+						  <thead>
+							<tr>
+							  <td class="text-left">{{ entry_customer_group_name }}</td>
+							  <td class="text-left">{{ entry_show_as_reference_on_product_page }}</td>
+							  <td class="text-left">{{ entry_sort_order }}</td>
+							  <td class="text-left">{{ entry_use_custom_style }}</td>
+							  <td class="text-left">{{ entry_text_color }}</td>
+							  <td class="text-left">{{ entry_apply_style_to }}</td>
+							</tr>
+						  </thead>
+						  <tbody>							
+															{% set row = -1 %}
+								{% for customer_group_settings in cgp_customer_group_settings %} 
+								{% set row = row + 1 %}
+							
+							<tr>
+							  <td class="text-center">
+								{{ customer_group_settings['name'] }} 
+								<input type="hidden" name="cgp_customer_group_settings[{{ row }}][customer_group_id]" value="{{ customer_group_settings['customer_group_id'] }}"/>
+							  </td>
+							  <td class="text-center">
+								<input type="checkbox" name="cgp_customer_group_settings[{{ row }}][show_as_reference_on_product_page]" value="1" {{ customer_group_settings['show_as_reference_on_product_page'] ? 'checked="checked"' : '' }} >
+							  </td>
+							  <td class="text-center">
+								<input type="text" name="cgp_customer_group_settings[{{ row }}][sort_order]" value="{{ customer_group_settings['sort_order'] }}" size="1" class="form-control" />
+							  </td>
+							  <td class="text-center">
+								<input type="checkbox" name="cgp_customer_group_settings[{{ row }}][use_custom_style]" value="1" {{ customer_group_settings['use_custom_style'] ? 'checked="checked"' : '' }} >
+							  </td>
+							  <td class="text-center">
+								<input type="text" name="cgp_customer_group_settings[{{ row }}][text_color]" value="{{ customer_group_settings['text_color'] }}" readonly="true" id="color-input{{ row }}" class="color-input form-control" />
+							  </td>
+							  <td class="text-center">
+								<input type="checkbox" name="cgp_customer_group_settings[{{ row }}][apply_style_to_name]" value="1" {{ customer_group_settings['apply_style_to_name'] ? 'checked="checked"' : '' }} >{{ text_name }} 
+								<input type="checkbox" name="cgp_customer_group_settings[{{ row }}][apply_style_to_text]" value="1" {{ customer_group_settings['apply_style_to_text'] ? 'checked="checked"' : '' }} >{{ text_price }} 
+							  </td>
+							</tr>
+							{% endfor %} 
+						  </tbody>
+						</table>
+				    </div>
+                </div>
+          </fieldset>
+        </form>
+      </div>
+     </div>
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="view/stylesheet/colorpicker/colorpicker.css" type="text/css" />
+<script type="text/javascript" src="view/javascript/colorpicker/colorpicker.js"></script>
+<script type="text/javascript" src="view/javascript/colorpicker/eye.js"></script>
+<script type="text/javascript" src="view/javascript/colorpicker/utils.js"></script>
+<script type="text/javascript" src="view/javascript/colorpicker/layout.js?ver=1.0.2"></script>
+<script type="text/javascript" src="view/javascript/colorpicker/misc.js"></script>
+<script type="text/javascript">
+	colorPickerise($('.color-input'));
+</script>
+<style>
+	.hidden
+	{
+		display: none !important;
+	}
+	
+	.width-auto
+	{
+		width: auto;
+	}
+</style>
+
+{{ footer }} 

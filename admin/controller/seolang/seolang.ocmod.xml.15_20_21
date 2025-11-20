@@ -1,0 +1,44 @@
+<file path="catalog/controller/common/maintenance.php" error="skip">
+	<operation error="skip">
+        <search position="after"><![CDATA[function index() {]]></search>
+        <add position="after"><![CDATA[
+			// SEO multilang code - begin
+			if (!defined('DIR_CATALOG')) {
+				if (!defined('SC_VERSION')) define('SC_VERSION', substr(str_replace('.', '', VERSION), 0, 2));				
+            	$langmark_settings = $this->registry->get('config')->get('seolang_langmark_settings');
+				if (isset($langmark_settings) && isset($langmark_settings['langmark_widget_status']) && $langmark_settings['langmark_widget_status']) {
+					if (!is_object($this->model_seolang_seolang)) {
+						$this->load->model('seolang/seolang');
+					}					
+					if (!is_object($this->controller_seolang_mova_mova)) {
+						$this->model_seolang_seolang->control('seolang/mova/mova');
+					}						
+					if (!$this->registry->get('seolangmova')) {
+						$this->registry->set('seolangmova', $this->controller_seolang_mova_mova);
+						if (SC_VERSION < 20) {
+							$this->config->set('seolangmova', $this->controller_seolang_mova_mova);
+						}
+					}
+					
+					if (isset($this->url->lm_) && $this->registry) {
+						$this->url->lm_setRegistry($this->registry);
+					}
+					if (isset($this->response->lm_) && $this->registry) {
+						$this->response->lm_setRegistry($this->registry);
+					}
+					if (isset($this->cache->lm_) && $this->registry) {
+						$this->cache->lm_setRegistry($this->registry);
+					}					
+					
+					if (!class_exists('SeoLang', false)) {
+						$this->model_seolang_seolang->loadlibrary('seolang/seolang');
+						$multilang = new SeoLang($this->registry);
+					}
+            	}
+            } else {
+				$this->registry->set('admin_work', true);
+			}
+			// SEO multilang code - end
+    ]]></add>
+	</operation>
+</file>

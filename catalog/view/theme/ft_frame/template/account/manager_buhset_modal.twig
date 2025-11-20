@@ -1,0 +1,63 @@
+<div class="modal-dialog modal-dialog-center modal-lg">
+	<div class="modal-content border-0 rounded-lg mh-100 h-100">
+		<div class="modal-header no-gutters">
+			<div class="col">
+				<div class="h5 modal-title">{{ text_title_buh_modal }}</div>
+			</div>
+			<div class="col-auto">
+            <a href="#" class="d-block ml-2" data-dismiss="modal">
+        			<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        				<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+        			</svg>
+        		</a>
+			</div>
+		</div>
+		<div class="modal-body dscmodal p-4">
+          <div class="select_buh_modal">
+          	<form method="post" id="editBuhModalForm" enctype="multipart/form-data" class="form-horizontal edit-dsc-modal">
+            <div class="form-group">
+              <div class="input-group" style="width: 100px;">
+                <label for="input-select-sebes"><span>{{ text_sebes }}</span>
+                  <input autocomplete="off" type="text" name="manager_buh_sebes" value="{{ sebes }}" placeholder="0.000" id="input-select-sebes" class="form-control" />
+                </label>
+              </div><div class="input-group" style="width: 100px;">
+                <label for="input-select-rshpr"><span>{{ text_rshpr }}</span>
+                  <input autocomplete="off" type="text" name="manager_buh_rshpr" value="{{ rshpr }}" placeholder="0.000" id="input-select-rshpr" class="form-control" />
+                </label>
+              </div>
+            </div>
+            <hr>
+            {% for box in boxes %}
+            <div class="form-group">
+            	<div class="input-group" style="max-width: 280px;">
+              	<label for="input-select-box" style="display: flex; align-items: center; justify-content: center; lex-wrap: nowrap;"><span style="min-width: 100px; font-weight: 600;">{{ box.name }}</span>
+                 	<input autocomplete="off" type="text" name="manager_buh_box_{{ box.nummer }}_price" value="{{ box.price }}" placeholder="0.000" id="input-select-box" class="form-control" />
+               	</label>
+             	</div>
+            </div>
+            {% endfor %}
+          	</form>
+          </div>
+		</div>
+		<div class="modal-footer d-block px-0">
+			<div class="m-0 px-3">
+				<div class="row">
+					<div class="col-12 col-sm-4 ml-auto mr-auto">
+						<button type="button" id="save_buh_fileds" data-loading="{{ text_loading }}" class="btn btn-primary btn-block text-truncate">{{ button_continue }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+  $('#ft-edit-buh-modal #input-select-sebes, #ft-edit-buh-modal #input-select-rshpr').keyup(function(){
+    var val = $(this).val();
+    if(isNaN(val)){
+         val = val.replace(/[^0-9\.]/g,'');
+         if(val.split('.').length>2) 
+             val =val.replace(/\.+$/,"");
+    }
+    $(this).val(val); 
+  });
+</script>

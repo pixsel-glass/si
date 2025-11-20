@@ -1,0 +1,59 @@
+{% if languages|length > 1 %}
+<div class="pull-left">
+	<div id="form-language">
+		{#<div class="text-start mb-2 mt-1 pl-3 pr-3">{{ text_language }}</div>#}
+		<div class="btn-group">
+			<ul class="list-inline d-block mb-0">
+				{% for language in languages %}
+					{% if language.main %}
+						<li class="list-inline-item d-block mb-1 ml-2">
+							<button data-lang-id="{{ language.language_id }}" style="padding: 0 0.75rem;" class="align-items-center gap-5 ml-3 d-flex text-dark language-select {% if language.current %}font-weight-bold{% endif %} btn btn-link btn-block language-select" onclick="lm_deleteCookie('languageauto'); setlncookie('{{ language.language_id }}', '{{ language.code }}'); window.location = '{{ language.url }}'">
+								{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}<img src="catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}"/>{% endif %}
+								{{ language.name }}</button>
+						</li>
+					{% else %}
+						<li class="list-inline-item d-block mb-1 ml-2">
+							<button data-lang-id="{{ language.language_id }}" style="padding: 0 0.75rem;" class="align-items-center gap-5 ml-3 d-flex text-dark language-select {% if language.current %}font-weight-bold{% endif %} btn btn-link btn-block language-select" onclick="lm_setCookie('languageauto', '1', {expires: 180}); setlncookie('{{ language.language_id }}', '{{ language.code }}'); window.location = '{{ language.url }}'">
+								{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}<img src="catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}"/>{% endif %}
+								{{ language.name }}</button>
+						</li>
+					{% endif %}
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+<script>
+	function lm_setCookie(name, value, options = {}) {
+		options = {
+			path: '/',
+			...options
+		};
+		let date = new Date(Date.now() + (86400e3 * options.expires));
+		date = date.toUTCString();
+		options.expires = date;
+		let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+		for (let optionKey in options) {
+			updatedCookie += "; " + optionKey;
+			let optionValue = options[optionKey];
+			if (optionValue !== true) {
+				updatedCookie += "=" + optionValue;
+			}
+		}
+		document.cookie = updatedCookie;
+	}
+	function setlncookie(language_id, language_code) {
+		lm_setCookie('lm_language_id', language_id, {
+			expires: 180
+		});
+		lm_setCookie('lm_language_code', language_code, {
+			expires: 180
+		});
+	}
+	function lm_deleteCookie(name) {
+		lm_setCookie(name, "", {
+			'max-age': -1
+		});
+	}
+</script>
+{% endif %}

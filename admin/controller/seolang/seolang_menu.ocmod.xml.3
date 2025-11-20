@@ -1,0 +1,6 @@
+<file path="{ADMIN}/view/template/common/column_left.twig">
+    <operation error="skip">
+        <search position="before"><![CDATA[</nav>]]></search>
+        <add position="before"><![CDATA[{% if (seolang_menus is defined) %} {{ seolang_menus }} {% endif %}]]></add>
+    </operation>
+</file>

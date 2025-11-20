@@ -1,0 +1,1354 @@
+<div class="modal-dialog modal-dialog-center modal-lg">
+	<div class="modal-content border-0 rounded-lg mh-100 h-100">
+		<div class="modal-header no-gutters">
+			<div class="col">
+				<div class="h5 modal-title">{{ text_your_details }}</div>
+			</div>
+			<div class="col-auto">
+            <a href="#" class="d-block ml-2" data-dismiss="modal">
+        			<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        				<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+        			</svg>
+        		</a>
+			</div>
+		</div>
+		<div class="modal-body dscmodal p-4">
+			<form method="post" autocomplete="off" id="form-edit-default-fileds" enctype="multipart/form-data" class="form-horizontal edit-dsc-modal">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+    					<a class="nav-link active" data-toggle="tab" href="#infoMain">{{ entry_tab_main }}</a>
+  					</li>
+  					<li class="nav-item {% if customer_type == 3 %}d-none{% endif %}">
+    					<a class="nav-link" data-toggle="tab" href="#infoDefault">{{ entry_tab_default }}</a>
+  					</li>
+  				</ul>
+
+  				<div class="tab-content">
+  					<div class="tab-pane active in" id="infoMain">
+  						<h5>{{ text_your_details }}</h5>
+  						<div>
+  							{% if customer_type != 2 %}
+							<div class="form-group d-flex">
+	        					<label class="col-3 text-left mb-0 pl-0 pt-2" for="input-customer-group">{{ entry_customer_group }}</label>
+								<div class="col-9 col-sm-7">
+									<select name="customer_group_id" id="input-customer-group" class="form-control">
+									{% for customer_group in customer_groups %}
+									{% if customer_group.customer_group_id == customer_group_id %}
+									<option value="{{ customer_group.customer_group_id }}" selected="selected">{{ customer_group.name }}</option>
+									{% else %}
+									<option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
+									{% endif %}
+									{% endfor %}
+								 	</select>
+								</div>
+							</div>
+							{% endif %}
+
+					        {% if customer_type != 2 %}
+					          <div class="form-group">
+					            <div class="form-check form-check-inline">
+					              <label class="form-check-label">
+					                {% if customer_type == 0 %}
+					                  <input autocomplete="off" class="form-check-input" type="radio" name="customer_type" value="0" checked="checked" />
+					                  {{ text_customer_private }}
+					                {% else %}
+					                  <input autocomplete="off" class="form-check-input" type="radio" name="customer_type" value="0" />
+					                  {{ text_customer_private }}
+					                {% endif %}
+					              </label>
+					            </div>
+					            <div class="form-check form-check-inline">
+					              <label class="form-check-label"> {% if customer_type == 1 %}
+					                <input autocomplete="off" class="form-check-input" type="radio" name="customer_type" value="1" checked="checked" />
+					                {{ text_customer_firma }}
+					              {% else %}
+					                <input autocomplete="off" class="form-check-input" type="radio" name="customer_type" value="1" />
+					                {{ text_customer_firma }}
+					              {% endif %}
+					            </label>
+					          </div>
+					          {% if customer_type == 2 %}
+					            <div class="form-check form-check-inline">
+					              <label class="form-check-label"> {% if customer_type == 2 %}
+					                <input autocomplete="off" class="form-check-input" type="radio" name="customer_type" value="2" checked="checked" />
+					                {{ text_customer_worker }}
+					              {% else %}
+					                <input autocomplete="off" class="form-check-input" type="radio" name="customer_type" value="2" />
+					                {{ text_customer_worker }}
+					              {% endif %}
+					            </label>
+					          </div>
+					          {% endif %}
+					            {#<div class="form-check form-check-inline">
+					              <label class="form-check-label">
+								  {% if customer_type == 3 %}
+					                <input autocomplete="off" class="form-check-input" type="radio" name="customer_type" value="3" checked="checked" />
+					                {{ text_customer_nip }}
+					              {% else %}
+					                <input autocomplete="off" class="form-check-input" type="radio" name="customer_type" value="3" />
+					                {{ text_customer_nip }}
+					              {% endif %}
+					              </label>
+					            </div>#}
+					        </div>
+					        {% endif %}
+
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 mb-0 pt-2" for="input-country">{{ entry_country }} </label>
+								<div class="col-9 col-sm-7">
+					                <select autocomplete="off" class="form-control" name="country_id" id="input-country" {% if customer_type == 3 %}readonly="readonly"{% endif %}>
+					                  <option value="">{{ entry_country }}</option>
+					                  {% for country in countries %}
+									  <option value="{{ country.country_delivery_id }}" data-zone="{{ country.geo_zone_id }}" {% if country_id == country.country_delivery_id %}selected="selected"{% endif %}>{{ country.name }}</option>
+					                  {% endfor %}
+					                </select>
+				              </div>
+				            </div>
+
+					        {% if customer_type != 2 %}
+							<div class="firma_fields mt-3 {% if customer_type == 0 %}d-none{% endif %}">
+					          <div class="form-group d-flex">
+					            <label class="col-3 text-left mb-0 pl-0 pt-2" for="input-company-name">{{ entry_company_name }}</label>
+					            <div class="col-9 col-sm-7">
+					                <input autocomplete="off" type="text" name="company_name" value="{{ company_name }}" placeholder="{{ entry_company_name }}" id="input-company-name" class="form-control" />
+					            </div>
+					          </div>
+					            <div class="form-group cmvatcode {% if country_id == 0 or country_id == 170 %}d-none{% else %}d-flex{% endif %}">
+					              <label class="col-3 text-left mb-0 pl-0 pt-2" for="input-company-vatcode">{{ entry_company_vatcode }}</label>
+					              <div class="col-9 col-sm-7">
+					                <div class="input-group">
+					                  <input autocomplete="off" type="text" name="company_vatcode" value="{{ company_vatcode }}" placeholder="{{ entry_company_vatcode }}" id="input-company-vatcode" class="form-control" />
+					                </div>
+					              </div>
+					           	</div>
+					          <div class="firma_other_fields {% if country_id != 0 and country_id != 170 %}d-none{% endif %}">
+					            <div class="form-group d-flex">
+					              <label class="col-3 text-left mb-0 pl-0 pt-2" for="input-company-nip">{{ entry_company_nip }}</label>
+					              <div class="col-9 col-sm-7">
+					                <div class="input-group">
+					                  <input autocomplete="off" type="text" name="company_nip" value="{{ company_nip }}" placeholder="{{ entry_company_nip }}" id="input-company-nip" class="form-control" />
+					                  <span class="input-group-append">
+					                    <button type="button" class="btn btn-primary">
+					                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+					                    </button>
+					                  </span>
+					                </div>
+					              </div>
+					            </div>
+					            <div class="form-group d-flex">
+					              <label class="col-3 text-left mb-0 pl-0 pt-2" for="input-pl-company-name">{{ entry_pl_company_name }}</label>
+					              <div class="col-9 col-sm-7">
+					                <input autocomplete="off" type="text" name="pl_company_name" value="{{ pl_company_name }}" placeholder="{{ entry_pl_company_name }}" id="input-pl-company-name" class="form-control" />
+					              </div>
+					            </div>
+
+					            <div class="form-group d-flex">
+					              <label class="col-3 text-left mb-0 pl-0 pt-2" for="input-company-region">{{ entry_company_region }}</label>
+					              <div class="col-9 col-sm-7">
+					                <input autocomplete="off" type="text" name="company_region" value="{{ company_region }}" placeholder="{{ entry_company_region }}" id="input-company-region" class="form-control" />
+					              </div>
+					            </div>
+					            <div class="form-group d-flex">
+					              <label class="col-3 text-left mb-0 pl-0 pt-2" for="input-company-address">{{ entry_company_address }}</label>
+					              <div class="col-9 col-sm-7">
+					                <input autocomplete="off" type="text" name="company_address" value="{{ company_address }}" placeholder="{{ entry_company_address }}" id="input-company-address" class="form-control" />
+					              </div>
+					            </div>
+					            <div class="form-group d-flex">
+					              <label class="col-3 text-left mb-0 pl-0 pt-2" for="input-company-zip">{{ entry_company_zip }}</label>
+					              <div class="col-9 col-sm-7">
+					                <input autocomplete="off" type="text" name="company_zip" value="{{ company_zip }}" placeholder="{{ entry_company_zip }}" id="input-company-zip" class="form-control" />
+					              </div>
+					            </div>
+					            <div class="form-group {% if customer_type == 3 %}d-none{% else %}d-flex{% endif %}">
+					              <label class="col-3 text-left mb-0 pl-0 pt-2" for="input-company-region">{{ entry_invoice_banks }}</label>
+					              <div class="col-9 col-sm-7 invoice_banks">
+					                {% set row_bank = 0 %}
+					                {% if (invoice_banks) %}
+					                  {% for invoice_bank in invoice_banks %}
+					                    <div style="margin-bottom:10px;" class="input-group invoice-banks-{{ row_bank }}">
+					                      <input autocomplete="off" type="text" name="invoice_banks[{{ row_bank }}][text]" value="{{ invoice_bank['text'] }}" class="form-control" />
+					                      <span class="input-group-append">
+					                        <button type="button" class="btn btn-danger remove-invoice-bank">
+					                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+					                        </button>
+					                      </span>
+					                    </div>
+					                  {% set row_bank = row_bank + 1 %}
+					                  {% endfor %}
+					                {% endif %}
+					                <button id="add-invoice-field" type="button" class="btn btn-primary">{{ button_add }}</button>
+					              </div>
+					            </div>
+					          </div>
+					        </div>
+					        {% endif %}
+
+							<div class="form-group required {% if customer_type == 3 %}d-none{% else %}d-flex{% endif %}">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-firstname">{{ entry_firstname }} </label>
+								<div class="col-9 col-sm-7">
+									<input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control" />
+									{% if error_firstname %}
+										<div class="text-danger">{{ error_firstname }}</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="form-group required {% if customer_type == 3 %}d-none{% else %}d-flex{% endif %}">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-lastname">{{ entry_lastname }}</label>
+								<div class="col-9 col-sm-7">
+									<input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="form-control" />
+									{% if error_lastname %}
+										<div class="text-danger">{{ error_lastname }}</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="form-group required {% if customer_type == 3 %}d-none{% else %}d-flex{% endif %}">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-email">{{ entry_email }}</label>
+								<div class="col-9 col-sm-7">
+									<input type="email" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+									{% if error_email %}
+										<div class="text-danger">{{ error_email }}</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="form-group required {% if customer_type == 3 %}d-none{% else %}d-flex{% endif %}">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-telephone">{{ entry_telephone }}</label>
+								<div class="col-9 col-sm-7">
+									<input type="tel" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-telephone" class="form-control" />
+									{% if error_telephone %}
+										<div class="text-danger">{{ error_telephone }}</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="form-group required {% if customer_type == 3 %}d-none{% else %}d-flex{% endif %}">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-password">{{ entry_password }}</label>
+								<div class="col-9 col-sm-7">
+									<input type="password" name="password" value="" placeholder="{{ entry_password }}" id="input-password" class="form-control" />
+									{% if error_password %}
+										<div class="text-danger">{{ error_password }}</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="form-group required {% if customer_type == 3 %}d-none{% else %}d-flex{% endif %}">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-confirm">{{ entry_password_confirm }}</label>
+								<div class="col-9 col-sm-7">
+									<input type="password" name="confirm" value="" placeholder="{{ entry_password_confirm }}" id="input-confirm" class="form-control" />
+									{% if error_confirm %}
+										<div class="text-danger">{{ error_confirm }}</div>
+									{% endif %}
+								</div>
+							</div>
+  						</div>
+  					</div>
+  					<div class="tab-pane" id="infoDefault">
+						<div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-status">{{ entry_status }}</label>
+								<div class="col-9">
+									<div class="chm-form-check">
+										<input autocomplete="off" type="hidden" name="dsc_status" value="0"/>
+										<input autocomplete="off" type="checkbox" name="dsc_status" value="1" id="dsc_status" class="cm-toggle"{% if dsc_status %} checked{% endif %}/>
+									</div>
+								</div>
+							</div>
+							<div class="dsc-fileds {% if not dsc_status %}disabled-fields{% endif %}">
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-shipping-method">{{ entry_country }}</label>
+								<div class="col-9">
+									<select autocomplete="off" class="form-control" name="dsc_country" id="input-dsc-country">
+										<option value="">{{ text_select }}</option>
+										{% for country in countries %}
+											<option value="{{ country.country_delivery_id }}" data-zone="{{ country.geo_zone_id }}" {% if dsc_country == country.country_delivery_id %}selected="selected"{% endif %}>{{ country.name }}</option>
+											{#<option {% if dsc_country == country.country_id %}selected="selected"{% endif %} value="{{ country.country_id }}" data-zone="{{ country.geo_zone_id }}">{{ country.name }}</option>#}
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="form-group d-flex dscvat {% if dsc_country == 170 or not dsc_status %}hidden{% endif %}">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-vat">{{ entry_vat }}</label>
+								<div class="col-9">
+									<div class="chm-form-check">
+										<input autocomplete="off" type="hidden" name="dsc_vat" value="0"/>
+										<input autocomplete="off" type="checkbox" name="dsc_vat" value="1" id="dsc_vat" class="cm-toggle"{% if dsc_vat == 1 %} checked{% endif %}/>
+									</div>
+								</div>
+							</div>
+							<div class="form-group d-none">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-currency">{{ entry_currency }}</label>
+								<div class="col-9">
+									<select autocomplete="off" class="form-control" name="dsc_currency" id="input-dsc-currency">
+										<option value="">{{ text_select }}</option>
+										{% for currency in currencies %}
+											<option {% if dsc_currency == currency.code %}selected="selected"{% endif %} value="{{ currency.code }}" data-zone="{% if currency.currency_id == 1 %}6{% else %}0{% endif %}">{{ currency.code }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-language">{{ entry_language }}</label>
+								<div class="col-9">
+									<select autocomplete="off" class="form-control" name="dsc_language" id="input-dsc-language">
+										<option value="">{{ text_select }}</option>
+										{% for language in languages %}
+											<option {% if dsc_language == language.code %}selected="selected"{% endif %} value="{{ language.code }}" data-lnid="{{ language.language_id }}">{{ language.name }}</option>
+										{% endfor %}
+									</select>
+									<input autocomplete="off" type="hidden" name="language_id" value="{{ language_id }}"/>
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-firstname">{{ entry_firstname }} </label>
+								<div class="col-9">
+									<input type="text" name="dsc_firstname" value="{{ dsc_firstname }}" placeholder="{{ entry_firstname }}" id="input-dsc-firstname" class="form-control" />
+									{% if error_firstname %}
+										<div class="text-danger">{{ error_firstname }}</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-lastname">{{ entry_lastname }}</label>
+								<div class="col-9">
+									<input type="text" name="dsc_lastname" value="{{ dsc_lastname }}" placeholder="{{ entry_lastname }}" id="input-dsc-lastname" class="form-control" />
+									{% if error_lastname %}
+										<div class="text-danger">{{ error_lastname }}</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-telephone">{{ entry_telephone }}</label>
+								<div class="col-9">
+									<input type="tel" name="dsc_telephone" value="{{ dsc_telephone }}" placeholder="{{ entry_telephone }}" id="input-dsc-telephone" class="form-control" />
+									{% if error_telephone %}
+										<div class="text-danger">{{ error_telephone }}</div>
+									{% endif %}
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-shipping-method">{{ entry_shipping_method }}</label>
+								<div class="col-9">
+									<select autocomplete="off" class="form-control" name="dsc_shipping_method" id="input-dsc-shipping-method">
+										<option value="" data-zone="6">{{ text_select }}</option>
+										{% for shhiping in shipping_methods %}
+											<option {% if dsc_shipping_method == shhiping.code %}selected="selected"{% endif %} value="{{ shhiping.code }}" data-zone="{{ shhiping.geo_zone_id }}">{{ shhiping.title }}</option>
+										{% endfor %}
+									</select>
+									<input type="hidden" name="parcelLocker" class="parcel-locker-value" value="{{ parcelLocker }}"><input type="hidden" name="parcelAddressLocker" class="parcel-addresslocker-value" value='{{ parcelAddressValLocker }}'>
+									<div class="inpost_address" {% if hidden_packomat == 1 %}hidden{% endif %} style="cursor: pointer;">{{ parcelAddressLocker }}{% if parcelAddressLocker is empty %}{% else %}<svg fill="#000000" style="margin-left: 5px; width: 28px;" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M11.707,5.293A1,1,0,0,1,11,7H4V17H9a1,1,0,0,1,0,2H3a1,1,0,0,1-1-1V6A1,1,0,0,1,3,5H8.586L7.293,3.707A1,1,0,1,1,8.707,2.293ZM21,5H15a1,1,0,0,0,0,2h5V17H13a1,1,0,0,0-.707,1.707l3,3a1,1,0,0,0,1.414-1.414L15.414,19H21a1,1,0,0,0,1-1V6A1,1,0,0,0,21,5Z"></path></g></svg>{% endif %}</div>
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-payment-method">{{ entry_payment_method }}</label>
+								<div class="col-9">
+									<select autocomplete="off" class="form-control" name="dsc_payment_method" id="input-dsc-payment-method">
+										<option value="" data-zone="6">{{ text_select }}</option>
+										{% for payment in payment_methods %}
+											<option {% if dsc_payment_method == payment.code %}selected="selected"{% endif %} value="{{ payment.code }}" data-zone="{{ payment.geo_zone_id }}">{{ payment.title }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-city">{{ entry_city }}</label>
+								<div class="col-9">
+									<input autocomplete="off" type="text" name="dsc_city" value="{{ dsc_city }}" placeholder="{{ entry_city }}" id="input-dsc-city" class="form-control" />
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-address-1">{{ entry_address_1 }}</label>
+								<div class="col-9">
+									<input autocomplete="off" type="text" name="dsc_address_1" value="{{ dsc_address_1 }}" placeholder="{{ entry_address_1 }}" id="input-dsc-address-1" class="form-control" />
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-postcode">{{ entry_postcode }} </label>
+								<div class="col-9">
+									<input type="text" name="dsc_postcode" value="{{ dsc_postcode }}" placeholder="{{ entry_postcode }}" id="input-dsc-postcode" class="form-control" />
+								</div>
+							</div>
+							<div class="form-group d-flex">
+								<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-opc-not-call-me">{{ entry_not_call_me }}</label>
+								<div class="col-9">
+									<select autocomplete="off" class="form-control" name="dsc_opc_not_call_me" id="input-dsc-opc-not-call-me">
+										<option {% if not dsc_opc_not_call_me or dsc_opc_not_call_me == 0 %}selected="selected"{% endif %} value="0">{{ text_disabled }}</option>
+										<option {% if dsc_opc_not_call_me == 1 %}selected="selected"{% endif %} value="1">{{ text_enabled }}</option>
+									</select>
+								</div>
+							</div>
+						
+
+
+						<div class="form-group d-flex">
+							<label class="col-3 text-left pl-0 pr-0 mb-0 pt-2" for="input-dsc-infakt-faktyre">{{ text_infakt_title }}</label>
+							<div class="col-9">
+								<div class="form-group col-12">
+									<label class="chm-checkbox mb-0">
+										<input class="checkbox-input" onclick="$('.infakt-form').toggle()" type="checkbox" name="dsc_faktyre" value="1" {% if dsc_faktyre is defined and dsc_faktyre > 0  %}checked="checked"{% endif %} />
+										<span class="checkbox-check"></span>{{ text_infakt_create }}
+									</label>
+									<span class="infakt-help text-gray-500">{{ text_infakt_help }}</span>
+								</div>
+
+								<div class="form-group col-xs-12 col-sm-12 infakt-form" {% if dsc_faktyre is not defined or dsc_faktyre <= 0 %}style="display:none"{% endif %}>
+							      	<div class="form-row">
+				          				<div class="firmafields row aicenter fxnowrap col-12 col-sm-12">
+				            				<div class="form-group required col-xs-6 col-sm-6 col-md-6 col-lg-4 infakt-form-nip {% if dsc_country == 170 %}{% else %}d-none{% endif %}">
+				              					<label class="control-label opc-label" for="input-dsc-nip">{{ entry_company_nip }}</label>
+				              					<input type="text" {% if dsc_privat_faktyre is defined and dsc_privat_faktyre > 0 %}disabled="disabled"{% endif %} name="dsc_nip" value="{{ dsc_nip }}" placeholder="{{ entry_company_nip }}" id="input-dsc-nip" class="form-control p-1" />
+				           					</div>
+				            				<div class="form-group required col-xs-6 col-sm-6 col-md-6 col-lg-4 infakt-form-vatcode {% if dsc_country == 0 and country_id == 170 %}d-none{% endif %} {% if dsc_country == 170 %}d-none{% endif %}">
+				              					<label class="control-label opc-label" for="input-dsc-vatcode">{{ entry_company_vatcode }}</label>
+				              					<input type="text" name="dsc_vatcode" value="{{ dsc_vatcode }}" placeholder="{{ entry_company_vatcode }}" id="input-dsc-vatcode" class="form-control p-1" />
+				           					</div>
+											<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-8 mb-0 mt-3 privateosobe {% if dsc_country == 0 and country_id != 170 %}d-none{% endif %} {% if dsc_country != 170 %}d-none{% endif %}">
+												<label class="chm-checkbox mb-0 pros" style="">
+													<input class="checkbox-input" type="checkbox" name="dsc_privat_faktyre" value="1" {% if dsc_privat_faktyre is defined and dsc_privat_faktyre > 0  %}checked="checked"{% endif %} />
+													<span class="checkbox-check"></span>{{ text_infakt_private }}
+												</label>
+											</div>
+				        				</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						</div>
+					</div>
+
+				</div>
+
+				<div class="form-group d-flex">
+					<div class="col-3 text-left pl-0 pr-0 mb-0 pt-2">
+						<button type="button" id="remove_dsc_client" data-loading="{{ text_loading }}" class="btn btn-primary btn-block text-truncate" disabled="disabled">{{ button_remove_client }}</button>
+					</div>
+					<div class="col-9 pt-3" style="display: flex; align-items: center; gap: 10px;">
+						<label class="chm-checkbox mb-0 pros" style="">
+							<input class="checkbox-input" onclick="" type="checkbox" name="remove_dsc_client_1" id="remove_dsc_client_1" value="1" />
+							<span class="checkbox-check"></span>{{ button_remove_accept1 }}
+						</label>
+						<label class="chm-checkbox mb-0 pros" style="">
+							<input class="checkbox-input" onclick="" type="checkbox" name="remove_dsc_client_2" id="remove_dsc_client_2" value="1" />
+							<span class="checkbox-check"></span>{{ button_remove_accept2 }}
+						</label>
+						<label class="chm-checkbox mb-0 pros" style="">
+							<input class="checkbox-input" onclick="" type="checkbox" name="remove_dsc_client_3" id="remove_dsc_client_3" value="1" />
+							<span class="checkbox-check"></span>{{ button_remove_accept3 }}
+						</label>
+					</div>
+				</div>
+
+				<input type="hidden" name="customer_id" value="{{ customer_id }}" />
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer d-block px-0">
+			<div class="m-0 px-3">
+				<div class="row">
+					<div class="col-12 col-sm-4 ml-auto mr-auto">
+						<button type="button" id="save_dsc_fileds" data-loading="{{ text_loading }}" class="btn btn-primary btn-block text-truncate">{{ button_continue }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% if inpostSandbox or geoWidgetToken %}
+{% set geoWidgetToken = inpostSandbox ? inpostSandbox : geoWidgetToken %}
+<div class="modal fade" id="inpostGeoWidgetModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document" style="height: 90%">
+		<div class="modal-content" style="height: 100%">
+			<div class="modal-body" style="height: 100%">
+				<inpost-geowidget id="geoWidget" onpoint="afterPointSelected" token="{{ geoWidgetToken }}" language="en" config="parcelCollect"></inpost-geowidget>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<link rel="stylesheet" href="catalog/view/javascript/inpost/inpost-geowidget.css">
+<script src="catalog/view/javascript/inpost/inpost.js"></script>
+<script src="catalog/view/javascript/inpost/inpost-geowidget.js"></script>
+
+{#<script src="catalog/view/javascript/opc/maskedinput.js"></script>#}
+
+<script>
+
+        {% if row_bank %}
+          var row_bank = '{{ row_bank }}';
+        {% else %}
+          var row_bank = 0;
+        {% endif %}
+
+        $(document).on('click', '#add-invoice-field', function(){
+
+          html = '<div style="margin-bottom:10px;" class="input-group invoice-banks-'+ row_bank +'">';
+          html += ' <input type="text" name="invoice_banks['+ row_bank +'][text]" value="" class="form-control" />';
+          html += ' <span class="input-group-append">';
+          html += '   <button type="button" class="btn btn-danger remove-invoice-bank"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>';
+          html += ' </span>';
+          html += '</div>';
+
+          $('#add-invoice-field').before(html);
+
+          row_bank++;
+        });
+
+        $(document).on('click', '.remove-invoice-bank', function () {
+          $(this).closest('.input-group').remove();
+        });
+
+        $(document).on('change', 'input[name="customer_type"]', function () {
+			// reset tolko nip
+			$('#ft-edit-dsc-modal .invoice_banks').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-edit-dsc-modal input[name="firstname"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-edit-dsc-modal input[name="lastname"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-edit-dsc-modal input[name="email"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-edit-dsc-modal input[name="telephone"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-edit-dsc-modal input[name="ms_code"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-edit-dsc-modal input[name="password"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-edit-dsc-modal input[name="confirm"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-edit-dsc-modal .nav-tabs li:eq(1)').removeClass('d-none');
+			// reset tolko nip end
+
+			var selectedValue = $('input[name="customer_type"]:checked').val();
+			if (selectedValue == 1 || selectedValue == 2) {
+				$('.firma_fields').removeClass('d-none');
+
+				// reset country
+				if ($('#ft-edit-dsc-modal select[name="country_id"]').attr('data-oldcountry') !== undefined) {
+					var old_country = $('#ft-edit-dsc-modal select[name="country_id"]').attr('data-oldcountry');
+					$('#ft-edit-dsc-modal select[name="country_id"] option:selected').removeAttr('selected');
+					$('#ft-edit-dsc-modal select[name="country_id"]').removeAttr('data-oldcountry');
+					$('#ft-edit-dsc-modal select[name="country_id"] option[value="' + old_country + '"]').prop('selected', true);
+					$('#ft-edit-dsc-modal select[name="country_id"]').removeAttr('readonly');
+				}
+			} else if (selectedValue == 3) {
+				var old_country = $('#ft-edit-dsc-modal select[name="country_id"] option:selected').val();
+				$('#ft-edit-dsc-modal select[name="country_id"]').attr('data-oldcountry', old_country);
+				$('#ft-edit-dsc-modal select[name="country_id"] option:selected').removeAttr('selected');
+				$('#ft-edit-dsc-modal select[name="country_id"]').val(170).prop('selected', true);
+				$('#ft-edit-dsc-modal select[name="country_id"]').attr('readonly', 'readonly');
+
+				$('.firma_fields').removeClass('d-none');
+
+				$('#ft-edit-dsc-modal .invoice_banks').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-edit-dsc-modal input[name="firstname"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-edit-dsc-modal input[name="lastname"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-edit-dsc-modal input[name="email"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-edit-dsc-modal input[name="telephone"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-edit-dsc-modal input[name="ms_code"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-edit-dsc-modal input[name="password"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-edit-dsc-modal input[name="confirm"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+
+				$('#ft-edit-dsc-modal .nav-tabs li:eq(1)').addClass('d-none');
+			} else {
+				$('.firma_fields').addClass('d-none');
+
+				// reset country
+				if ($('#ft-edit-dsc-modal select[name="country_id"]').attr('data-oldcountry') !== undefined) {
+					var old_country = $('#ft-edit-dsc-modal select[name="country_id"]').attr('data-oldcountry');
+					$('#ft-edit-dsc-modal select[name="country_id"] option:selected').removeAttr('selected');
+					$('#ft-edit-dsc-modal select[name="country_id"]').removeAttr('data-oldcountry');
+					$('#ft-edit-dsc-modal select[name="country_id"] option[value="' + old_country + '"]').prop('selected', true);
+					$('#ft-edit-dsc-modal select[name="country_id"]').removeAttr('readonly');
+				}
+			}
+        });
+
+
+        $(document).on('click', '.show_other_fields', function () {
+          var otherFields = $('.firma_other_fields');
+
+          if (otherFields.hasClass('d-none')) {
+            otherFields.removeClass('d-none');
+          } else {
+            otherFields.addClass('d-none');
+          }
+        });
+
+</script>
+
+<script type="text/javascript"><!--
+$('#input-company-nip').next('span').find('button').on('click', function() {
+  $('#input-pl-company-name').val('');
+  $('#input-company-region').val('');
+  $('#input-company-address').val('');
+  $('#input-company-zip').val('');
+
+  $('[name="company_nip"]').closest('.form-group').find('.text-danger').remove();
+  
+  $.ajax({
+    type: "POST",
+    url: "/catalog/controller/extension/module/infaktpl.php",
+    dataType: 'json',                    
+    data: { "nip": escape($('#input-company-nip').val())},
+    success: function(result) {
+		console.log(result);
+      if (result['error'].length < 0) {
+      	if (result[0]['name'] != '123 123') {
+            $('#input-pl-company-name').val(result[0]['name']);
+                            
+            $('#input-company-region').val(result[0]['city']);
+
+            $('#input-company-address').val(result[0]['street'] + ' ' + result[0]['propertyNumber'] + ' ' + result[0]['apartmentNumber']);
+
+            $('#input-company-zip').val(result[0]['zipCode']);
+	    } else {
+	    	$('[name="company_nip"]').closest('.input-group').after('<div class="text-danger">{{ error_nip }}</div>');
+	    }
+	  } else {
+	    $('[name="company_nip"]').closest('.input-group').after('<div class="text-danger">{{ error_nip }}</div>');
+	  }
+    },
+	error: function() {
+	  $('[name="company_nip"]').closest('.input-group').after('<div class="text-danger">{{ error_nip }}</div>');
+	}
+  });
+});
+//--></script>
+
+<script>
+$(document).on('hidden.bs.modal', function (event) {
+  if ($('.modal:visible').length) {
+    $('body').addClass('modal-open');
+  }
+});
+
+						/* Autocomplete for shipping addresses */
+(function ($) {
+	var methods = {
+		init: function (options) {
+			return this.each(function () {
+				var $this = $(this);
+				var data = $this.data('autocompleteAddress');
+
+				/* If the plugin is not yet initialized */
+				if (!data) {
+					$this.timer = null;
+					$this.items = new Array();
+
+					$.extend($this, options);
+
+					$this.attr('autocomplete', 'off');
+					//$this.attr('autocomplete', 'new-password');
+
+					/* Focus */
+					$this.on('focus.autocompleteAddress', function () {
+						$this.request('');
+					} );
+
+					/* Blur */
+					$this.on('blur.autocompleteAddress', function () {
+						setTimeout(function (object) {
+							object.hide();
+						}, 200, $this);
+					} );
+
+					/* Keydown */
+					$this.on('keydown.autocompleteAddress', function (event) {
+						switch (event.keyCode) {
+							case 27: // escape
+								$this.hide();
+								break;
+							default:
+								$this.request();
+								break;
+						}
+					} );
+
+					/* Click */
+					$this.click = function (event) {
+						event.preventDefault();
+
+						var value = $(event.target).parent().attr('data-value');
+
+						if (value && $this.items[value]) {
+							$this.select($this.items[value]);
+						}
+					}
+
+					/* Show */
+					$this.show = function () {
+						var pos = $this.position();
+
+						$this.siblings('ul.' + $this.class).css({
+							'top': pos.top + $this.outerHeight(),
+							'left': pos.left
+						});
+
+						$this.siblings('ul.' + $this.class).show();
+					}
+
+					/* Hide */
+					$this.hide = function () {
+						$this.siblings('ul.' + $this.class).hide();
+					}
+
+					/* Request */
+					$this.request = function (search) {
+						clearTimeout($this.timer);
+
+						$this.timer = setTimeout(function (object) {
+							search = (typeof(search) === 'undefined') ? object.val() : search;
+
+							object.source(search, $.proxy(object.response, object));
+						}, 200, $this);
+					}
+
+					/* Response */
+					$this.response = function (json) {
+						var html = '';
+
+						if (json.length) {
+							for (i = 0; i < json.length; i++) {
+								this.items[json[i]['value']] = json[i];
+
+								html += '<li data-value="' + json[i]['value'] + '"><a href="#">' + json[i]['label'] + '</a></li>';
+							}
+						}
+
+						if (html && $this.is(':focus')) {
+							$this.show();
+						} else {
+							$this.hide();
+						}
+
+						$this.siblings('ul.' + $this.class).html(html);
+					}
+
+					$this.after('<ul class="' + $this.class + '"></ul>');
+					$this.siblings('ul.' + $this.class).delegate('a', 'click', $.proxy($this.click, $this));
+					$this.data('autocompleteAddress', true);
+				}
+			} );
+		},
+		destroy: function () {
+			return this.each(function () {
+				var $this = $(this);
+
+				$this.removeData('autocompleteAddress');
+
+				$this.off('.autocompleteAddress');
+			} );
+		}
+	};
+
+	$.fn.autocompleteAddress = function (method) {
+		if (methods[method]) {
+			return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+		} else if (typeof (method) === 'object' || !method) {
+			return methods.init.apply(this, arguments);
+		} else {
+			$.error('Method "' + method + '" does not exist for jQuery.autocompleteAddress');
+		}
+	}
+
+	$('input[name="dsc_privat_faktyre"]').on('change', function() {
+		if ($(this).prop('checked')) {
+			$('input[name="dsc_nip"]').prop('disabled', 'disabled');
+		} else {
+			$('input[name="dsc_nip"]').removeAttr('disabled');
+		}
+	});
+
+	// nip validate
+	$("#input-company-nip, #input-dsc-nip").keypress(function (e) {
+		if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+	    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+		}
+	});
+	$("#input-company-nip, #input-dsc-nip").keyup(function (e) {
+		if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+	    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+		}
+	});
+	$("#input-company-nip, #input-dsc-nip").keydown(function (e) {
+		if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+	    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+		}
+	});
+} )(window.jQuery);
+
+/* ShippingData object */
+function ShippingData() {
+	var self = this;
+	var src, method, lang, city;
+	var address_1,city_selected,old_sel_city;
+
+	self.methods_city = [
+		'novaposhta.department',
+		'novaposhta.doors',
+		'novaposhta.poshtomat',
+		'ukrposhta.express_department',
+		'ukrposhta.standard_department',
+		'ukrposhta.express_doors',
+		'ukrposhta.standard_doors',
+		'justin.department'
+	];
+
+	self.methods_department = [
+		'novaposhta.department',
+		'novaposhta.poshtomat',
+		'ukrposhta.express_department',
+		'ukrposhta.standard_department',
+		'justin.department'
+	];
+
+	self.methods_address = [
+		'novaposhta.doors'
+	];
+
+	self.setProp = function () {
+		self.method = $('input[name="dsc_shipping_method"]:checked').val() || $('select[name="dsc_shipping_method"]').val();
+		self.address_1 = $('select[data-type=select2][name*="dsc_address_1"]:visible').length;
+		self.city_selected = $('[name*="dsc_city"]:visible').val();
+		self.lang = $('html').attr('lang') || 'ru';
+	}
+
+	self.handlerChanges = function (name, value) {
+
+		if ($.inArray(self.method, self.methods_city.concat(self.methods_department, self.methods_address)) != - 1) {
+			self.address_1 = $('select[data-type=select2][name*="dsc_address_1"]:visible').length;
+			self.old_sel_city = city_selected;
+			self.city_selected = $('[name*="dsc_city"]:visible').val() || self.old_sel_city;
+
+			if (name.match(/zone/i)) {
+				$('input[name*="dsc_city"]:visible').val('');
+				$('input[name*="dsc_address_1"]:visible, input[name*="address_2"]:visible, input[name*="street"]:visible').val('');
+
+				/*opc*/
+				$('select[data-type=select2][name*="dsc_city"]:visible option').filter(':not(:eq(0))').remove();
+				$('select[data-type=select2][name*="dsc_address_1"]:visible option').filter(':not(:eq(0))').remove();
+				/*end opc*/
+
+			} else if (name.match(/city/i)) {
+				$('input[name*="dsc_address_1"]:visible, input[name*="address_2"]:visible, input[name*="street"]:visible').val('');
+				$('select[data-type=select2][name*="dsc_address_1"]:visible option').filter(':not(:eq(0))').remove();
+				if (self.address_1 && $.inArray(self.method, self.methods_department) != - 1) {
+					self.initSelect2Addres1();
+				}
+			} else if (name.match(/shipping\_method/i)) {
+				$('input[name*="dsc_city"]:visible').val('').autocompleteAddress('destroy');
+				$('input[name*="dsc_address_1"]:visible, input[name*="address_2"]:visible, input[name*="street"]:visible').val('').autocompleteAddress('destroy');
+
+				self.method = value;
+			}
+		} else if ($.inArray(value, self.methods_city.concat(self.methods_department, self.methods_address)) != - 1) {
+			if (name.match(/shipping\_method/i)) {
+				$('input[name*="dsc_city"]:visible').val('');
+				$('input[name*="dsc_address_1"]:visible, input[name*="address_2"]:visible, input[name*="street"]:visible').val('');
+
+				self.method = value;
+			}
+		}
+	}
+
+	self.getAddress = function (element, search) {
+		var filter, action;
+
+		if (element[0].name.match(/city/i)) {
+			action = 'getCities';
+			filter = $('[name*="zone"]:visible').val() || '';
+		} else if (element[0].name.match(/address_1/i)) {
+			action = 'getDepartments';
+			filter = $('[name*="dsc_city"]:visible').val();
+		} else if (element[0].name.match(/address_2|street/i)) {
+			action = 'getStreets';
+			filter = self.city || $('[name*="dsc_city"]:visible').val();
+		}
+
+		if (!search) {
+			search = element[0].value;
+		}
+
+		return $.ajax( {
+			url: 'index.php?route=extension/module/shippingdata/getShippingData',
+			type: 'POST',
+			data: 'shipping=' + self.method + '&action=' + action + '&filter=' + encodeURIComponent(filter) + '&search=' + encodeURIComponent(search),
+			dataType: 'json',
+			global: false,
+			success: function (json) {
+				self.src = json;
+			}
+		} );
+	}
+}
+
+/* DOOM loaded */
+$(function () {
+	var shippingData = new ShippingData();
+
+	/* Settings properties after DOOM load */
+	shippingData.setProp();
+
+	/* Settings properties after ajaxStop */
+	$(document).ajaxStop(function () {
+		shippingData.setProp();
+	});
+
+	// default parameters
+	setTimeout(function() {
+		/*if($("select[name=\'dsc_country\']").val() == 170) {
+			// $("#input-dsc-telephone").mask('+99 999 999 999 99');
+			$('.inpost_address').removeClass('hidden');
+		} else {
+			$('.inpost_address').addClass('hidden');
+			// $("#input-dsc-telephone").mask('+99 999 999 999 99');
+		}
+
+		if ($('#input-dsc-country option:selected').data('zone') != 6 && $('#input-dsc-country option:selected').val() != '') {
+			$('#input-dsc-payment-method option').each(function() {
+				if ($(this).data('zone') == 6) {
+					$(this).css('display', 'none');
+				}
+			});
+			$('#input-dsc-shipping-method option').each(function() {
+				if ($(this).data('zone') == 6) {
+					$(this).css('display', 'none');
+				} else {
+					$(this).css('display', 'initial');
+				}
+			});
+		} else {
+			$('#input-dsc-payment-method option').each(function() {
+				if ($(this).data('zone') == 6) {
+					$(this).css('display', 'initial');
+				}
+			});
+			$('#input-dsc-shipping-method option').each(function() {
+				if ($(this).data('zone') == 6 || $(this).val() == 'gls.gls') {
+					$(this).css('display', 'initial');
+				} else {
+					$(this).css('display', 'none');
+				}
+			});
+		}
+
+		if ($('#input-dsc-currency option:selected').data('zone') != 6 && $('#input-dsc-currency option:selected').val() != '') {
+			$('#input-dsc-payment-method option').each(function() {
+				if ($(this).data('zone') == 6) {
+					$(this).css('display', 'none');
+				}
+			});
+		} else {
+			if ($('#input-dsc-currency option:selected').val() != '' && $('#input-dsc-country option:selected').data('zone') == 6) {
+				$('#input-dsc-payment-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'initial');
+					}
+				});
+			}
+		}
+
+		if ($('#input-dsc-shipping-method option:selected').val() != 'pickup.pickup') {
+			$('#input-dsc-payment-method option[value="cheque"]').css('display', 'none');
+		} else {
+			$('#input-dsc-payment-method option[value="cheque"]').css('display', 'initial');
+		}*/
+
+		if ($('.dsc-fileds').hasClass('disabled-fields')) {
+		} else {
+			$('#input-dsc-telephone').mask('+999999999999');
+			//const input_tel = document.querySelector("#input-dsc-telephone");
+			//var country_arr = {14:'at',21:'be',33:'bg',53:'hr',56:'cz',57:'dk',67:'ee',72:'fl',74:'fr',81:'de',84:'gr',97:'hu',103:'ie',105:'it',117:'lv',123:'lt',124:'lu',150:'nl',170:'pl',171:'pt',175:'ro',189:'sk',190:'sl',195:'es',203:'se',386:'si'};
+			//const iti_tel = window.intlTelInput(input_tel, {
+			//	    allowDropdown: true,
+			//	    autoPlaceholder: "polite",
+			//	    fixDropdownWidth: true,
+			//	    formatAsYouType: true,
+			//	    formatOnDisplay: true,
+			//	    initialCountry: country_arr[$('#input-dsc-country option:selected').val()],
+			//	    nationalMode: true,
+			//	    onlyCountries: ["at", "be", "bg", "hr", "cz", "dk", "ee", "fl", "fr", "de", "gr", "hu", "ie", "it", "lt", "lv", "lu", "nl", "pl", "pt", "ro", "sk", "sl", "se", "es", "si", "globe"],
+			//	    placeholderNumberType: "MOBILE",
+			//	    showFlags: true,
+			//	    separateDialCode: false,
+			//	    strictMode: true,
+			//	    useFullscreenPopup: false,
+			//	    validationNumberType: "MOBILE",
+			//});
+		}
+	}, 400);
+	// default parameters
+
+	/* Check changes */
+	$(document).on('change', '[name*="zone"]:visible, [name*="dsc_country"]:visible, [name*="dsc_currency"]:visible, [name*="dsc_city"]:visible, [name*="shipping_method"]', function (e) {
+
+		if ($(this).attr('name') == 'dsc_country') {
+			if ($('#input-dsc-country option:selected').data('zone') != 6 && $('#input-dsc-country option:selected').val() != '') {
+				$('#input-dsc-payment-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'none');
+					}
+				});
+
+				$('.infakt-form-nip').addClass('d-none');
+				$('#input-dsc-nip').val('');
+				$('.privateosobe').addClass('d-none');
+				$('.infakt-form-vatcode').removeClass('d-none');
+
+				$('#input-dsc-shipping-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'none');
+					} else {
+						$(this).css('display', 'initial');
+					}
+				});
+
+				setTimeout(function() {
+					var s = 0;
+					$('#input-dsc-shipping-method option').each(function() {
+						if (s == 0 && $(this).css('display') != 'none') {
+							$(this).prop('selected', 'selected').trigger('change');
+							return false;
+						}
+
+						s = s + 1;
+					});
+
+					var p = 0;
+					$('#input-dsc-payment-method option').each(function() {
+						if (p == 0 && $(this).css('display') != 'none') {
+							$(this).prop('selected', 'selected').trigger('change');
+							return false;
+						}
+
+						p = p + 1;
+					});
+				}, 400);
+			} else {
+				$('.infakt-form-nip').removeClass('d-none');
+				$('.privateosobe').removeClass('d-none');
+				$('.infakt-form-vatcode').addClass('d-none');
+				$('#input-dsc-vatcode').val('');
+
+				$('#input-dsc-payment-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'initial');
+					}
+				});
+
+				$('#input-dsc-shipping-method option').each(function() {
+					if ($(this).data('zone') == 6 || $(this).val() == 'gls.gls') {
+						$(this).css('display', 'initial');
+					} else {
+						$(this).css('display', 'none');
+					}
+				});
+
+				setTimeout(function() {
+					$('#input-dsc-shipping-method option').each(function() {
+						if ($(this).css('display') != 'none') {
+							$(this).prop('selected', 'selected').trigger('change');
+							return false;
+						}
+					});
+				}, 300);
+			}
+
+			if ($('#input-dsc-currency option:selected').data('zone') != 6 && $('#input-dsc-currency option:selected').val() != '') {
+				$('#input-dsc-payment-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'none');
+					}
+				});
+			} else {
+				if ($('#input-dsc-currency option:selected').val() != '' && $('#input-dsc-country option:selected').data('zone') == 6) {
+					$('#input-dsc-payment-method option').each(function() {
+						if ($(this).data('zone') == 6) {
+							$(this).css('display', 'initial');
+						}
+					});
+				}
+			}
+
+			if($('#input-dsc-country option:selected').val() == 170) {
+				// $("#input-dsc-telephone").mask('+99 999 999 999 99');
+
+				$(".dscvat").addClass('hidden');
+				$('.dscvat input[type="checkbox"]').prop('checked', 'true').bind('change');
+			} else {
+				// $("#input-dsc-telephone").mask('+99 999 999 999 99');
+
+				$(".dscvat").removeClass('hidden');
+			}
+
+			// var country_arr = {14:'at',21:'be',33:'bg',53:'hr',56:'cz',57:'dk',67:'ee',72:'fl',74:'fr',81:'de',84:'gr',97:'hu',103:'ie',105:'it',117:'lv',123:'lt',124:'lu',150:'nl',170:'pl',171:'pt',175:'ro',189:'sk',190:'sl',195:'es',203:'se',386:'si'};
+			// window.intlTelInput.getInstance(document.querySelector("#input-dsc-telephone")).setCountry(country_arr[$('#input-dsc-country option:selected').val()]);
+		}
+
+		if ($(this).attr('name') == 'dsc_currency') {
+			if ($('#input-dsc-country option:selected').data('zone') != 6) {
+				$('#input-dsc-payment-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'none');
+					}
+				});
+
+				$('#input-dsc-shipping-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'none');
+					} else {
+						$(this).css('display', 'initial');
+					}
+				});
+			} else {
+				$('#input-dsc-payment-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'initial');
+					}
+				});
+
+				$('#input-dsc-shipping-method option').each(function() {
+					if ($(this).data('zone') == 6 || $(this).val() == 'gls.gls') {
+						$(this).css('display', 'initial');
+					} else {
+						$(this).css('display', 'none');
+					}
+				});
+			}
+
+			if ($('#input-dsc-currency option:selected').data('zone') != 6) {
+				$('#input-dsc-payment-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'none');
+					}
+				});
+			} else {
+				$('#input-dsc-payment-method option').each(function() {
+					if ($(this).data('zone') == 6) {
+						$(this).css('display', 'initial');
+					}
+				});
+			}
+
+			if($('#input-dsc-country option:selected').val() == 170) {
+				// $("#input-dsc-telephone").mask('+99 999 999 999 99');
+			} else {
+				// $("#input-dsc-telephone").mask('+99 999 999 999 99');
+				// $("#input-dsc-telephone").unmask();
+			}
+
+			// var country_arr = {14:'at',21:'be',33:'bg',53:'hr',56:'cz',57:'dk',67:'ee',72:'fl',74:'fr',81:'de',84:'gr',97:'hu',103:'ie',105:'it',117:'lv',123:'lt',124:'lu',150:'nl',170:'pl',171:'pt',175:'ro',189:'sk',190:'sl',195:'es',203:'se',386:'si'};
+			// window.intlTelInput.getInstance(document.querySelector("#input-dsc-telephone")).setCountry(country_arr[$('#input-dsc-country option:selected').val()]);
+		}
+
+		if($(this).attr('name') == 'dsc_shipping_method' && $(this).find('option:selected').length > 0) {
+			if ($(this).find('option:selected').val().indexOf('inpost_shipping_2') >= 0) {
+				$('.parcel-locker, .parcel-locker-selection-data').each(function(){
+					$(this).addClass('hidden');
+	   			});
+
+	   			// $('.inpost_address').removeClass('hidden');
+
+				setTimeout(function() {
+					$('#ft-edit-dsc-modal').css('z-index', '1041');
+					$('#inpostGeoWidgetModal').modal('show');
+				}, 500);
+			} else {
+		        $('input[name="dsc_city"]').val('');
+		        $('input[name="dsc_address_1"]').val('');
+		        $('.parcel-locker-value').val('');
+		        $('.parcel-addresslocker-value').val('');
+
+				$('.inpost_address').addClass('hidden');	
+			}
+		}
+
+		if ($('#input-dsc-shipping-method option:selected').val() != 'pickup.pickup') {
+			$('#input-dsc-payment-method option[value="cheque"]').css('display', 'none');
+		} else {
+			$('#input-dsc-payment-method option[value="cheque"]').css('display', 'initial');
+		}
+
+		shippingData.handlerChanges(e.target.name, e.target.value);
+
+	});
+
+	$(document).on('change', '[name*="dsc_language"]', function (e) {
+		$('[name*="language_id"]').val($(this).find('option:selected').data('lnid'));
+	});
+
+	$(document).on('click', '.inpost_address', function() {
+		$('.parcel-locker, .parcel-locker-selection-data').each(function(){
+			$(this).addClass('hidden');
+		});
+
+		setTimeout(function() {
+			$('#inpostGeoWidgetModal').modal('show');
+			$('#ft-edit-dsc-modal').css('z-index', '1041');
+		}, 500);
+	});
+
+
+	// remove client
+	$(document).on('change', '[name="remove_dsc_client_1"]', function (e) {
+		if ($(this).prop('checked')) {
+			if ($('input[name="remove_dsc_client_2"]').prop('checked') && $('input[name="remove_dsc_client_3"]').prop('checked')) {
+				$('#remove_dsc_client').removeAttr('disabled');
+			}
+		} else {
+			$('#remove_dsc_client').attr('disabled', 'disabled');
+		}
+	});
+	$(document).on('change', '[name="remove_dsc_client_2"]', function (e) {
+		if ($(this).prop('checked')) {
+			if ($('input[name="remove_dsc_client_1"]').prop('checked') > 0 && $('input[name="remove_dsc_client_3"]').prop('checked')) {
+				$('#remove_dsc_client').removeAttr('disabled');
+			}
+		} else {
+			$('#remove_dsc_client').attr('disabled', 'disabled');
+		}
+	});
+	$(document).on('change', '[name="remove_dsc_client_3"]', function (e) {
+		if ($(this).prop('checked')) {
+			if ($('input[name="remove_dsc_client_1"]').prop('checked') && $('input[name="remove_dsc_client_2"]').prop('checked')) {
+				$('#remove_dsc_client').removeAttr('disabled');
+			}
+		} else {
+			$('#remove_dsc_client').attr('disabled', 'disabled');
+		}
+	});
+	$(document).on('click', '#remove_dsc_client', function(e) {
+		var text_confirm = '{{ button_remove_client }} ?';
+
+	    if(!confirm(text_confirm)) {
+	        e.stopImmediatePropagation();
+	        e.preventDefault();
+	    } else {
+	        var customer_id = '{{ customer_id }}';
+
+	        // console.log(customer_id);
+	        // return;
+
+     		$.ajax({
+			    type: "GET",
+			    url: 'index.php?route=account/manager_list/removeCustomer&customer_id=' + customer_id,
+			    dataType: 'json',
+			    success: function(json) {
+			      if (json['error']) {
+			        alert('Error');
+			      }
+
+			      location.reload();
+
+			      $('#ft-edit-dsc-modal').modal('hide');
+			      $('#ft-edit-dsc-modal').remove();
+			    },
+			    error: function(xhr, ajaxOptions, thrownError) {
+			      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			    }
+			});
+	    }
+	});
+	// remove client
+
+	$('select[name="country_id"]').on('change', function() {
+		if ($(this).find("option:selected").val() == 0 || $(this).find("option:selected").val() == 170) {
+			$('.cmvatcode').removeClass('d-flex').addClass('d-none');
+			$('#input-company-vatcode').val('');
+			$('.firma_other_fields').removeClass('d-none');
+		} else {
+			$('.cmvatcode').addClass('d-flex').removeClass('d-none');
+			$('.firma_other_fields').addClass('d-none');
+			$('#input-company-nip').val('');
+		}
+
+		// var country_arr = {14:'at',21:'be',33:'bg',53:'hr',56:'cz',57:'dk',67:'ee',72:'fl',74:'fr',81:'de',84:'gr',97:'hu',103:'ie',105:'it',117:'lv',123:'lt',124:'lu',150:'nl',170:'pl',171:'pt',175:'ro',189:'sk',190:'sl',195:'es',203:'se',386:'si'};
+		// window.intlTelInput.getInstance(document.querySelector("#input-telephone")).setCountry(country_arr[$('#input-country option:selected').val()]);
+	});
+
+	if ($.inArray(shippingData.method, shippingData.methods_city) != - 1) {
+		if(shippingData.method == 'novaposhta.doors'){
+			$('input[name*="dsc_city"]:visible').val('');
+			$('input[name*="dsc_address_1"]:visible, input[name*="address_2"]:visible, input[name*="street"]:visible').val('');
+		}
+	}
+
+	/* Add autocomplete for city */
+	$('body').on('focus', 'input[name*="dsc_city"]:visible', function () {
+		if (this.name.match(/city/i) && $.inArray(shippingData.method, shippingData.methods_city) != - 1) {
+			$(this).autocompleteAddress({
+				source: function (request, response) {
+					shippingData.getAddress(this, request).done(function () {
+						response($.map(shippingData.src, function (item) {
+							return {
+								id:    item['id'] || '',
+								label: item['full_description'] || item['description'],
+								value: item['description'],
+							}
+						}));
+					});
+				},
+				select: function (e) {
+					if (e.value != this.val()) {
+						this.val(e.value);
+						shippingData.city = e.id;
+
+						this.trigger('change');
+
+					}
+				},
+				class: 'dropdown-address'
+			});
+		}
+	});
+
+	/* Add autocomplete for department */
+	$('body').on('focus', 'input[name*="dsc_address_1"]:visible', function () {
+		if (this.name.match(/address_1/i) && $.inArray(shippingData.method, shippingData.methods_department) != - 1) {
+			$(this).autocompleteAddress({
+				source: function (request, response) {
+					shippingData.getAddress(this, request).done(function () {
+						response($.map(shippingData.src, function (item) {
+							return {
+								label: item['full_description'] || item['description'],
+								value: item['description']
+							}
+						}));
+					});
+				},
+				select: function (e) {
+					if (e.value != this.val()) {
+						this.val(e.value);
+
+						this.trigger('change');
+					}
+				},
+				class: 'dropdown-address'
+			});
+		}
+	});
+});
+
+
+document.getElementById('dsc_status').addEventListener('change', function() {
+	$('.dsc-fileds').toggleClass('disabled-fields');
+
+	if ($('.dsc-fileds').hasClass('disabled-fields')) {
+		// window.intlTelInput.getInstance(document.querySelector(".edit-dsc-modal #input-dsc-telephone")).destroy();
+	} else {
+		/*window.intlTelInput.getInstance(document.querySelector(".edit-dsc-modal #input-dsc-telephone")).destroy();
+		const input_tel = document.querySelector(".edit-dsc-modal #input-dsc-telephone");
+		var country_arr = {14:'at',21:'be',33:'bg',53:'hr',56:'cz',57:'dk',67:'ee',72:'fl',74:'fr',81:'de',84:'gr',97:'hu',103:'ie',105:'it',117:'lv',123:'lt',124:'lu',150:'nl',170:'pl',171:'pt',175:'ro',189:'sk',190:'sl',195:'es',203:'se',386:'si'};
+		const iti_tel = window.intlTelInput(input_tel, {
+		    allowDropdown: true,
+		    autoPlaceholder: "polite",
+		    fixDropdownWidth: true,
+		    formatAsYouType: true,
+		    formatOnDisplay: true,
+		    initialCountry: country_arr[$('#input-dsc-country option:selected').val()],
+		    nationalMode: true,
+		    onlyCountries: ["at", "be", "bg", "hr", "cz", "dk", "ee", "fl", "fr", "de", "gr", "hu", "ie", "it", "lt", "lv", "lu", "nl", "pl", "pt", "ro", "sk", "sl", "se", "es", "si", "globe"],
+		    placeholderNumberType: "MOBILE",
+		    showFlags: true,
+		    separateDialCode: true,
+		    strictMode: true,
+		    useFullscreenPopup: false,
+		    validationNumberType: "MOBILE",
+		});*/
+		$('.edit-dsc-modal #input-dsc-telephone').mask('+999999999999');
+	}
+});
+</script>

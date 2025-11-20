@@ -1,0 +1,14 @@
+<file path="admin/controller/common/column_left.php">
+    <operation error="skip">
+        <search  position="before"><![CDATA[return $this->load->view]]></search>
+        <add position="before"><![CDATA[
+					$this->load->model('seolang/seolang');
+			        $this->model_seolang_seolang->control('seolang/seolang');
+			        if (is_callable(array($this->controller_seolang_seolang, 'seolang_menu'))) {
+			        	$data['seolang_menus'] = $this->controller_seolang_seolang->seolang_menu();
+			        	if (!$data['seolang_menus']) unset($data['seolang_menus']);
+			        }
+    ]]></add>
+    </operation>
+</file>
+

@@ -1,0 +1,23 @@
+<div class="header__languages">
+
+	<div
+		class="header__select">
+		<!-- <span class="account__title">{{ text_language }}</span> -->
+		<span id="form-language">
+			<span class="select">
+				<select data-placeholder="" class="select select--header select--transparent" onchange="console.log($(this).val()); window.location = $(this).val();">
+					{% for language in languages %}
+						{% if (language['current']) %}
+							<option value="{{ language['url'] }}" selected="selected">{{ language['name'] }}</option>
+						{% else %}
+							<option value="{{ language['url'] }}">{{ language['name'] }}</option>
+						{% endif %}
+					{% endfor %}
+
+				</select>
+			</span>
+
+		</span>
+	</div>
+
+</div>

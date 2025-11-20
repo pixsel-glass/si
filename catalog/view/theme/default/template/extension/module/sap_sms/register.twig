@@ -1,0 +1,33 @@
+{% if mainstatus is not empty or otpstatus is not empty %}
+<div class="form-group required otpbox{{ otppage }}" id="otpbox">
+	<label class="{{ route ? 'col-sm-2 ' : '' }}control-label" for="{{ id }}">{{ entry_telephone }}</label>
+	{% if route %}
+	<div class="col-sm-10">
+	{% endif %}
+	<div class="input-group telephone-error-{{ otppage }}">
+		<input type="hidden" name="page" value="{{ otppage }}">
+		<input type="hidden" name="otp_country_code" id="otp_country_code-{{ otppage }}">
+		<input type="hidden" name="fax" value="">
+		<input type="text" inputmode="tel" id="{{ id }}" name="telephone" class="form-control{{ show_country_code ? ' iti--sap-tel-input' : '' }} numeric telephonenew{{ otppage }}{{ is_mask ? ' mask' : '' }}" {{ show_country_code ? 'data-phone-input-id="'~id~'" data-phone-dial-code-input="#otp_country_code-'~otppage~'"' : '' }} data-config-type="sms"{{ is_mask ? mask : '' }} value="{{ telephone }}" placeholder="{{ entry_telephone }}" {{ maximum ? 'maxlength="'~maximum~'"' : '' }} autocomplete="off">
+		<span class="input-group-btn">
+			<button type="button" class="btn btn-danger btnverify{{ otppage }}" title="{{ button_verify }}"><i class="fa fa-check" aria-hidden="true"></i> {{ button_verify }}</button>
+		</span>
+	</div>
+	{% if route %}
+	</div>
+	{% endif %}
+</div>
+<style>.iti {position: unset !important;}</style>
+{% if show_country_code %}
+<script async>
+	var sapTelSMSInputConfig = {{ config_tel_input }};
+</script>
+{% else %}
+{% if mask %}
+<script>
+	var maskPhone = '{{ mask }}';
+	$('#otp_country_code-{{ otppage }}').val(maskPhone.replace(/[^0-8]/g, ''));
+</script>
+{% endif %}
+{% endif %}
+{% endif %}

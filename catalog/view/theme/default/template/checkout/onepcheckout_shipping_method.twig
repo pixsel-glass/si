@@ -1,0 +1,32 @@
+<div class="checkout-shipping-method h-100 {% if shipping_methods is empty %}hidden{% endif %}">
+	<div class="checkout-heading">{{ title_shipping_method }}</div>
+	<div class="shipping-method">
+		{% for key, shipping_method in shipping_methods %}
+			{# {% if 'inpost_shipping' in key %}
+			{% else %} #}
+				<div class="shipping_method_title">{{ shipping_method['title'] }}</div>
+			{# {% endif %} #}
+			{% if (not shipping_method['error']) %}
+				{% for quote in shipping_method['quote'] %}
+					<div class="radio chm-radio">
+						<label>
+							{% if (quote['code'] == shipping_code or not shipping_code) %}
+								{% set shipping_code = quote['code'] %}
+								<input autocomplete="off" type="radio" name="shipping_method" value="{{ quote['code'] }}" checked="checked" />
+							{% else %}
+								<input autocomplete="off" type="radio" name="shipping_method" value="{{ quote['code'] }}" />
+							{% endif %}
+							{{ quote['title'] }}
+							{% if quote['text'] is not empty %} - {{ quote['text'] }}{% endif %}
+						</label>
+						{% if 'inpost_shipping_2' in quote['code'] %}
+							<div class="inpost_address">{{ parcelAddressLocker }}{% if parcelAddressLocker is empty %}{% else %}<svg fill="#000000" style="margin-left: 5px; width: 28px;" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M11.707,5.293A1,1,0,0,1,11,7H4V17H9a1,1,0,0,1,0,2H3a1,1,0,0,1-1-1V6A1,1,0,0,1,3,5H8.586L7.293,3.707A1,1,0,1,1,8.707,2.293ZM21,5H15a1,1,0,0,0,0,2h5V17H13a1,1,0,0,0-.707,1.707l3,3a1,1,0,0,0,1.414-1.414L15.414,19H21a1,1,0,0,0,1-1V6A1,1,0,0,0,21,5Z"></path></g></svg>{% endif %}</div>
+						{% endif %}
+					</div>
+				{% endfor %}
+			{% else %}
+				<div class="alert alert-danger">{{ shipping_method['error'] }}</div>
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>

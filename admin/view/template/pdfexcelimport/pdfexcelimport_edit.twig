@@ -1,0 +1,199 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right"></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid"> 
+  <style>
+    .fullBlock{
+      display:flex;
+      flex-wrap:wrap;
+    }
+    .fullBlock > div:nth-child(1){
+      width:calc(40% - 50px);
+      margin:20px 50px 20px 0px;
+      display:flex;
+      flex-wrap:wrap;
+    }
+    .fullBlock > div:nth-child(2){
+      width:calc(60% - 0px);
+      margin:45px 0px 20px 0px;
+      display:flex;
+      flex-wrap:wrap;
+    }
+    .fullBlock > div:nth-child(1) > div{
+      width:33%;
+      cursor:pointer;
+    }
+    .fullBlock > div:nth-child(1) > div.allw{
+      width:100%;
+      cursor:pointer;
+    }
+    .fullBlock > div:nth-child(2) > div:nth-child(1){
+      width:calc(60% - 20px);
+      cursor:pointer;
+      margin:0px 20px 0px 0px;
+    }
+    .fullBlock > div:nth-child(2) > div:nth-child(2){
+      width:40%;
+      cursor:pointer;
+    }
+    .fullBlock label{
+      display:inline;
+      width:auto;
+      font-weight:normal;
+      font-size: 11px;
+    }
+    .fullBlock input{
+      display:inline-block;
+      margin:10px 5px 0px 0px;
+    }
+    .fullBlock input[type=text]{
+      width:300px;
+    }
+    .fullBlock input[type=submit]{
+      display:block;
+      margin:20px 0px 0px 0px;
+    }
+    .prices_dopin_poask{
+      display:none;
+      margin:0px 0px 0px 20px;
+    }
+    .prices_dopin_poask_active{
+      display:block;
+    }
+  </style>
+  <script type="text/javascript">
+   $(document).ready(function() {
+    $('.allw label').on('click', function() {
+      if($(this).parent().find('input').is(':checked')){
+        $(this).parent().find('input').prop('checked', false);
+        $('.categoriesall_part').prop('checked', false);
+      }else{
+        $(this).parent().find('input').prop('checked', true);
+        $('.categoriesall_part').prop('checked', true);
+      }
+    });
+    $('.categoriesall').on('change', function() {
+      if($('.categoriesall_part').is(':checked')){
+        $('.categoriesall_part').prop('checked', false);
+      }else{
+        $('.categoriesall_part').prop('checked', true);
+      }
+    });
+
+    $('.categoriesall_part_wrapper label').on('click', function() {
+      if($(this).parent().find('input').is(':checked')){
+        $(this).parent().find('input').prop('checked', false);
+      }else{
+        $(this).parent().find('input').prop('checked', true);
+      }
+    });
+
+    $('.prices_dopin').on('click', function() {
+       if($(this).prop("checked")){
+          $(this).parent().find('.prices_dopin_poask').addClass('prices_dopin_poask_active');
+       }else{
+          $(this).parent().find('.prices_dopin_poask').removeClass('prices_dopin_poask_active');
+       }
+    });
+   });
+  </script>
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="table-responsive">
+          <h3>{{ text_edit_title }} "{{ customer_group.name }}"</h3>        
+          <form action="{{ action }}" method="post" enctype="multipart/form-data" class="exportTableM">
+            <div class="fullBlock">
+              <div>
+                <div class="allw">
+                  <input type="checkbox" name="categoriesall" class="categoriesall" value="0" checked />
+                  <label>{{ text_all_models }}</label>
+                </div>
+                {% for category in categories %}
+                  <div class="categoriesall_part_wrapper">
+                    <input type="checkbox" name="categories[]" class="categoriesall_part" value="{{ category.category_id }}" {% if category.checked==1 %} checked {% endif %} />
+                    <label>{{ category.name }}</label>
+                  </div>
+                {% endfor %}
+              </div>
+              <div>
+                <div>
+                  <div>
+                    <input type="checkbox" name="prices_code" value="1" {% if customer_group.prices.prices_code==1 %} checked {% endif %} />
+                    <label>{{ text_in_code }}</label>
+                  </div>
+                  <div>
+                    <input type="checkbox" name="prices_articul" value="1" {% if customer_group.prices.prices_articul==1 %} checked {% endif %} />
+                    <label>{{ text_out_code }}</label>
+                  </div>
+                  <div>
+                    <input type="checkbox" name="prices_img" value="1" {% if customer_group.prices.prices_img==1 %} checked {% endif %} />
+                    <label>{{ text_image_enable }}</label>
+                  </div>
+                  <div>
+                    <input type="checkbox" name="prices_sort" value="1" {% if customer_group.prices.prices_sort==1 %} checked {% endif %} />
+                    <label>{{ text_sort_enable }}</label>
+                  </div>
+                  <div>
+                    <input type="checkbox" name="gart_enabled" value="1" {% if customer_group.prices.gart_enabled==1 %} checked {% endif %} />
+                    <label>{{ text_gart_enable }}</label>
+                    <select name="gart_optid" id="input-gart-optid" class="form-control">
+                      <option value="0">{{ text_select }}</option>
+                      {% for aoption in alloptions %}
+                      {% if customer_group.prices.gart_optid == aoption.option_value_id %}
+                      <option value="{{ aoption.option_value_id }}" selected="selected">{{ aoption.name }}</option>
+                      {% else %}
+                      <option value="{{ aoption.option_value_id }}">{{ aoption.name }}</option>
+                      {% endif %}
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  {% for customer_group in customer_groups %}
+                    <div>
+                      <input type="checkbox" name="prices_dopin[]" class="prices_dopin" value="{{ customer_group.customer_group_id }}" {% if customer_group.checked==1 %} checked {% endif %} />
+                      <label>{{ text_show_price }} {{ customer_group.name }}</label>
+                      {#<div class="prices_dopin_poask {% if customer_group.checked==1 %}prices_dopin_poask_active{% endif %}">
+                         <input type="checkbox" name="prices_dopin_poask[]" value="{{ customer_group.customer_group_id }}" {% if customer_group.prices_dopin_poask_checked==1 %} checked {% endif %} />
+                         <label>{{ text_request }}</label>
+                      </div>#}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div>
+                <span>{{ text_filename }}</span>
+                <input type="text" name="prices_filename" value="{{ customer_group.prices.prices_filename }}" />
+                <input type="checkbox" name="prices_dateadd" value="1" {% if customer_group.prices.prices_dateadd==1 %} checked {% endif %} />
+                <span>{{ text_date }}</span>
+              </div>
+              <div style="width:100%">
+                <input type="checkbox" name="prices_delete" value="1" {% if customer_group.prices.prices_delete==1 %} checked {% endif %} />
+                <span>{{ text_remove_old }}</span>
+              </div>
+              <div style="width:100%">
+                <input type="submit" value="{{ text_save_settings }}"/>
+              </div>
+            </div>
+            <input type="hidden" name="customer_group_id" value="{{ customer_group.customer_group_id }}" />
+          </form>
+
+        </div>   
+      </div>
+    </div>
+
+  </div>
+  
+				
+{{ footer }} 

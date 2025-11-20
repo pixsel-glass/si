@@ -1,0 +1,221 @@
+<div class="modal-dialog modal-dialog-center modal-lg">
+  <div class="modal-content border-0 rounded-lg mh-100 h-100">
+    
+    <div class="modal-header no-gutters">
+      <div class="col">
+        <div class="h5 modal-title">{{ heading_title }}</div>
+      </div>
+      <div class="col-auto">
+            <a href="#" class="d-block ml-2" data-dismiss="modal">
+              <svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+              </svg>
+            </a>
+      </div>
+    </div>
+    <div class="modal-body dscmodal p-4">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="text-left" colspan="2">{{ text_order_detail }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" style="width: 50%;">{% if invoice_no %} <b>{{ text_invoice_no }}</b> {{ invoice_no }}<br />
+              {% endif %} <b>{{ text_order_id }}</b> #{{ order_id }}<br />
+              <b>{{ text_date_added }}</b> {{ date_added }}
+              {% if shipping_address %}<br />
+               <b>{{ text_shipping_address }}</b> {{ shipping_address }}
+                {% endif %}
+            </td>
+            <td class="text-left" style="width: 50%;">
+              {% if payment_method %} <b>{{ text_payment_method }}</b> {{ payment_method }} {% if payed == 1 %}<span class="payed">{{ entry_spayed }}</span>{% endif %}<br />
+              {% endif %}
+              {% if shipping_method %} <b>{{ text_shipping_method }}</b> {{ shipping_method }} {% endif %}
+
+              </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="text-left" colspan="2">{{ text_aorder_detail }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left" style="width: 50%;"><b>{{ column_country }}</b> {{ order_country }}<br />
+              <b>{{ text_customer_group }}</b> {{ customer_group }}<br />
+              <b>{{ text_telephone }}</b> {{ telephone }}<br />
+              <b>{{ text_email }}</b> {{ email }}<br />
+            </td>
+            <td class="text-left" style="width: 50%;">
+            	{% if fc == 1 %}
+         			<span style="font-weight: 600;">{{ text_ordered_by }}</span> <span style="font-weight: 700;">{{ fc_firstname|striptags }} {{ fc_lastname|striptags }}</span><br />
+            	{% endif %}
+              {% if opc_not_call_me == 0 %}<span style="color: red; font-weight: bold;">{{ text_call_me }}</span>{% else %}<span style="color: green;">{{ text_not_call_me }}</span>{% endif %}<br />
+              {% if infakt_need == 1 %}<span style="color: red; font-weight: bold;">{{ text_faktyre }}</span>{% else %}<span style="color: grey;">{{ text_not_faktyre }}</span>{% endif %}<br />
+              {% if infakt_privat_faktyre == 1 %}<span style="font-weight: bold;">{{ text_privat_person }}</span>{% else %}{% if infakt_nip is not null and infakt_nip is not empty and infakt_nip != '' %}<span style="font-weight: bold;">NIP:</span> <span>{{ infakt_nip }}</span>{% elseif infakt_vatcode is not null and infakt_vatcode is not empty and infakt_vatcode != '' %}<span style="font-weight: bold;">VAT:</span> <span>{{ infakt_vatcode }}</span>{% endif %}{% endif %}<br />
+              {% if infakt_vat == 0 %}<span class="bezvat">{{ lang_without }}</span>{% else %}<span class="bezvat">{{ lang_with }}</span>{% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>      
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th class="text-left p-1">{{ column_name }}</th>
+              <th class="text-left p-1 d-none d-md-table-cell">{{ column_model }}</th>
+              <th class="text-right p-1">{{ column_quantity }}</th>
+              <th class="text-right p-1 d-none d-md-table-cell">
+                {{ column_price }}
+                {% if pixsel_tax_status %}
+                  <span class="text-gray-500 font-weight-normal">{{ lang_with }}</span>
+                {% endif %}
+              </th>
+              <th class="text-right p-1 d-none d-md-table-cell">
+                {{ column_total }}
+                {% if pixsel_tax_status %}
+                  <span class="text-gray-500 font-weight-normal">{{ lang_with }}</span>
+                {% endif %}
+              </th>
+              <th class="text-left p-1 d-md-none"></th>
+          </thead>
+          <tbody>
+
+          {% for product in products %}
+          <tr>
+            <td class="text-left p-1">{{ product.name }}
+              {% for option in product.option %} <br />
+              <small><b>{{ option.pixsel_sku }}</b></small>&nbsp;<small> - {{ option.name }}: {{ option.value }}</small> {% endfor %}</td>
+            <td class="text-left p-1 d-none d-md-table-cell">{{ product.model }}</td>
+            <td class="text-right p-1">{{ product.quantity }}</td>
+            <td class="text-right p-1 d-none d-md-table-cell">
+              {% if customer_group_id != 1 %}
+              <s>{{ product.rprice }}</s><br>
+              {% endif %}
+              {{ product.price }}
+              {% if pixsel_tax_status %}<br />
+              <span class="text-gray-500 font-weight-normal">{{ product.tax_price }} {{ lang_without }}</span>
+              {% endif %}
+            </td>
+            <td class="text-right p-1 d-none d-md-table-cell">
+              {% if customer_group_id != 1 %}
+              <s>{{ product.rtotal }}</s><br>
+              {% endif %}
+              {{ product.total }}
+              {% if pixsel_tax_status %}<br />
+              <span class="text-gray-500 font-weight-normal">{{ product.tax_total }} {{ lang_without }}</span>
+              {% endif %}
+            </td>
+
+            <td class="text-left p-1 d-md-none" style="white-space: nowrap;">
+              <div class="order_price mb-2 d-flex justify-content-between"><span>{{ column_price }}:</span> <span class="pl-2">{{ product.price }}</span></div>
+              <div class="order_ptotal d-flex justify-content-between"><span>{{ column_total }}:</span> <span class="pl-2">{{ product.total }}</span></div>
+            </td>
+          </tr>
+          {% endfor %}
+          {% for voucher in vouchers %}
+          <tr>
+            <td class="text-left p-1">{{ voucher.description }}</td>
+            <td class="text-left p-1"></td>
+            <td class="text-right p-1">1</td>
+            <td class="text-right p-1">{{ voucher.amount }}</td>
+            <td class="text-right p-1">{{ voucher.amount }}</td>
+            {% if products %}
+            <td></td>
+            {% endif %} </tr>
+          {% endfor %}
+            </tbody>
+           </table>
+
+           <div class="table order_info_totals">
+            {#{% for total in totals %}
+              <div class="d-flex justify-content-end flex-nowrap">
+                <div class="text-right pr-4 flex-grow-1"><b>{{ total.title }} {% if total.code == 'sub_total' or total.code == 'total' and pixsel_tax_status %}{{ lang_with }}{% endif %}</b></div>
+                <div class="text-right total-text">{{ total.text }}</div>
+              </div>
+
+                {% if pixsel_tax_status %}
+                  <div class="d-flex justify-content-end flex-nowrap">
+                    <div class="text-right pr-4 flex-grow-1 text-gray-500"><b>{{ total.title }} {% if total.code == 'sub_total' or total.code == 'total' and pixsel_tax_status %}{{ lang_without }}{% endif %}</b></div>
+                    <div class="text-right total-text text-gray-500">{{ total.tax_text }}</div>
+                  </div>
+                {% endif %}
+            {% endfor %}#}
+
+            {% set shipcost = 0 %}
+            {% for total in totals %}
+              {% if total.code == 'shipping' %}
+                {% set shipcost = total.cleantext %}
+              {% endif %}
+              <div class="d-flex justify-content-end flex-nowrap" {% if total.code == 'total' and shipcost == 0 or total.code == 'shipping' and shipcost == 0 %}style="display: none !important;"{% endif %}>
+                <div class="text-right pr-4 flex-grow-1 font-weight-600"><b>{{ total.title }} {% if total.code == 'sub_total' or total.code == 'total' or total.code == 'shipping' and pixsel_tax_status %}{{ lang_with }}{% endif %}</b></div>
+                <div class="text-right total-text font-weight-600">{{ total.text }}</div>
+              </div>
+
+                {% if pixsel_tax_status and total.code == 'total' and shipcost > 0 %}
+                  <div class="d-flex justify-content-end flex-nowrap">
+                    <div class="text-right pr-4 flex-grow-1 text-gray-500"><b>{{ total.title }} {{ lang_without }}</b></div>
+                    <div class="text-right total-text text-gray-500">{{ total.tax_text }}</div>
+                  </div>
+                {% endif %}
+
+                {% if pixsel_tax_status and total.code != 'shipping' and total.code != 'total' %}
+                  <div class="d-flex justify-content-end flex-nowrap">
+                    <div class="text-right pr-4 flex-grow-1 text-gray-500"><b>{{ total.title }} {% if total.code == 'sub_total' and pixsel_tax_status %}{{ lang_without }}{% endif %}</b></div>
+                    <div class="text-right total-text text-gray-500">{{ total.tax_text }}</div>
+                  </div>
+                {% endif %}
+            {% endfor %}
+          </div>
+      </div>
+      {% if comment %}
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="text-left">{{ text_comment }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="text-left">{{ comment }}</td>
+          </tr>
+        </tbody>
+      </table>
+      {% endif %}
+      {% if histories %}
+      <h5>{{ text_history }}</h5>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="text-left">{{ column_date_added }}</th>
+            <th class="text-left">{{ column_status }}</th>
+            <th class="text-left">{{ column_comment }}</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        {% if histories %}
+        {% for history in histories %}
+        <tr>
+          <td class="text-left">{{ history.date_added }}</td>
+          <td class="text-left">{{ history.status }}</td>
+          <td class="text-left">{{ history.comment }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td colspan="3" class="text-center">{{ text_no_results }}</td>
+        </tr>
+        {% endif %}
+          </tbody>
+
+      </table>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+{% if languages|length > 1 %}
+
+<div id="oct_desktop_language">
+
+	<div id="language">
+		<div id="form-language" class="sc-switcher d-flex align-items-center p-2 br-12 ms-3 ms-xl-4">
+			{% for language in languages %}
+				{% if language.main %}
+					<button type="button" class="br-4 fsz-12 d-flex align-items-center justify-content-center language-select{% if language.current %} active{% endif %}" title="{{ language.name }}" onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'">
+					{% else %}
+						<button type="button" class="br-4 fsz-12 d-flex align-items-center justify-content-center language-select{% if language.current %} active{% endif %}" title="{{ language.name }}" onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'">
+						{% endif %}
+
+						{% if language.current %}
+							{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}
+								<img src="catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}" class="me-1" width="8" height="6"/>
+							{% endif %}
+						{% endif %}
+						{{ language.name }}
+					</button>
+				{% endfor %}
+
+		</div>
+	</div>
+
+</div>
+
+<style>
+.lm_modal .modal-body {
+  padding: 30px;
+  min-height: 100px;
+}
+</style>
+
+
+
+<script>
+function lm_setCookie(name, value, options = {}) {
+options = {
+path: '/',
+...options
+};
+
+	let date = new Date(Date.now() + (86400e3 * options.expires));
+	date = date.toUTCString();
+	options.expires = date;
+
+	let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+	for (let optionKey in options) {
+		updatedCookie += "; " + optionKey;
+		let optionValue = options[optionKey];
+		if (optionValue !== true) {
+			updatedCookie += "=" + optionValue;
+		}
+	}
+	document.cookie = updatedCookie;
+}
+
+function lm_deleteCookie(name) {
+  lm_setCookie(name, "", {'max-age': -1});
+}
+</script>
+{% endif %}

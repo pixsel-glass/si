@@ -1,0 +1,9 @@
+{% if languages|length > 1 %}
+	<form id="form-language">
+		<select name="code" class="noselect" onchange="window.location = $(this).val();">
+			{% for language in languages %}
+				<option value="{{ language.url }}" {% if language.code == code %} selected="selected" {% endif %}>{{ language.name }}</option>
+			{% endfor %}
+		</select>
+	</form>
+{% endif %}

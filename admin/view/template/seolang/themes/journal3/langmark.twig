@@ -1,0 +1,90 @@
+<style>
+	.language-currency .dropdown::after {
+		content: "" !important;
+	}
+	#language .dropdown {
+		margin-top: 0;
+	}
+</style>
+{% if j3.settings.get('catalogLanguageStatus') %}
+	{% if languages|length > 1 %}
+		{% set current_language = null %}
+		{% for language in languages %}
+			{% if language.code == code %}
+				{% set current_language = language %}
+			{% endif %}
+		{% endfor %}
+
+
+		<div id="language" class="language">
+			<form id="form-language">
+
+				<div class="dropdown drop-menu">
+					<button type="button" class="dropdown-toggle" data-toggle="dropdown">
+						<span class="language-flag-title">
+							<span class="symbol"><img src="{{ j3.imageToBase64('catalog/language/' ~ current_language.code ~ '/' ~ current_language.code ~ '.png') }}" width="16" height="11" alt="{{ current_language.name }}" title="{{ current_language.name }}"/></span>
+							<span class="language-title">{{ current_language.name }}</span>
+						</span>
+					</button>
+
+					<div class="dropdown-menu j-dropdown">
+						<ul class="j-menu">
+							{% for language in languages %}
+
+								{% if language.main %}
+									<li onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'">
+										<a href="{{ language.url }}" onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'" class="language-select" data-name="{{ language.code }}">
+											<span class="language-flag"><img src="{{ j3.imageToBase64('catalog/language/' ~ language.code ~ '/' ~ language.code ~ '.png') }}" width="16" height="11" alt="{{ language.name }}" title="{{ language.name }}"/></span>
+											<span class="language-title-dropdown">{{ language.name }}</span>
+										</a>
+									</li>
+								{% else %}
+
+
+									<li onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'">
+										<a href="{{ language.url }}" onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'" class="language-select" data-name="{{ language.code }}">
+											<span class="language-flag"><img src="{{ j3.imageToBase64('catalog/language/' ~ language.code ~ '/' ~ language.code ~ '.png') }}" width="16" height="11" alt="{{ language.name }}" title="{{ language.name }}"/></span>
+											<span class="language-title-dropdown">{{ language.name }}</span>
+										</a>
+									</li>
+								{% endif %}
+
+
+							{% endfor %}
+						</ul>
+					</div>
+
+				</div>
+
+			</form>
+		</div>
+
+<script>
+function lm_setCookie(name, value, options = {}) {
+options = {
+path: '/',
+...options
+};
+
+	let date = new Date(Date.now() + (86400e3 * options.expires));
+	date = date.toUTCString();
+	options.expires = date;
+
+	let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+	for (let optionKey in options) {
+		updatedCookie += "; " + optionKey;
+		let optionValue = options[optionKey];
+		if (optionValue !== true) {
+			updatedCookie += "=" + optionValue;
+		}
+	}
+	document.cookie = updatedCookie;
+}
+
+function lm_deleteCookie(name) {
+	lm_setCookie(name, "", {'max-age': -1});
+}
+</script>
+	{% endif %}
+{% endif %}

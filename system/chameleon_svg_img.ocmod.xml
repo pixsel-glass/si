@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<name>Сhameleon - SVG IMG</name>
+	<code>Сhameleon - SVG IMG</code>
+	<version>1.6</version>
+	<author>29aleksey</author>
+	<link>---</link>
+	<file path="admin/controller/common/filemanager.php">	
+		<operation>
+			<search><![CDATA[jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF]]></search>
+			<add position="replace">
+			<![CDATA[jpg,jpeg,png,gif,JPG,JPEG,PNG,GIF,svg,SVG]]>
+			</add>
+		</operation>
+		<operation>
+			<search><![CDATA['jpg',]]></search>
+			<add position="after">
+			<![CDATA['svg',]]>
+			</add>
+		</operation>	
+		<operation>
+			<search><![CDATA['image/jpeg',]]></search>
+			<add position="after">
+			<![CDATA['image/svg+xml',]]>
+			</add>
+		</operation>
+	</file>
+	<file path="admin/model/tool/image.php">
+		<operation error="skip">
+			<search><![CDATA[$extension = pathinfo($filename, PATHINFO_EXTENSION);]]></search>
+			<add position="after">
+			<![CDATA[
+			if (strtolower($extension) == 'svg') {
+				if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+					return HTTPS_CATALOG . 'image/' . $filename;
+				} else {
+					return HTTP_CATALOG . 'image/' . $filename;
+				}
+			}
+			]]>
+			</add>
+		</operation>
+	</file>
+	<file path="catalog/model/tool/image.php">
+		<operation error="skip">
+			<search><![CDATA[$extension = pathinfo($filename, PATHINFO_EXTENSION);]]></search>
+			<add position="after">
+			<![CDATA[
+			if (strtolower($extension) == 'svg') {
+				if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
+					return $this->config->get('config_ssl') . 'image/' . $filename;
+				} else {
+					return $this->config->get('config_url') . 'image/' . $filename;
+				}
+			}
+			]]>
+			</add>
+		</operation>
+	</file>
+</modification>

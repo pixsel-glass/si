@@ -1,0 +1,71 @@
+{% if currencies|length > 1 %}
+	<form action="{{ action }}" method="post" enctype="multipart/form-data" id="ft-form-footer-currency">
+		<ul class="list-unstyled mb-0 mt-3">
+			{% for currency in currencies %}
+				<li class="row no-gutters pb-1">
+					<span class="col-auto">
+						<svg class="ft-icon-18 d-block text-gray-500 darker-on-hover mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+						</svg>
+					</span>
+					<span class="col">
+					{% if currency.symbol_left %}
+						{% if currency.code != code %}
+							<a href="#" class="d-flex text-dark currency-select">
+								<span class="col-auto pl-0 pr-1">
+									<strong class="d-inline-block text-center ft-icon text-gray-500 darker-on-hover ml-1 mr-2">{{ currency.symbol_left }}</strong>
+								</span>
+								<span class="col-auto pl-2 pr-2">
+									{{ currency.code }} <small>({{ currency.title }})</small>
+								</span>
+								<input type="hidden" name="{{ currency.code }}" />
+							</a>
+						{% else %}
+							<span class="d-flex font-weight-bold">
+								<span class="col-auto pl-0 pr-1">
+									<strong class="d-inline-block text-center ft-icon text-gray-500 darker-on-hover ml-1 mr-2">{{ currency.symbol_left }}</strong>
+								</span>
+								<span class="col-auto pl-2 pr-2 text-currency-name">
+									{{ currency.code }} <small>({{ currency.title }})</small>
+								</span>
+							</span>
+						{% endif %}
+					{% else %}
+						{% if currency.code != code %}
+							<a href="#" class="d-flex text-dark currency-select">
+								<span class="col-auto pl-0 pr-1">
+									<strong class="d-inline-block text-center ft-icon text-gray-500 darker-on-hover ml-1 mr-2">{{ currency.symbol_right }}</strong>
+								</span>
+								<span class="col-auto pl-2 pr-2">
+									{{ currency.code }} <small>({{ currency.title }})</small>
+								</span>
+								<input type="hidden" name="{{ currency.code }}" />
+							</a>
+						{% else %}
+							<span class="d-flex font-weight-bold">
+								<span class="col-auto pl-0 pr-1">
+									<strong class="d-inline-block text-center ft-icon text-gray-500 darker-on-hover ml-1 mr-2">{{ currency.symbol_right }}</strong>
+								</span>
+								<span class="col-auto pl-2 pr-2 text-currency-name">
+									{{ currency.code }} <small>({{ currency.title }})</small>
+								</span>
+							</span>
+						{% endif %}
+					{% endif %}
+					</span>
+				</li>
+			{% endfor %}
+			<input type="hidden" name="code" value="" />
+			<input type="hidden" name="redirect" value="{{ redirect }}" />
+		</ul>
+	</form>
+	<script>
+	$('#ft-form-footer-currency .currency-select').on('click', function(e) {
+		e.preventDefault();
+
+		$('#ft-form-footer-currency input[name=\'code\']').val($(this).find('input').attr('name'));
+
+		$('#ft-form-footer-currency').submit();
+	});
+	</script>
+{% endif %}

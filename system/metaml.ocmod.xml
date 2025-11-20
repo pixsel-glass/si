@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>META ML</name>
+    <version>1.0</version>
+    <author>devrvk</author>
+    <id>metaml</id>
+    <code>metaml</code>
+    <link>https://t.me/devrvk</link>
+
+  <file path="admin/controller/setting/setting.php">
+      <operation>
+        <search><![CDATA[$data['user_token'] = $this->session->data['user_token'];]]></search>
+        <add position="after"><![CDATA[
+            // META ML
+            $this->load->model('localisation/language');
+            $data['languages'] = $this->model_localisation_language->getLanguages();
+            // META ML
+          ]]></add>
+      </operation>
+  </file>
+
+  <file path="admin/view/template/setting/setting.twig">
+      <operation>
+        <search index="0"><![CDATA[<div class="form-group required">]]></search>
+        <add position="before"><![CDATA[
+            <!-- META ML -->
+                {% for language in languages %}
+          ]]></add>
+      </operation>
+
+      <operation>
+        <search index="0"><![CDATA[<div class="form-group">]]></search>
+        <add position="before"><![CDATA[
+                {% endfor %}<!-- META ML -->{% for language in languages %}
+          ]]></add>
+      </operation>
+      
+      <operation>
+        <search index="1"><![CDATA[<div class="form-group">]]></search>
+        <add position="before"><![CDATA[
+                {% endfor %}<!-- META ML -->{% for language in languages %}
+          ]]></add>
+      </operation>
+
+      <operation>
+        <search index="2"><![CDATA[<div class="form-group">]]></search>
+        <add position="before"><![CDATA[
+                {% endfor %}
+            <!-- META ML -->
+          ]]></add>
+      </operation>
+
+      <operation>
+        <search><![CDATA[<label class="col-sm-2 control-label" for="input-meta-title">{{ entry_meta_title }}</label>]]></search>
+        <add position="replace"><![CDATA[
+            <!-- META ML -->
+                <label class="col-sm-2 control-label" for="input-meta-title">{{ entry_meta_title }} <img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/></label>
+            <!-- META ML -->
+          ]]></add>
+      </operation>
+      <operation>
+        <search><![CDATA[<input type="text" name="config_meta_title" value="{{ config_meta_title }}" placeholder="{{ entry_meta_title }}" id="input-meta-title" class="form-control" />]]></search>
+        <add position="replace"><![CDATA[
+            <!-- META ML -->
+                <input type="text" name="config_meta_title[{{ language.language_id }}][title]" value="{{ config_meta_title[language.language_id] ? config_meta_title[language.language_id].title }}" placeholder="{{ entry_meta_title }}" id="input-meta-title{{ language.language_id }}" class="form-control" />
+            <!-- META ML -->
+          ]]></add>
+      </operation>      
+
+      <operation>
+        <search><![CDATA[<label class="col-sm-2 control-label" for="input-meta-description">{{ entry_meta_description }}</label>]]></search>
+        <add position="replace"><![CDATA[
+            <!-- META ML -->
+                <label class="col-sm-2 control-label" for="input-meta-description">{{ entry_meta_description }} <img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/></label>
+            <!-- META ML -->
+          ]]></add>
+      </operation>
+      <operation>
+        <search><![CDATA[<textarea name="config_meta_description" rows="5" placeholder="{{ entry_meta_description }}" id="input-meta-description" class="form-control">{{ config_meta_description }}</textarea>]]></search>
+        <add position="replace"><![CDATA[
+            <!-- META ML -->
+                <textarea name="config_meta_description[{{ language.language_id }}][description]" rows="5" placeholder="{{ entry_meta_description }}" id="input-meta-description{{ language.language_id }}" class="form-control">{{ config_meta_description[language.language_id] ? config_meta_description[language.language_id].description }}</textarea>
+            <!-- META ML -->
+          ]]></add>
+      </operation>
+
+      <operation>
+        <search><![CDATA[<label class="col-sm-2 control-label" for="input-meta-keyword">{{ entry_meta_keyword }}</label>]]></search>
+        <add position="replace"><![CDATA[
+            <!-- META ML -->
+                <label class="col-sm-2 control-label" for="input-meta-keyword">{{ entry_meta_keyword }} <img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/></label>
+            <!-- META ML -->
+          ]]></add>
+      </operation>
+      <operation>
+        <search><![CDATA[<textarea name="config_meta_keyword" rows="5" placeholder="{{ entry_meta_keyword }}" id="input-meta-keyword" class="form-control">{{ config_meta_keyword }}</textarea>]]></search>
+        <add position="replace"><![CDATA[
+            <!-- META ML -->
+                <textarea name="config_meta_keyword[{{ language.language_id }}][keyword]" rows="5" placeholder="{{ entry_meta_keyword }}" id="input-meta-keyword{{ language.language_id }}" class="form-control">{{ config_meta_keyword[language.language_id] ? config_meta_keyword[language.language_id].keyword }}</textarea>
+            <!-- META ML -->
+          ]]></add>
+      </operation>
+
+  </file>  
+
+  <file path="catalog/controller/common/home.php">
+      <operation>
+        <search><![CDATA[$this->document->setTitle($this->config->get('config_meta_title'));]]></search>
+        <add position="replace"><![CDATA[
+            // META ML
+            $this->load->model('localisation/language');
+            $data['languages'] = $this->model_localisation_language->getLanguages();
+            $language_id = (int)$this->config->get('config_language_id');
+
+            $titles = $this->config->get('config_meta_title');
+            $this->document->setTitle($titles[$language_id]['title']);
+          ]]></add>
+      </operation>
+
+      <operation>
+        <search><![CDATA[$this->document->setDescription($this->config->get('config_meta_description'));]]></search>
+        <add position="replace"><![CDATA[
+
+            $descriptions = $this->config->get('config_meta_description');
+            $this->document->setDescription($descriptions[$language_id]['description']);
+          ]]></add>
+      </operation>
+
+      <operation>
+        <search><![CDATA[$this->document->setKeywords($this->config->get('config_meta_keyword'));]]></search>
+        <add position="replace"><![CDATA[
+
+            $keywords = $this->config->get('config_meta_keyword');
+            $this->document->setKeywords($keywords[$language_id]['keyword']);
+            // META ML
+          ]]></add>
+      </operation>
+  </file>  
+
+</modification>

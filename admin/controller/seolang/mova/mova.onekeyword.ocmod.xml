@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{NAME}<div class='uf'></div></name>
+    <code>{MOD}</code>
+    <id>{MOD}</id>
+    <version>{VERSION}</version>
+    <vqmver required="true">2.4.0</vqmver>
+    <author>{AUTHOR}</author>
+    <link>{LINK}</link>
+
+<file path="system/library/seopro.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~\s+(.*?)[\s+|][=](.*?)query[(][\"]SELECT(.*?)[\"]seo_url(.*?)escape[(](.*?)[)](.*?)([\.]\s+[\"][\']\s+AND\s+language_id.*?[\=].*?[\'][\"].*?[\.].*?[\$]language_id)(.*?)\;~]]></search>
+        <add position="replace"><![CDATA[
+            //$1
+
+            if (isset($keyword)) $keyword_str = $keyword;
+            if (isset($query)) $query_str = $query;
+
+            $1 =$2query("SELECT$3"seo_url$4escape($5)$6$7$8;
+
+            if ($1->num_rows == 0) {
+                $1 =$2query("SELECT$3"seo_url$4escape($5_str)$6$8;
+            }    
+
+    ]]></add>
+	</operation>
+</file>
+
+</modification>

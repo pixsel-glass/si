@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>{{ text_order_id }} {{ order_id }}</title>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #000000;">
+{{ text_received }}
+<p style="margin-top: 0px; margin-bottom: 20px;">
+{{ text_order_id }} {{ order_id }}
+</p><p style="margin-top: 0px; margin-bottom: 20px;">
+{{ text_date_added }} {{ date_added }}
+</p><p style="margin-top: 0px; margin-bottom: 20px;">
+{{ text_order_status }} {{ order_status }}
+</p><p style="margin-top: 0px; margin-bottom: 20px;">
+{{ text_product }}
+</p><p style="margin-top: 0px; margin-bottom: 20px;">
+{% for product in products %}
+{{ product.quantity }}x {{ product.name }} ({{ product.model }}) {{ product.total }}
+{% if product.option %}
+{% for option in product.option %}
+	- {{ option.name }} {{ option.value }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% if vouchers %}
+</p><p style="margin-top: 0px; margin-bottom: 20px;">
+{% for voucher in vouchers %}
+1x {{ voucher.description }} {{ voucher.amount }}
+{% endfor %}
+{% endif %}
+</p><p style="margin-top: 0px; margin-bottom: 20px;">
+{# {{ text_total }} #}
+{% for total in totals %}
+{{ total.title }}: {{ total.value }}
+{% endfor %}
+</p><p style="margin-top: 0px; margin-bottom: 20px;">
+{% if comment %}
+{{ text_comment }}
+
+{{ comment }}
+{% endif %}
+</p>
+</body>
+</html>

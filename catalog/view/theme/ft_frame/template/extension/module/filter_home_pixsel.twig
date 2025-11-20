@@ -1,0 +1,263 @@
+<div class="card mb-3 home-page-filter">
+	<div class="container">
+	<div class="mobile_slogan_top d-block d-md-none">{{ text_mob_slogan }}</div>
+	<div class="card-header border-0 px-4 py-4">
+		<div class="row no-gutters row-cols-1 flex-column align-items-center filterhomepixsel">
+			<div class="card-header__title">
+				<div class="title-h1 d-none d-md-block">{{ text_title }}</div>
+				<div class="title-slogan d-none d-md-block">{{ text_slogan }}</div>
+				<div class="box-select-glass d-md-none">
+					<div class="text-select-glass">{{ text_select_glass }}</div>
+					<div class="title-h1">{{ text_title }}</div>
+				</div>
+			</div>
+			<div class="col mb-2">
+				<select name="filter_mark" id="filter_mark" class="form-control">
+					<option value="">{{ text_select_mark }}</option>
+					{% for mark_value in marks %}
+					<option value="{{ mark_value.category_id }}" data-img="{{ mark_value.category_thumb }}" data-svg="{% if mark_value.category_svg is not empty %}1{% endif %}" data-href="{{ mark_value.href }}" {% if mark_value.category_id == mark_id %}selected="selected"{% endif %}>{{ mark_value.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="col mb-2">
+				<select name="filter_model" id="filter_model" class="form-control">
+					<option value="">{{ text_select_model }}</option>
+					{% for model_value in models %}
+					<option value="{{ model_value.category_id }}" {% if model_value.category_id == model_id %}selected="selected"{% endif %}>{{ model_value.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="col mb-2">
+				<select name="filter_year" id="filter_year" class="form-control">
+					<option value="">{{ text_select_year }}</option>
+					{% for year_value in years %}
+					<option value="{{ year_value.category_id }}" data-img="{{ year_value.category_thumb }}" data-svg="{% if year_value.category_svg is not empty %}1{% endif %}" {% if year_value.category_id == year_id %}selected="selected"{% endif %}>{{ year_value.name }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="col">
+				<button type="button" class="btn btn-lg btn-block btn-danger shadow-none py-2 pl-3 pr-3 d-lg-block mbw-50">
+					{{ button_search_filter }}
+				</button>
+			</div>
+		</div>
+		</div>
+	</div>
+
+</div>
+<script>
+var cardHeader = $('.home-page-filter .card-header');
+
+cardHeader.on('mouseenter touchstart', function () {
+	cardHeader.addClass('no-opacity');
+});
+
+$('.home-page-filter .card-header select').on('focus', function () {
+   cardHeader.addClass('no-opacity');
+ });
+
+$('.home-page-filter .card-header').on('mouseleave touchend', function (e) {
+	if (e.target.id != 'filter_mark' && e.target.id != 'filter_model' && e.target.id != 'filter_year') {
+		cardHeader.removeClass('no-opacity');
+	}
+});
+
+	$(function () {
+		$('#filter_mark').on('change', function() {
+			if ($(this).val() != '') {
+				//$(this).css('color', '#000');
+				var selected = $(this).find('option:selected');
+				if (selected.attr('data-svg') == 1) {
+
+					$.ajax({
+						url: 'index.php?route=extension/module/filter_pixsel/getSvg',
+						type: 'post',
+						data: {category_id: selected.val()},
+						dataType: 'html',
+						beforeSend: function() {
+						},
+						complete: function() {
+						},
+						success: function(data) {
+							$('.filterhomepixsel .marklogo.brand').html(data);
+						},
+						error: function(xhr, ajaxOptions, thrownError) {
+							console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+						}
+					});
+				} else {
+					if ($('.filterhomepixsel .marklogo.brand img').length > 0) {
+						$('.filterhomepixsel .marklogo.brand img').attr('src', selected.attr('data-img'));
+						$('.filterhomepixsel .marklogo.brand').removeClass('d-none').addClass('d-block');
+					} else {
+						$('.filterhomepixsel .marklogo.brand').html('<img src="'+selected.attr('data-img')+'" alt="" class="">');
+						$('.filterhomepixsel .marklogo.brand').removeClass('d-none').addClass('d-block');
+					}
+				}
+
+				$.ajax({
+					url: 'index.php?route=extension/module/filter_pixsel/getSubcat',
+					type: 'post',
+					data: {category_id: $(this).val()},
+					dataType: 'json',
+					beforeSend: function() {
+						$('.filterhomepixsel .marklogo.car').html('');
+						$('#filter_model').html('');
+						$('#filter_model').append('<option value="">{{ text_select_model }}</option>');
+						$('#filter_year').html('');
+						$('#filter_year').append('<option value="">{{ text_select_year }}</option>');
+
+						$('#filter_model').css('color', '#aaa');
+						$('#filter_year').css('color', '#aaa');
+					},
+					complete: function() {
+					},
+					success: function(data) {
+						$.each(data, function(index, element) {
+						  $('#filter_model').append('<option value="'+element.category_id+'">'+element.name+'</option>');
+						});
+						updateTextColorModel();
+					},
+					error: function(xhr, ajaxOptions, thrownError) {
+						console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+					}
+				});
+			} else {
+				//$(this).css('color', '#aaa');
+
+				$('.filterhomepixsel .marklogo.car').html('');
+				$('.filterhomepixsel .marklogo.brand').html('');
+				$('#filter_model').html('');
+				$('#filter_model').append('<option value="">{{ text_select_model }}</option>');
+				$('#filter_year').html('');
+				$('#filter_year').append('<option value="">{{ text_select_year }}</option>');
+			}
+		});
+
+		$('#filter_model').on('change', function() {
+			if ($(this).val() != '') {
+				//$(this).css('color', '#000');
+
+				$.ajax({
+					url: 'index.php?route=extension/module/filter_pixsel/getSubcat',
+					type: 'post',
+					data: {category_id: $(this).val()},
+					dataType: 'json',
+					beforeSend: function() {
+						$('.filterhomepixsel .marklogo.car').html('');
+						$('#filter_year').html('');
+						$('#filter_year').append('<option value="">{{ text_select_year }}</option>');
+					},
+					complete: function() {
+					},
+					success: function(data) {
+						$.each(data, function(index, element) {
+						  $('#filter_year').append('<option value="'+element.category_id+'" data-img="'+element.category_thumb+'" data-svg="'+element.category_svg+'" data-href="'+element.href+'">'+element.name+'</option>');
+						});
+						updateTextColorYear();
+					},
+					error: function(xhr, ajaxOptions, thrownError) {
+						console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+					}
+				});
+			} else {
+				//$(this).css('color', '#aaa');
+
+				$('.filterhomepixsel .marklogo.car').html('');
+				$('#filter_year').html('');
+				$('#filter_year').append('<option value="">{{ text_select_year }}</option>');
+			}
+		});
+
+		$('#filter_year').on('change', function() {
+			if ($(this).val() != '') {
+				//$(this).css('color', '#000');
+
+				var selected = $(this).find('option:selected');
+				if (selected.attr('data-svg') == 1) {
+					$.ajax({
+						url: 'index.php?route=extension/module/filter_pixsel/getSvg',
+						type: 'post',
+						data: {category_id: selected.val()},
+						dataType: 'html',
+						beforeSend: function() {
+						},
+						complete: function() {
+						},
+						success: function(data) {
+							$('.filterhomepixsel .marklogo.car').html(data);
+						},
+						error: function(xhr, ajaxOptions, thrownError) {
+							console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+						}
+					});
+				} else {
+					if ($('.filterhomepixsel .marklogo.car img').length > 0) {
+						$('.filterhomepixsel .marklogo.car img').attr('src', selected.attr('data-img'));
+						$('.filterhomepixsel .marklogo.car').removeClass('d-none').addClass('d-block');
+					} else {
+						$('.filterhomepixsel .marklogo.car').html('<img src="'+selected.attr('data-img')+'" alt="" class="">');
+						$('.filterhomepixsel .marklogo.car').removeClass('d-none').addClass('d-block');
+					}
+				}
+			} else {
+				//$(this).css('color', '#aaa');
+
+				$('.filterhomepixsel .marklogo.car').html('');
+			}
+		});
+
+		$('.button-filter').on('click', function() {
+				$('.filterhomepixselhidden').addClass('d-none');
+				$('.filterhomepixsel').removeClass('d-none');
+				$('.filterhomepixsel').addClass('d-block');
+		});
+
+		$('.filterhomepixsel button').on('click', function() {
+			var href = "{{lang}}/index.php?route=product/category&path=";
+			if ($('#filter_mark').val() != '' && $('#filter_model').val() != '' && $('#filter_year').val() != '' && href != '') {
+				window.location = href+''+$('#filter_mark').val()+'_'+$('#filter_model').val()+'_'+$('#filter_year').val();
+			}
+		});
+	});
+
+function updateTextColorMark() {
+	var selectedOption = $('#filter_mark option:selected');
+	$('#filter_mark').css('color', (selectedOption.val() == '') ? '#7b8793' : '#000');
+	$('#filter_mark option:first').css('color', '#7b8793');
+	$('#filter_mark option:not(:first)').css('color', '#000');
+}
+
+function updateTextColorModel() {
+	var selectedOption = $('#filter_model option:selected');
+	$('#filter_model').css('color', (selectedOption.val() == '') ? '#7b8793' : '#000');
+	$('#filter_model option:first').css('color', '#7b8793');
+	$('#filter_model option:not(:first)').css('color', '#000');
+}
+
+function updateTextColorYear() {
+	var selectedOption = $('#filter_year option:selected');
+	$('#filter_year').css('color', (selectedOption.val() == '') ? '#7b8793' : '#000');
+	$('#filter_year option:first').css('color', '#7b8793');
+	$('#filter_year option:not(:first)').css('color', '#000');
+}
+
+$(document).ready(function() {
+	updateTextColorMark();
+
+	$('#filter_mark').change(function() {
+		updateTextColorMark();
+	});
+
+	updateTextColorModel();
+
+	$('#filter_model').change(function() {
+		updateTextColorModel();
+	});
+
+	updateTextColorYear();
+	$('#filter_year').change(function() {
+		updateTextColorYear();
+	});
+});
+</script>

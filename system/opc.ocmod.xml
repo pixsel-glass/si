@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <code>Opc</code>
+  <name>Opc</name>
+  <version>1.4</version>
+  <author>[29aleksey]</author>
+	<file path="catalog/controller/startup/startup.php">
+		<operation error="skip">
+			<search><![CDATA[$this->registry->set('url']]></search>
+			<add position="after"><![CDATA[
+				//OPC
+				if ($this->config->get('config_show_onepcheckout') && $this->config->get('config_show_onepcheckout') == 1) {
+					$this->url->addRewrite(new opc_rewrite($this->config));
+				}
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/common/header.php">		
+		<operation>
+			<search><![CDATA[$data['logged'] = true;]]></search>
+			<add position="after"><![CDATA[	
+				$this->load->language('sale/abandoned_order');
+				$this->load->model('sale/abandoned_order');    
+				$data['abandoned_status_informer'] = $this->config->get('abandoned_status_informer'); 
+				if (isset($data['abandoned_status_informer']) && $data['abandoned_status_informer']) {
+					$data['text_abandoned_order'] = $this->language->get('text_abandoned_order');
+					$data['qty_abandoned_order'] = $this->model_sale_abandoned_order->getTotalQtyAbandonedOrder();
+					$data['abandoned_order'] = $this->url->link('sale/abandoned_order', '&user_token=' . $this->session->data['user_token'], 'SSL');
+				}									
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/view/template/common/header.twig">
+		<operation>
+			<search><![CDATA[<ul class="nav navbar-nav navbar-right">]]></search>
+			<add position="after"><![CDATA[
+			{% if abandoned_status_informer is defined and abandoned_status_informer %}
+				<li class="dropdown">
+					<a href="{{ abandoned_order }}">{{ text_abandoned_order }}<span class="label label-danger" style="right:4px;top:7px;position:absolute;">{{ qty_abandoned_order }}</span></a>
+				</li>
+			{% endif %}
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/common/column_left.php">
+		<operation error="skip">
+			<search><![CDATA[if ($this->user->hasPermission('access', 'sale/order')) {]]></search>
+			<add position="before"><![CDATA[
+				if ($this->user->hasPermission('access', 'sale/abandoned_order')) {
+					$this->load->language('sale/abandoned_order');
+					$this->load->model('sale/abandoned_order');   
+					$qty_abandoned_order = $this->model_sale_abandoned_order->getTotalQtyAbandonedOrder();
+					$sale[] = array(
+						'name'	   => sprintf($this->language->get('text_column_left_abandoned_order'), $qty_abandoned_order),
+						'href'     => $this->url->link('sale/abandoned_order', 'user_token=' . $this->session->data['user_token'], true),
+						'children' => array()		
+					);
+				}
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/controller/sale/order.php">
+		<operation error="skip">
+			<search><![CDATA[$data['ip'] = $order_info['ip'];]]></search>
+			<add position="before"><![CDATA[
+			//OPC
+			$data['opc_not_call_me'] = $order_info['opc_not_call_me'];
+			$fc_customer_id = $order_info['fc_customer_id'];
+			$this->load->model('customer/customer');
+			if ($fc_customer_id != 0) {
+				$data['fc'] = 1;
+				$customer_info = $this->model_customer_customer->getCustomer($fc_customer_id);
+				if ($customer_info['customer_type'] == 2) {
+					$data['fc'] = 1;
+					$data['fc_firstname'] = $customer_info['firstname'];
+					$data['fc_lastname'] = $customer_info['lastname'];
+				} else {
+					$data['fc'] = 0;
+				}
+			} else {
+				$data['fc'] = 0;
+			}
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/model/sale/order.php">
+		<operation error="skip">
+			<search><![CDATA['ip'                      => $order_query->row['ip'],]]></search>
+			<add position="after"><![CDATA[
+			//OPC
+			'opc_not_call_me'                      => $order_query->row['opc_not_call_me'],
+			'fc_customer_id'                      => $order_query->row['fc_customer_id'],
+			]]></add>
+		</operation>
+	</file>
+
+	<file path="admin/view/template/sale/order_info.twig">
+		<operation error="skip">
+			<search index="2"><![CDATA[</table>]]></search>
+			<add position="after" offset="1"><![CDATA[
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-info-circle"></i> {{ text_dop_info }}</h3>
+          </div>
+          <table class="table">
+            <tbody>
+            	{% if fc == 1 %}
+            	<tr>
+            		<td>
+            			<span style="font-weight: 600;">{{ text_ordered_by }}</span> <span style="font-weight: 700;">{{ fc_firstname|striptags }} {{ fc_lastname|striptags }}</span>
+            		</td>
+            	</tr>
+            	{% endif %}
+              <tr>
+                {#<td>
+					{% if opc_not_call_me == 0 %}<span style="color: red; font-weight: bold;">{{ text_call_me }}</span>{% else %}<span style="color: green;">{{ text_not_call_me }}</span>{% endif %}
+                </td>#}
+              </tr><tr>
+                <td>
+					{% if infakt_need == 1 %}<span style="color: red; font-weight: bold;">{{ text_faktyre }}</span>{#{% else %}<span style="color: grey;">{{ text_not_faktyre }}</span>#}{% endif %}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+			]]></add>
+		</operation>
+	</file>
+</modification>

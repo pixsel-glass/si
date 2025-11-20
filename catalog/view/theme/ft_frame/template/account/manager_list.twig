@@ -1,0 +1,1161 @@
+{{ header }}
+<div id="account-order" class="container">
+  <div class="row">
+		{% if column_left %}
+		<div class="col-12 col-sm col-lg-3 order-lg-1 col-aside">
+			{{ column_left }}
+		</div>
+		{% endif %}
+		{% if column_right %}
+		<div class="col-12 col-sm col-lg-3 order-lg-3 col-aside">
+			{{ column_right }}
+		</div>
+		{% endif %}
+    <div id="content" class="col-12 col-lg order-lg-2 mb-3">
+			{{ content_top }}
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-0 mb-3 bg-transparent" itemscope itemtype="http://schema.org/BreadcrumbList">
+          {% for breadcrumb in breadcrumbs %}
+          {% if loop.index == 1 %}
+          <li class="breadcrumb-item p-0" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a class="text-dark" href="{{ breadcrumb.href }}"  itemprop="item">
+              <meta itemprop="name" content="{{ g_text_home }}" />
+            	<svg class="ft-icon-18 d-block" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            		<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            	</svg>
+            </a>
+            <meta itemprop="position" content="{{ loop.index }}" />
+          </li>
+          {% elseif breadcrumbs|length != loop.index %}
+          <li class="breadcrumb-item p-0" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a class="text-dark" href="{{ breadcrumb.href }}" itemprop="item">
+              <span itemprop="name">{{ breadcrumb.text }}</span>
+            </a>
+            <meta itemprop="position" content="{{ loop.index }}" />
+          </li>
+          {% else %}
+          <li class="breadcrumb-item p-0 active">
+            <span>{{ breadcrumb.text }}</span>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ol>
+      </nav>
+
+    <div class="card filter-card mt-2 mb-3" id="pixsel-order-listing">
+      <div class="card-header filter-listing border-0 px-4">
+        <div class="row no-gutters align-items-center justify-content-md-between orderlistingpixsel">
+
+          <div class="select_client">
+            <div class="form-group">
+              <div class="top-find-client d-flex align-items-end">
+                <label class="control-label opc-label mr-auto" for="input-select-client">{{ text_find_client }}</label>
+                {% if client_id is defined %}
+                <div id="add-retail-customer" data-customer-id="{{ retail_info['customer_id'] }}" data-customer-name="{{ retail_info['firstname'] }} {{ retail_info['lastname'] }} {{ retail_info['telephone'] }}" class="control-label opc-label ml-auto text-gray-500">{{ text_retail_customer }}</div>
+                {% endif %}
+                <button class="btn btn-default pl-0 pr-0 ml-2 box-shadow-off order-3" type="button" onclick="createCustomer();">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt" stroke-linejoin="bevel"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                </button>
+              </div>
+              <div class="input-group">
+                <input autocomplete="off" type="text" name="client_name_tel" value="{{ client_info }}" placeholder="{{ client_info_plc }}" id="input-select-client" class="form-control" />
+                <input autocomplete="off" type="hidden" name="client_id" value="{{ client_id }}" id="input-client-id" class="form-control" />
+                <span class="input-group-btn">
+                  <button id="button-remove-client" class="btn btn-light d-none">
+                    <svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+                    </svg>
+                  </button>
+                  <input type="submit" value="ok" id="button-add-client" class="btn btn-primary" />
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="select_order col-xs-12 col-sm-2 col-lg-2 p-0">
+      <div class="form-group">
+        <label for="input-select-order">{{ column_order_id }}</label>
+        <div class="input-group">
+          <input autocomplete="off" type="text" name="order_id" value="" placeholder="{{ order_info_plc }}" id="input-select-order" class="form-control">
+          <span class="input-group-btn">
+            <button id="button-remove-search" class="btn btn-light d-none">
+              <svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+              </svg>
+            </button>
+            <input type="submit" value="ok" id="button-search-order" class="btn btn-primary">
+          </span>
+        </div>
+      </div>
+    </div>
+
+      <h1 class="h2 mb-4">{{ heading_title }}</h1>
+      {% if orders %}
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover manager-table">
+          <thead>
+            <tr class="bg-light">
+              <th class="text-center pt-2 pb-2 pl-1 pr-1">{{ column_order_id }}</th>
+              <th class="text-center pt-2 pb-2 pl-1 pr-1 d-md-table-cell">{{ column_customer }}</th>
+              <th class="text-center pt-2 pb-2 pl-1 pr-1 d-md-table-cell">{{ column_country }}</th>
+              <th class="text-center pt-2 pb-2 pl-1 pr-1">{{ column_product }}</th>
+              <th class="text-center pt-2 pb-2 pl-1 pr-1">{{ column_status }}</th>
+              <th class="text-center pt-2 pb-2 pl-1 pr-1 d-md-table-cell">
+                {{ column_total }}
+                {% if pixsel_tax_status %}
+                  <span class="text-gray-500 font-weight-normal">{{ lang_with }}</span>
+                {% endif %}
+              </th>
+              <th class="text-center pt-2 pb-2 pl-1 pr-1 d-md-table-cell">{{ column_date_added }}</th>
+              <th class="text-center pt-2 pb-2 pl-1 pr-1"><span class="d-md-block">{{ column_order_info }}</span></td>
+            </tr>
+          </thead>
+          <tbody>
+           {% for order in orders %}
+            <tr {% if order.customer_id == 0 %}style="background-color: #f5f3f3;"{% endif %}>
+              <td class="text-center p-2">
+                #{{ order.order_id }}
+              </td>
+              <td class="text-center p-2 d-md-table-cell">
+                {{ order.name }}
+                {% if order.customer_id == 0 %}
+                  <div class="d-block noauth text-muted">
+                    {{ text_noauth }}
+                  </div>
+                {% endif %}
+              </td>
+              <td class="text-center p-2 d-md-table-cell">{{ order.country }}</td>
+              <td class="text-center p-2">{{ order.products }}</td>
+              <td class="text-center p-2">
+                  {% for order_status in order_statuses %}
+                    {% if order.order_status_id == order_status.order_status_id %}
+                    <div class="order-status">
+                      <input type="text" id="input-order-status" name="order_status" value="{{ order_status.name }}" data-orderid="{{ order.order_id }}" class="form-control" disabled="disabled" data-bg="{{ order_status.jclr_bg }}" data-co="{{ order_status.jclr_text }}" style="text-align: center; background-color: {{ order_status.jclr_bg }}; color: {{ order_status.jclr_text }};"> 
+                      <a href="#" data-orderid="{{ order.order_id }}" data-toggle="modal" data-target="#editStatusModal" class="editStatusModal" style="float: right;"><i class="fa fa-pencil"></i></a>
+                    </div>
+                    {% endif %}
+                  {% endfor %}
+              </td>
+              <td class="text-center p-2 d-md-table-cell">
+                <span class="text-nowrap">{{ order.total }}</span>
+                {% if pixsel_tax_status %}
+                  <span class="netto-price d-inline-block">{{ order.tax_total }} {{ lang_without }}</span>
+                {% endif %}
+                {% if order.payed == 1 %}
+                  <span class="payed d-block">{{ entry_spayed }}{% if order.payed_with is not empty %} <span class="text-muted font-size-12">({{ order.payed_with }})</span>{% endif %}</span>
+                {% endif %}
+              </td>
+              <td class="text-center p-2 d-md-table-cell">{{ order.date_added }}</td>
+              <td class="text-center p-2">{# href="{{ order.view }}" #}
+                <button onclick="orderInfo({{ order.order_id }})" data-toggle="tooltip" title="{{ button_view }}" class="btn btn-info">
+									<svg class="d-block ft-icon-10 m-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+										<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+									</svg>
+							  </button>
+                <button onclick="orderEdit({{ order.order_id }})" data-toggle="tooltip" title="{{ button_edit }}" class="btn btn-danger">
+                  <svg fill="#ffffff" height="11px" width="11px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 306.637 306.637" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M12.809,238.52L0,306.637l68.118-12.809l184.277-184.277l-55.309-55.309L12.809,238.52z M60.79,279.943l-41.992,7.896 l7.896-41.992L197.086,75.455l34.096,34.096L60.79,279.943z"></path> <path d="M251.329,0l-41.507,41.507l55.308,55.308l41.507-41.507L251.329,0z M231.035,41.507l20.294-20.294l34.095,34.095 L265.13,75.602L231.035,41.507z"></path> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </g> </g></svg>
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 text-left">{{ pagination }}</div>
+        <div class="col-sm-6 text-right">{{ results }}</div>
+      </div>
+      {% else %}
+      <p>{{ text_empty }}</p>
+      {% endif %}
+      </div>
+    </div>
+	{{ content_bottom }}
+</div>
+
+<!-- Модальне вікно для додавання нового товару -->
+<div id="addProductModal" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="addProductModal" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">{{ text_quick_order_add_product }}</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="product">{{ text_product }}</label>
+                  <input type="text" name="product" value="" id="input-product" class="form-control" />
+                  <input type="hidden" name="product_id" value="" />
+                </div>
+                <div class="form-group">
+                  <label for="quantity">{{ column_quantitym }}</label>
+                  <input type="number" id="quantity" class="form-control" value="1" min="1">
+                </div>
+                <div class="form-group" id="option-wrap">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="">{{ button_continue }}</button>
+              </div>
+            </div>
+          </div>
+</div>
+
+<!-- Модальне вікно для редагування типу опції товару -->
+<div id="editProductModal" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="editProductModal" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">{{ text_quick_order_edit_product }}</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <input type="text" name="product" value="" id="input-product" class="form-control" disabled="disabled" />
+                  <input type="hidden" name="product_id" value="" />
+                </div>
+                <div class="form-group" id="option-wrap">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="">{{ button_continue }}</button>
+              </div>
+            </div>
+          </div>
+</div>
+
+<script src="catalog/view/theme/ft_frame/javascript/common.js"></script>
+<script src="catalog/view/javascript/opc/select2.min.js"></script>
+<script src="catalog/view/javascript/opc/maskedinput.js"></script>
+<link rel="stylesheet" type="text/css" href="/admin/view/javascript/font-awesome/css/font-awesome.min.css">
+<script type="text/javascript">
+(function($) {
+  $('input[name=\'client_name_tel\']').autocomplete({
+          'source': function(request, response) {
+            $.ajax({
+              url: 'index.php?route=checkout/onepcheckout/autocompleteCustomer&client_name_tel=' +  encodeURIComponent(request),
+              dataType: 'json',
+              success: function(json) {
+                response($.map(json, function(item) {
+                  return {
+                    // label: item['name'] + ' ' +  item['telephone'], ' (' + item['company_name'] + ') '
+                    label: (item['company_name'] ? '' + item['company_name'] + ' |' : '') + ' ' + item['name'] + ' ' + item['telephone'],
+                    value: item['customer_id'],
+                    customer_group: item['customer_group']
+                  }
+                }));
+              }
+            });
+          },
+          'select': function(item) {
+            $('input[name=\'client_name_tel\']').val(item['label']);
+            $('input[name=\'client_id\']').val(item['value']);
+            
+            $('.top-find-client').find('.edit-client-info').remove();
+            $('.top-find-client').prepend('<button onclick="editClientInfo('+ item['value'] +')" class="btn btn-default pl-0 pr-0 mr-2 box-shadow-off order-0 edit-client-info d-none"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="butt" stroke-linejoin="bevel"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></button>');
+            
+            $('.top-find-client').find('.opc-customer-group').remove();
+            $('.top-find-client').append('<div class="control-label opc-label opc-customer-group ml-auto d-none">'+ item['customer_group'] +'</div>');
+          }
+  });
+
+  $('input[id=\'button-add-client\']').on('click', function() {
+    $('#add-retail-customer').addClass('d-none');
+    if($('input[name=\'client_id\']').val() > 0){
+      $('#button-remove-client').removeClass('d-none');
+      $('input[name=\'client_name_tel\']').attr('disabled','disabled');
+      $('.edit-client-info').removeClass('d-none');
+      $('.opc-customer-group').removeClass('d-none');
+      $('.pagination').addClass('d-none');
+
+      // clear order_id
+      $('input[name=\'order_id\']').val('');
+      $('#button-remove-search').addClass('d-none');
+      // clear order_id
+
+      clientList($('input[name=\'client_id\']').val());
+    } else {
+      $('#button-remove-client').addClass('d-none');
+      $('input[name=\'client_id\']').val(0);
+      $('.edit-client-info').remove();
+      $('.opc-customer-group').remove();
+    }
+  });
+
+  $('#button-remove-client').on('click', function() {
+    location.reload();
+    $('input[name=\'client_name_tel\']').removeAttr('disabled').val('');
+    $('input[name=\'client_id\']').val(0);
+    $('.edit-client-info').remove();
+    $('.opc-customer-group').remove();
+    $('#add-retail-customer').removeClass('d-none');
+    $(this).addClass('d-none');
+  });
+
+
+  $('input[id=\'button-search-order\']').on('click', function() {
+    var order_id = $('input[name=\'order_id\']').val();
+    if (order_id != 0 && order_id != '' && order_id != null && order_id != undefined) {
+
+      // clear client
+      $('#button-remove-client').addClass('d-none');
+      $('input[name=\'client_id\']').val(0);
+      $('.edit-client-info').remove();
+      $('.opc-customer-group').remove();
+      $('input[name="client_name_tel"]').val('').removeAttr('disabled');
+      // clear client
+
+      orderSearch(order_id);
+
+      $('#button-remove-search').removeClass('d-none');
+      $('.pagination').addClass('d-none');
+    } else {
+      location.reload();
+    }
+  });
+
+  $('#button-remove-search').on('click', function() {
+    location.reload();
+  });
+
+  $('select[name="order_status"]').each(function() {
+    var bg = $(this).find('option:selected').data('bg');
+    var co = $(this).find('option:selected').data('co');
+    $(this).css('background-color', bg).css('color', co);
+  });
+
+})(window.jQuery);
+
+function orderInfo(order_id){
+    $.ajax({
+      url: 'index.php?route=account/manager_list/info&order_id=' + order_id,
+      type: 'GET',
+      dataType: 'html',
+      success: function(data) {
+        var html = '<div id="ft-order-info-modal" class="modal fade" role="dialog">' + data + '</div>'
+
+        $('body').append(html);
+
+        $('#ft-order-info-modal').modal('show');
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+
+    $(document).on('hide.bs.modal', '#ft-order-info-modal.modal.fade', function () {
+      $('#ft-order-info-modal').remove();
+    });
+}
+function orderEdit(order_id){
+    $.ajax({
+      url: 'index.php?route=account/manager_list/edit&order_id=' + order_id,
+      type: 'GET',
+      dataType: 'html',
+      success: function(data) {
+        var html = '<div id="ft-order-edit-modal" class="modal fade">' + data + '</div>'
+
+        $('body').append(html);
+
+        $('#ft-order-edit-modal').modal('show');
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+
+    $(document).on('hide.bs.modal', '#ft-order-edit-modal.modal.fade', function () {
+      $('#ft-order-edit-modal').remove();
+      location.reload();
+    });
+}
+$(document).on('click', '#ft-order-edit-modal #save_edit_fileds', function(e) {
+  e.preventDefault();
+  
+  var order_id = $(this).data('orderid');
+  
+  var formData = $("#quickOrderForm").serialize();
+
+  $.ajax({
+    url: 'index.php?route=account/manager_list/editOrder&order_id=' + order_id,
+    type: 'post',
+    data: formData,
+    dataType: 'json',
+    success: function(json) {
+      if (json['error']) {
+        $('#ft-order-edit-modal .modal-body').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+      }
+
+      if(json['success']){
+        $('#ft-order-edit-modal .modal-body').prepend('<div class="alert alert-success alert-dismissible mt-4 mb-4">' + json['success'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+        setTimeout(function () {
+          location.reload();
+          $('#ft-order-edit-modal').modal('hide');
+          $('#ft-order-edit-modal').remove();
+          $('.modal-backdrop').hide();
+          $("body").removeClass("modal-open");
+          $("body").css("padding-right", "0");
+        }, 300);
+      }
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+
+function orderSearch(order_id){
+    $.ajax({
+      url: 'index.php?route=account/manager_list/search&order_id=' + order_id,
+      type: 'GET',
+      dataType: 'html',
+      success: function(data) {
+        $("div.table-responsive").replaceWith(data);
+
+        setTimeout(function() {
+          $('select[name="order_status"]').each(function() {
+            var bg = $(this).find('option:selected').data('bg');
+            var co = $(this).find('option:selected').data('co');
+            $(this).css('background-color', bg).css('color', co);
+          });
+        }, 200);
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+}
+
+function clientList(client_id){
+    $.ajax({
+      url: 'index.php?route=account/manager_list/list&client_id=' + client_id,
+      type: 'GET',
+      dataType: 'html',
+      success: function(data) {
+        $("div.table-responsive").replaceWith(data);
+
+        setTimeout(function() {
+          $('select[name="order_status"]').each(function() {
+            var bg = $(this).find('option:selected').data('bg');
+            var co = $(this).find('option:selected').data('co');
+            $(this).css('background-color', bg).css('color', co);
+          });
+        }, 200);
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+}
+
+function editClientInfo(customer_id){
+  $.ajax({
+    url: 'index.php?route=account/edit_dsc/editInfoDsc&customer_id=' + customer_id,
+    type: 'GET',
+    dataType: 'html',
+    success: function(data) {
+      var html = '<div id="ft-edit-dsc-modal" class="modal fade" role="dialog">' + data + '</div>'
+
+      $('body').append(html);
+
+      $('#ft-edit-dsc-modal').modal('show');
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+
+  $(document).on('hide.bs.modal', '#ft-edit-dsc-modal.modal.fade', function () {
+    $('#ft-edit-dsc-modal').remove();
+  });
+}
+
+function editInfakt(order_id){
+  $.ajax({
+    url: 'index.php?route=account/manager_list/editInfakt&order_id=' + order_id,
+    type: 'GET',
+    dataType: 'html',
+    success: function(data) {
+      var html = '<div id="ft-edit-infakt-modal" class="modal fade" role="dialog">' + data + '</div>'
+
+      $('body').append(html);
+
+      $('#ft-edit-infakt-modal').modal('show');
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+
+  $(document).on('hide.bs.modal', '#ft-edit-infakt-modal.modal.fade', function () {
+    $('#ft-edit-infakt-modal').remove();
+  });
+}
+
+$(document).on('click', '.editStatusModal', function(e) {
+    var order_id = $(this).data('orderid');
+
+    $.ajax({
+      url: 'index.php?route=account/manager_list/orderStatusModal&order_id=' + order_id,
+      type: 'GET',
+      dataType: 'html',
+      success: function(data) {
+        $('#ft-orderstatus-modal').remove();
+        var html = '<div id="ft-orderstatus-modal" class="modal fade" role="dialog">' + data + '</div>'
+
+        $('body').append(html);
+
+        $('#ft-orderstatus-modal').modal('show');
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+
+    $(document).on('hide.bs.modal', '#ft-bezvat-modal.modal.fade', function () {
+      $('#ft-bezvat-modal').remove();
+    });
+});
+
+$(document).on('click', '.bezvat', function(e) {
+    var order_id = $(this).data('orderid');
+
+    $.ajax({
+      url: 'index.php?route=account/manager_list/bezvat&order_id=' + order_id,
+      type: 'GET',
+      dataType: 'html',
+      success: function(data) {
+        var html = '<div id="ft-bezvat-modal" class="modal fade" role="dialog">' + data + '</div>'
+
+        $('body').append(html);
+
+        $('#ft-bezvat-modal').modal('show');
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+
+    $(document).on('hide.bs.modal', '#ft-bezvat-modal.modal.fade', function () {
+      $('#ft-bezvat-modal').remove();
+    });
+});
+
+$(document).on('click', '#ft-edit-infakt-modal #save_infakt_fileds', function(e) {
+  var $btn = $('#save_infakt_fileds');
+  var originalText = $btn.text();
+  
+  var order_id = $('#editInfaktModalForm input[name="order_id"]').val();
+  var country_id = $('#editInfaktModalForm input[name="country_id"]').val();
+  var vate = $('#editInfaktModalForm input[name="infakt_vat"]:checked').val();
+
+  if (vate == 0) {
+    $('#button-infakt[data-orderid="' + order_id + '"]').closest('td').find('#infakt_number').html('<span class="bezvat" data-orderid="' + order_id + '">Bez VAT</span>');
+
+    if (country_id == 170) {
+      $('#button-infakt[data-orderid="' + order_id + '"]').attr("disabled", "disabled");
+      $('#button-infakt-set[data-orderid="' + order_id + '"]').attr("disabled", "disabled");
+    }
+  }
+  
+  $.ajax({
+    url: 'index.php?route=account/manager_list/updateInfakt',
+    type: 'post',
+    data: $('#ft-edit-infakt-modal #editInfaktModalForm').serialize(),
+    dataType: 'json',
+    beforeSend: function() {
+        $btn.text($btn.attr('data-loading'));
+    },
+    complete: function() {
+      $btn.text(originalText);
+    },
+    success: function(json) {
+
+      if (json['error']) {
+        $('#ft-edit-infakt-modal .modal-body').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+      }
+
+      setTimeout(function () {
+        $('#ft-edit-infakt-modal .alert').remove();
+      }, 3000);
+
+      if(json['success']){
+        $('#ft-edit-infakt-modal .modal-body').prepend('<div class="alert alert-success alert-dismissible mt-4 mb-4">' + json['success'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+        setTimeout(function () {
+          $('#ft-edit-infakt-modal').modal('hide');
+          $('#ft-edit-infakt-modal').remove();
+          $('.modal-backdrop').hide();
+          $("body").removeClass("modal-open");
+          $("body").css("padding-right", "0");
+        }, 500);
+      }
+
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+
+
+$(document).on('click', '#ft-bezvat-modal #save_infakt_vat', function(e) {
+  var order_id = $('#ft-bezvat-modal input[name="order_id"]').val();
+  var country_id = $('#ft-bezvat-modal input[name="country_id"]').val();
+
+  if ($('#ft-bezvat-modal input[name="infakt_vat"]:checked').length > 0) {
+    var vate = 0;
+  } else {
+    var vate = 1;
+  }
+
+  if (vate == 0) {
+    if (country_id == 170) {
+      $('#button-infakt[data-orderid="' + order_id + '"]').attr("disabled", "disabled");
+      $('#button-infakt-set[data-orderid="' + order_id + '"]').attr("disabled", "disabled");
+    }
+
+    $('#button-infakt[data-orderid="'+order_id+'"]').closest('td').find('#infakt_number').html('<span class="bezvat" data-orderid="' + order_id + '">Bez VAT</span>');
+  } else {
+    $('#button-infakt[data-orderid="' + order_id + '"]').removeAttr("disabled");
+    $('#button-infakt-set[data-orderid="' + order_id + '"]').removeAttr("disabled");
+
+    $('#button-infakt[data-orderid="'+order_id+'"]').closest('td').find('#infakt_number').html('');
+  }
+  
+  $.ajax({
+    url: 'index.php?route=account/manager_list/updateBezvat',
+    type: 'post',
+    data: { order_id: order_id, vat: vate },
+    dataType: 'json',
+    beforeSend: function() {
+    },
+    complete: function() {
+    },
+    success: function(json) {
+
+      if (json['error']) {
+        $('#ft-bezvat-modal .modal-body').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+      }
+
+      setTimeout(function () {
+        $('#ft-bezvat-modal .alert').remove();
+      }, 3000);
+
+      if(json['success']){
+        $('#ft-bezvat-modal .modal-body').prepend('<div class="alert alert-success alert-dismissible mt-4 mb-4">' + json['success'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+        setTimeout(function () {
+          $('#ft-bezvat-modal').modal('hide');
+          $('#ft-bezvat-modal').remove();
+          $('.modal-backdrop').hide();
+          $("body").removeClass("modal-open");
+          $("body").css("padding-right", "0");
+        }, 500);
+      }
+
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+
+$(document).delegate('#button-infakt', 'click', function() {
+  var order_id = $(this).data('orderid');
+
+  $.ajax({
+    url: 'index.php?route=account/manager_list/createInfaktno&order_id=' + order_id,
+    dataType: 'json',
+    beforeSend: function() {
+      $('body').append('<div class="loading_mask"></div>');
+      $('.loading_mask').html('<div class="center-body"><div class="opc-loader-circle"></div></div>');
+      $('.loading_mask').show();
+    },
+    complete: function() {
+      $('.loading_mask').html('');
+      $('.loading_mask').hide();
+    },
+    success: function(json) {
+      if (json['error']) {
+        alert('Error');
+      }
+
+      if (json['infakt_no']) {
+        // $('#invoice').html(' '+json['infakt_number']+' <a href="#" class="infakt-link" data-uuid="'+json['infakt_no']+'">{{ text_link_infakt }}</a>');
+        $('#button-infakt[data-orderid="'+order_id+'"]').closest('td').find('#infakt_number').html('<a href="#" class="infakt-link" data-uuid="' + json['infakt_no'] + '">' + json['infakt_number'] + '</a>');
+        $('#button-infakt[data-orderid="'+order_id+'"]').attr('disabled', 'disabled');
+        // $('#infakt-pdf-link[data-orderid="'+order_id+'"]').attr('href', json['infakt_pdf']).css('display', 'initial');
+        $('#infakt-pdf-link[data-orderid="'+order_id+'"]').attr('href', 'index.php?route=account/manager_list/createInfaktPdf&order_id=' + order_id).css('display', 'initial');
+        $('#button-infakt-remove[data-orderid="'+order_id+'"]').attr('data-uuid', json['infakt_no']).css('display', 'initial');
+      }
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+
+$(document).delegate('.infakt-link', 'click', function(e) {
+  e.preventDefault();
+
+  var infakt_uuid = $(this).data('uuid');
+
+  $.ajax({
+    url: 'index.php?route=account/manager_list/createInfaktlink&infakt_uuid='+infakt_uuid,
+    dataType: 'json',
+    success: function(json) {
+      window.open(json['share_link'], '_blank')
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+
+$(document).delegate('#button-infakt-remove', 'click', function(e) {
+  e.preventDefault();
+
+  var infakt_uuid = $(this).data('uuid');
+  var order_id = $(this).data('orderid');
+
+  if (confirm('{{ text_remove_infakt }}')) {
+    $.ajax({
+      url: 'index.php?route=account/manager_list/removeInfakt&order_id='+ order_id +'&infakt_uuid='+infakt_uuid,
+      dataType: 'json',
+      success: function(json) {
+
+        if (json['error']) {
+          // $('#content > .container-fluid').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '</div>');
+          alert('Error');
+          return false;
+        }
+
+        // $('#button-infakt[data-orderid="'+order_id+'"]').closest('td').find('#infakt_number').remove();
+        $('#button-infakt[data-orderid="'+order_id+'"]').closest('td').find('#infakt_number').html('');
+        $('#button-infakt[data-orderid="'+order_id+'"]').attr('disabled', '').removeAttr('disabled');
+        $('#infakt-pdf-link[data-orderid="'+order_id+'"]').attr('href', '').css('display', 'none');
+        $('#button-infakt-remove[data-orderid="'+order_id+'"]').css('display', 'none');
+        // $(this).remove();
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+  } else {
+    return false;
+  }
+});
+
+
+$(document).on('click', '#ft-edit-dsc-modal #save_dsc_fileds', function(e) {
+  var $btn = $('#save_dsc_fileds');
+   var originalText = $btn.text();
+
+  $.ajax({
+    url: 'index.php?route=account/edit_dsc/saveDsc',
+    type: 'post',
+    data: $('#ft-edit-dsc-modal #form-edit-default-fileds').serialize(),
+    dataType: 'json',
+    beforeSend: function() {
+        $btn.text($btn.attr('data-loading'));
+    },
+    complete: function() {
+      $btn.text(originalText);
+    },
+    success: function(json) {
+
+      if (json['error']) {
+        $('#ft-edit-dsc-modal .modal-body').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+      }
+
+      setTimeout(function () {
+        $('#ft-edit-dsc-modal .alert').remove();
+      }, 3000);
+
+      if(json['success']){
+
+        if($('#button-add-client').length){
+          $('input[name=\'client_name_tel\']').val(json['client_info']);
+          $('input[name=\'client_id\']').val(json['client_id']);
+          setTimeout(function () {
+            $('#button-add-client').trigger('click');
+          }, 500);
+        }
+
+        $('#ft-edit-dsc-modal .modal-body').prepend('<div class="alert alert-success alert-dismissible mt-4 mb-4">' + json['success'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+        setTimeout(function () {
+          $('#ft-edit-dsc-modal').modal('hide');
+          $('#ft-edit-dsc-modal').remove();
+        }, 500);
+      }
+
+    },
+    error: function(xhr, ajaxOptions, thrownError) {
+      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+    }
+  });
+});
+
+
+$(document).delegate('#button-ms-demand', 'click', function(e) {
+  url = $(this).data('mshref');
+
+  window.open(
+    url,
+    '_blank'
+  );
+});
+
+$(document).delegate('#button-ms', 'click', function(e) {
+        e.preventDefault();
+
+        $('body').append('<div class="loading_mask"></div>');
+        $('.loading_mask').html('<div class="center-body"><div class="opc-loader-circle"></div></div>');
+        $('.loading_mask').show();
+
+        var order_id = $(this).data('orderid');
+        
+        if ($(this).data('acode').trim() == '') {
+          var agent_code = 0;
+        } else {
+          var agent_code = $(this).data('acode').trim();
+        }
+
+        if (!$('#button-ms-demand[data-orderid="'+order_id+'"]').attr('data-mshref') || $('#button-ms-demand[data-orderid="'+order_id+'"]').attr('data-mshref') == '') {
+          $.ajax({
+            type: "POST",
+            url: "index.php?route=account/manager_list/orderMySklad",
+            data: {order_id: order_id, agent_code: agent_code, manager: $('.name-account').text()},
+            dataType: "json",
+            beforeSend: function () {
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+              console.log(jqXhr);
+              console.log(textStatus);
+              console.log(errorThrown);
+
+              alert("{{ error_ms }}");
+
+              $('.loading_mask').html('');
+              $('.loading_mask').hide();
+            },
+            success: function(data) {
+              if (data.error) {
+                alert("{{ error_ms }}");
+              } else {
+                // data.meta.uuidHref
+
+                // $('#button-ms[data-orderid="'+order_id+'"]').closest('td').find('#order_my_sklad_no').html('<span id="order_my_sklad_no"><a href="' + data.meta.uuidHref + '" target="_blank">№' + data.name + '</a></span>');
+                $('#button-ms[data-orderid="'+order_id+'"]').closest('td').prepend('<span id="order_my_sklad_no"><a href="' + data.meta.uuidHref + '" target="_blank">№' + data.name + '</a></span>');
+                // $('#button-ms[data-orderid="'+order_id+'"]').attr('disabled', 'disabled');
+                $('#button-ms-demand[data-orderid="'+order_id+'"]').attr('data-mshref', data.meta.uuidHref).css('display', 'initial');
+                $('#button-ms-remove[data-orderid="'+order_id+'"]').attr('data-mshref', data.meta.uuidHref).css('display', 'initial');
+              }
+
+              $('.loading_mask').html('');
+              $('.loading_mask').hide();
+            }
+          });
+        } else {
+          $.ajax({
+            type: "POST",
+            url: "index.php?route=account/manager_list/demandUpdateMySklad",
+            data: {order_id: order_id, manager: $('.name-account').text()},
+            dataType: "json",
+            beforeSend: function () {
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+              console.log(jqXhr);
+              console.log(textStatus);
+              console.log(errorThrown);
+
+              alert("{{ error_ms }}");
+
+              $('.loading_mask').html('');
+              $('.loading_mask').hide();
+            },
+            success: function(data) {
+              if (data.error) {
+                alert("{{ error_ms }}");
+              }
+
+              $('.loading_mask').html('');
+              $('.loading_mask').hide();
+            }
+          });
+        }
+});
+
+$(document).delegate('#button-ms-remove', 'click', function(e) {
+  e.preventDefault();
+  
+  var order_id = $(this).data('orderid');
+  var removeurl = $(this).data('mshref');
+
+  if (confirm('{{ text_remove_ms }}')) {
+    $.ajax({
+      type: "POST",
+      url: "index.php?route=account/manager_list/removeMs",
+      data: {order_id: order_id, url: removeurl},
+      dataType: "json",
+      success: function () {
+        $('#button-ms[data-orderid="'+order_id+'"]').closest('td').find('#order_my_sklad_no').remove();
+        $('#button-ms[data-orderid="'+order_id+'"]').attr('disabled', '').removeAttr('disabled');
+        $('#button-ms-demand[data-orderid="'+order_id+'"]').attr('data-mshref', '').css('display', 'none');
+        $('#button-ms-remove[data-orderid="'+order_id+'"]').attr('data-mshref', '').css('display', 'none');
+      }
+    });
+  } else {
+    return false;
+  }
+});
+
+//$(document).on('change', '#input-order-status', function(e) {
+//  e.preventDefault();
+
+//  var order_id = $(this).data('orderid');
+//  var status_id = $(this).find('option:selected').val();
+
+//  var bg = $(this).find('option:selected').data('bg');
+//  var co = $(this).find('option:selected').data('co');
+
+//  $(this).css('background-color', bg).css('color', co);
+
+//  $.ajax({
+//    type: "POST",
+//    url: "index.php?route=account/manager_list/orderStatusChange",
+//    data: {order_id: order_id, status_id: status_id},
+//    dataType: "json",
+//    success: function () {
+
+//      $('select[data-orderid="'+order_id+'"]').closest('td').prepend('<div class="alert alert-success alert-dismissible mt-0 mb-2">Ok<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+
+//      if (status_id == 2) {
+//        $('select[data-orderid="'+order_id+'"]').closest('tr').find('#button-ms').trigger('click');
+//      }
+
+//      setTimeout(function () {
+//        $('select[data-orderid="'+order_id+'"]').closest('td').find('.alert').remove();
+//      }, 700);
+
+//    },
+//    error: function (jqXhr, textStatus, errorThrown) {
+//      console.log(jqXhr);
+//      console.log(textStatus);
+//      console.log(errorThrown);
+
+//      alert("{{ error_ms }}");
+//    },
+//  });
+//});
+
+$(document).on('click', '#save_order_status', function(e) {
+  e.preventDefault();
+
+  var order_id = $('input[name="order_status"]:checked').data('orderid');
+  var status_id = $('input[name="order_status"]:checked').val();
+
+  var bg = $('input[name="order_status"]:checked').data('bg');
+  var co = $('input[name="order_status"]:checked').data('co');
+  var nm = $('input[name="order_status"]:checked').data('sname');
+
+  $('#input-order-status[data-orderid="' + order_id + '"]').val(nm).css('background-color', bg).css('color', co);
+
+  // console.log(order_id);
+  // console.log(status_id);
+  // return;
+
+  $.ajax({
+    type: "POST",
+    url: "index.php?route=account/manager_list/orderStatusChange",
+    data: {order_id: order_id, status_id: status_id},
+    dataType: "json",
+    success: function () {
+
+      if (status_id == 16) {
+          $('#button-af-remove[data-orderid="'+order_id+'"]').closest('td').find('span').text('').addClass('d-none');
+          $('#button-af-remove[data-orderid="'+order_id+'"]').attr('data-autofolie', '0').addClass('d-none');
+      }
+
+      //$('select[data-orderid="'+order_id+'"]').closest('td').prepend('<div class="alert alert-success alert-dismissible mt-0 mb-2">Ok<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+
+      //if (status_id == 2) {
+        //$('select[data-orderid="'+order_id+'"]').closest('tr').find('#button-ms').trigger('click');
+      //}
+
+      //setTimeout(function () {
+      //  $('select[data-orderid="'+order_id+'"]').closest('td').find('.alert').remove();
+      //}, 700);
+
+      setTimeout(function () {
+        $('#ft-orderstatus-modal').modal('hide');
+        $('#ft-orderstatus-modal').remove();
+        $('.modal-backdrop').hide();
+        $("body").removeClass("modal-open");
+        $("body").css("padding-right", "0");
+      }, 200);
+
+    },
+    error: function (jqXhr, textStatus, errorThrown) {
+      console.log(jqXhr);
+      console.log(textStatus);
+      console.log(errorThrown);
+      // alert("{{ error_ms }}");
+    },
+  });
+});
+
+// $( '#ft-order-edit-modal' ).on( 'shown.bs.modal', function(){
+//  document.body.classList.add( 'modal-open' );
+// });
+
+$( '#addProductModal' ).on( 'shown.bs.modal', function(){
+    $(this).find('button.btn-primary').attr('onclick', "addProductToOrder('" + $('#save_edit_fileds').data('orderid') + "');")
+    setTimeout(function() {
+      $('#ft-order-edit-modal').css('z-index', '1041');
+      $('.modal-backdrop:eq(1)').css('z-index', '1042');
+    }, 200);
+});
+
+$( '#editProductModal' ).on( 'shown.bs.modal', function(){
+    $(this).find('button.btn-primary').attr('onclick', "editProductToOrder('" + $('#save_edit_fileds').data('orderid') + "');")
+});
+
+// Functions for order with Autofolie.pl
+$(document).on('click', '#button-af', function(e) {
+  e.preventDefault();
+
+  var order_id = $(this).data('orderid');
+  var autofoliestatus = $(this).data('autofoliestatus');
+  
+  if (autofoliestatus != 31) {
+    customConfirm('{{ text_update_af }}', function (confirmed) {
+      if (confirmed) {
+        $.ajax({
+          type: "POST",
+          url: "index.php?route=account/manager_list/orderAf",
+          data: {order_id: order_id},
+          dataType: "json",
+          beforeSend: function() {
+            $('body').append('<div class="loading_mask"></div>');
+            $('.loading_mask').html('<div class="center-body"><div class="opc-loader-circle"></div></div>');
+            $('.loading_mask').show();
+          },
+          complete: function() {
+          },
+          success: function(json) {
+            if (json['autofolie']) {
+              $('td.sendorder-'+json['pixsel']).find('span').text('#'+json['autofolie']).addClass('d-block').removeClass('d-none');
+
+              $('td.sendorder-'+json['pixsel']).find('#button-af-remove').attr('data-autofolie', json['autofolie']).removeClass('d-none');
+            }
+
+            $('.loading_mask').html('');
+            $('.loading_mask').hide();
+          },
+          error: function (jqXhr, textStatus, errorThrown) {
+            console.log(jqXhr);
+            console.log(textStatus);
+            console.log(errorThrown);
+          },
+        });
+      }
+    });
+  } else {
+    $.ajax({
+      type: "POST",
+      url: "index.php?route=account/manager_list/orderAf",
+      data: {order_id: order_id},
+      dataType: "json",
+      beforeSend: function() {
+        $('body').append('<div class="loading_mask"></div>');
+        $('.loading_mask').html('<div class="center-body"><div class="opc-loader-circle"></div></div>');
+        $('.loading_mask').show();
+      },
+      complete: function() {
+      },
+      success: function(json) {
+        if (json['autofolie']) {
+          $('td.sendorder-'+json['pixsel']).find('span').text('#'+json['autofolie']).addClass('d-block').removeClass('d-none');
+
+          $('td.sendorder-'+json['pixsel']).find('#button-af-remove').attr('data-autofolie', json['autofolie']).removeClass('d-none');
+        }
+
+        $('.loading_mask').html('');
+        $('.loading_mask').hide();
+      },
+      error: function (jqXhr, textStatus, errorThrown) {
+        console.log(jqXhr);
+        console.log(textStatus);
+        console.log(errorThrown);
+      },
+    });
+  }
+});
+
+$(document).on('click', '#button-af-remove', function(e) {
+  e.preventDefault();
+  
+  var order_id = $(this).data('orderid');
+  var autofolie = $(this).data('autofolie');
+
+  customConfirm('{{ text_remove_af }}', function (confirmed) {
+    if (confirmed) {
+      $.ajax({
+        type: "POST",
+        url: "index.php?route=account/manager_list/orderAfRemove",
+        data: {order_id: order_id, autofolie: autofolie},
+        dataType: "json",
+        beforeSend: function() {
+          $('body').append('<div class="loading_mask"></div>');
+          $('.loading_mask').html('<div class="center-body"><div class="opc-loader-circle"></div></div>');
+          $('.loading_mask').show();
+        },
+        complete: function() {
+        },
+        success: function(json) {
+
+          // $('#button-af-remove[data-orderid="'+order_id+'"]').closest('td').html('');
+          $('#button-af-remove[data-orderid="'+order_id+'"]').closest('td').find('span').text('').addClass('d-none').removeClass('d-block');
+          $('#button-af-remove[data-orderid="'+order_id+'"]').attr('data-autofolie', '0').addClass('d-none');
+
+          $('.loading_mask').html('');
+          $('.loading_mask').hide();
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+          console.log(jqXhr);
+          console.log(textStatus);
+          console.log(errorThrown);
+        },
+      });
+    }
+  });
+});
+
+function customConfirm(message, callback) {
+  Swal.fire({
+    title: message,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: '{{ text_yes }}',
+    cancelButtonText: '{{ text_no }}',
+    customClass: {
+      popup: 'custom-popup',
+      confirmButton: 'custom-confirm',
+      cancelButton: 'custom-cancel'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+}
+
+</script>
+
+{{ footer }}

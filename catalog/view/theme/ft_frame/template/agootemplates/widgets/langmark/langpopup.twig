@@ -1,0 +1,185 @@
+{% if (langmark is defined) %}
+<div id="cmswidget-{{ cmswidget }}" class="cmswidget">
+{{langmark }}
+</div>
+
+{% if (settings_widget['anchor'] is defined and settings_widget['anchor'] != '') %}
+<script>
+	$('#cmswidget-{{ cmswidget }}').hide();
+	{% if (settings_widget['doc_ready'] is defined and settings_widget['doc_ready']) %}
+	$(document).ready(function(){
+	 {% endif %}
+		var prefix = '{{ prefix }}';
+		var cmswidget = '{{ cmswidget }}';
+		var heading_title = '{{ heading_title }}';
+		var data = $('#cmswidget-{{ cmswidget }}').html();
+		{{ settings_widget['anchor'] }};
+		$('#cmswidget-{{ cmswidget }}').show();
+		delete data;
+		delete prefix;
+		delete cmswidget;
+	{% if (settings_widget['doc_ready'] is defined and settings_widget['doc_ready']) %}
+	});
+	 {% endif %}
+</script>
+
+ {% endif %}
+ {% else %}
+{% if languages|length > 1 %}
+
+
+{% if (settings_widget['autopopup'] is defined and settings_widget['autopopup']) %}
+
+<div data-toggle="modal" class="hidden" data-target="#lm_{{ settings_widget['cmswidget'] }}_Modal" id="langmarkmodal_{{ settings_widget['cmswidget'] }}"></div>
+
+<style>
+.lm_{{ settings_widget['cmswidget'] }}_flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.lm_{{ settings_widget['cmswidget'] }}_flex > div {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.lm-modal-html {
+	width: 100%;
+	text-align: center;
+}
+</style>
+
+<div class="modal fade" id="lm_{{ settings_widget['cmswidget'] }}_Modal" tabindex="-1" role="dialog" aria-labelledby="lm_{{ settings_widget['cmswidget'] }}_ModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+ 		
+		{% if  settings_widget.title_status  and  settings_widget.title_status %}     
+	  	<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title">
+				{% for language in languages %}
+					{% if (language['current']) %}
+						{{ settings_widget['title'][language['language_id']] }}
+					{% endif %}
+				{% endfor %}
+			</h4>
+		</div>
+		{% endif %}
+
+      <div class="modal-body">
+	    <div class="lm-modal-html">
+			{% for language in languages %}
+				{% if (language['current']) %}
+					{{ settings_widget['html'][language['language_id']] }}
+				{% endif %}
+			{% endfor %}
+		</div>
+
+		<div class="lm_{{ settings_widget['cmswidget'] }}_flex">
+		{% for language in languages %}
+			{% if language.main %}
+				<div>
+					<a onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'" href="{{ language['url'] }}{% if (language['current']) %}{{ '' }}{% endif %}">{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}<img src="catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}" /> {% endif %}{{ language['name'] }}</a>
+				</div>
+				{% else %} 
+				<div>
+					<a onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'" href="{{ language['url'] }}{% if (language['current']) %}{{ '' }}{% endif %}">{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}<img src="catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}" /> {% endif %}{{ language['name'] }}</a>
+				</div>
+			{% endif %} 
+		{% endfor %}
+		</div>
+
+      </div>
+
+		{% if  settings_widget.footer_status  and  settings_widget.footer_status %}      
+		<div class="modal-footer">
+        	<button type="button" class="btn btn-secondary" data-dismiss="modal">
+			{% for language in languages %}
+				{% if (language['current']) %}
+					{{ settings_widget['lm_text_close'][language['language_id']] }}
+				{% endif %}
+			{% endfor %}
+			</button>
+		</div>
+		{% endif %}
+
+    </div>
+  </div>
+</div>
+
+{% for language in languages %}
+	{% if (language['current']) %}
+		{% if (settings_widget['code_custom'][language['language_id']]  is defined and settings_widget['code_custom'][language['language_id']]  != '') %}
+		{{ settings_widget['code_custom'][language['language_id']] }}
+		{% endif %}
+  {% endif %}
+{% endfor %}
+
+<script>
+lm_{{ settings_widget['cmswidget'] }}_afterLoad_state = false;
+function lm_{{ settings_widget['cmswidget'] }}_afterload(){
+	if (!lm_{{ settings_widget['cmswidget'] }}_afterLoad_state) {
+		document.body.removeEventListener('touchstart', lm_{{ settings_widget['cmswidget'] }}_afterload); document.body.removeEventListener('touchmove', lm_{{ settings_widget['cmswidget'] }}_afterload); document.body.removeEventListener('mouseover', lm_{{ settings_widget['cmswidget'] }}_afterload); document.removeEventListener('mousemove', lm_{{ settings_widget['cmswidget'] }}_afterload);
+        if ($('body').hasClass('modal-open')) {
+		} else {
+			$('#lm_{{ settings_widget['cmswidget'] }}_Modal').modal('show');
+			//$('#langmarkmodal_{{ settings_widget['cmswidget'] }}').click(); // toggle
+			lm_{{ settings_widget['cmswidget'] }}_afterLoad_state = true;
+        }		
+	}
+}
+var lm_{{ settings_widget['cmswidget'] }}_userAgent = navigator.userAgent || navigator.vendor || window.opera;
+if (/Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(lm_{{ settings_widget['cmswidget'] }}_userAgent)) {
+	document.body.addEventListener('touchstart', lm_{{ settings_widget['cmswidget'] }}_afterload); document.body.addEventListener('touchmove', lm_{{ settings_widget['cmswidget'] }}_afterload); document.addEventListener('DOMContentLoaded', function() { setTimeout(lm_{{ settings_widget['cmswidget'] }}_afterload, {{ settings_widget['autoredirect_delay_mobile'] }}) });
+} else {document.body.addEventListener('mouseover', lm_{{ settings_widget['cmswidget'] }}_afterload); document.addEventListener('mousemove', lm_{{ settings_widget['cmswidget'] }}_afterload); document.addEventListener('DOMContentLoaded', function() { setTimeout(lm_{{ settings_widget['cmswidget'] }}_afterload, {{ settings_widget['autoredirect_delay_desktop'] }}); }); }
+
+$('#lm_{{ settings_widget.cmswidget }}_Modal').on('hidden.bs.modal', function () {
+	{% for language in languages %}
+		{% if  language.main  and  not language.current  and  settings_widget.redirect  and  settings_widget.redirect %}
+	
+	window.location = '{{ language.url }}';
+			{% endif %}
+	{% endfor %}
+	})
+	
+	$('#lm_{{ settings_widget.cmswidget }}_Modal').on('hidden', function () {
+	{% for language in languages %}
+		{% if  language.main  and  not language.current  and  settings_widget.redirect  and  settings_widget.redirect %}
+	
+	window.location = '{{ language.url }}';
+			{% endif %}
+	{% endfor %}
+	})
+</script>
+
+<script>
+function lm_setCookie(name, value, options = {}) {
+options = {
+  path: '/',
+  ...options
+};
+
+let date = new Date(Date.now() + (86400e3 * options.expires));
+date = date.toUTCString();
+options.expires = date;
+ 
+let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+for (let optionKey in options) {
+  updatedCookie += "; " + optionKey;
+  let optionValue = options[optionKey];
+  if (optionValue !== true) {
+    updatedCookie += "=" + optionValue;
+  }
+}
+document.cookie = updatedCookie;
+}
+
+function lm_deleteCookie(name) {
+  lm_setCookie(name, "", {'max-age': -1});
+}
+</script>
+{% endif %}
+{% endif %}
+{% endif %}

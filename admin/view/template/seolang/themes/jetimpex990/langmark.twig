@@ -1,0 +1,57 @@
+{% if languages|length > 1 %}
+
+<div class="box-language">
+<div id="form-language">
+
+<div class="btn-group toggle-wrap">
+<span class="toggle">
+{% for language in languages %}
+{% if (language['current']) %}
+{{ language['name'] }} 
+{% endif %}
+{% endfor %}
+<span class="hidden-xs hidden-sm hidden-md hidden">{{ text_language }}</span>
+</span>
+<ul class="toggle_cont pull-right">
+{% for language in languages %}
+<li>
+{% if language.main %}
+<button class="language-select {% if (language['current']) %}selected{% endif %}" type="button" onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'">
+{% else %}
+<button class="language-select {% if (language['current']) %}selected{% endif %}" type="button" onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'">
+{% endif %}
+{{ language['name'] }} 
+</button>
+</li>
+{% endfor %}
+</ul>
+</div>
+
+</div>
+</div>
+<script>
+	function lm_setCookie(name, value, options = {}) {
+		options = {
+			path: '/',
+			...options
+		};
+		let date = new Date(Date.now() + (86400e3 * options.expires));
+		date = date.toUTCString();
+		options.expires = date;
+		let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+		for (let optionKey in options) {
+			updatedCookie += "; " + optionKey;
+			let optionValue = options[optionKey];
+			if (optionValue !== true) {
+				updatedCookie += "=" + optionValue;
+			}
+		}
+		document.cookie = updatedCookie;
+	}
+	function lm_deleteCookie(name) {
+		lm_setCookie(name, "", {
+			'max-age': -1
+		});
+	}
+</script>
+{% endif %}

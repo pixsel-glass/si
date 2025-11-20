@@ -1,0 +1,396 @@
+{% if type == 0 %}
+<div id="ftCategoryWall_{{ module }}" class="{% if 'pagination' in controls %}mb-3{% else %}mb-4{% endif %}">
+	{% if heading_title or 'arrows' in controls %}
+	<div class="pt-2 mb-3">
+		<div class="row">
+			<div class="col">
+				{% if heading_title %}
+				<div class="h5 mb-0 ml-1">{{ heading_title }}</div>
+				{% endif %}
+			</div>
+			{% if 'arrows' in controls %}
+			<div class="col-auto">
+				<button class="btn btn-prev p-0 rounded-pill">
+					<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
+					</svg>
+				</button>
+				<button class="btn btn-next p-0 rounded-pill">
+					<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path>
+					</svg>
+				</button>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	{% endif %}
+
+	<div class="m-n1 m-sm-n2">
+		<!--noindex-->
+		<!--googleoff: all-->
+		<div class="carousel-placeholder d-flex">
+			<script>
+
+				items = {{ items }};
+				breakpoints = [];
+				base_width = window.innerWidth;
+
+				{% if responsive_items %}
+				{% for item in responsive_items %}
+				breakpoints[{{ loop.index0 }}] = { ww: {{ item.breakpoint }}, count: {{ item.amount }} };
+				{% endfor %}
+				{% endif %}
+
+				breakpoints.sort((a, b) => a.ww > b.ww ? 1 : -1);
+				breakpoints.forEach(function(breakpoint, i, breakpoints) {
+
+					next_bp_vw = breakpoints[i + 1] != null ? breakpoints[i + 1].ww : 9999;
+
+					if (breakpoint.ww <= base_width && next_bp_vw > base_width) {
+						items = breakpoint.count;
+					}
+				});
+
+			</script>
+			<div class="item d-flex">
+				<script>
+
+					item = document.querySelector('#ftCategoryWall_{{ module }} .carousel-placeholder .item');
+					item.style.width = items > 0 ? 100 / items + '%' : 100 + '%';
+
+				</script>
+				<div class="w-100 border rounded bg-white p-3 m-1 m-sm-2 text-center">
+					<div class="d-inline-block position-relative">
+						<svg class="d-block img-fluid w-100" width="{{ categories[0].img_width }}" height="{{ categories[0].img_height }}" xmlns="http://www.w3.org/2000/svg"></svg>
+						<div class="d-flex justify-content-center align-items-center position-absolute t-0 b-0 r-0 l-0 w-100 h-100 lazy-spinner">
+							<div class="spinner-border text-gray-400"></div>
+						</div>
+					</div>
+					<div class="h6 d-block mb-0 mt-2 line-clamp-1">
+						<span class="bg-light">
+							<span class="invisible">
+								Category name...
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+			<script>
+
+				for(let i = 1; i < items && i < {{ categories|length }}; i++)  {
+					clone = item.cloneNode(true);
+					item.parentNode.appendChild(clone);
+				}
+
+				items = null;
+				item = null;
+				clone = null;
+				breakpoints = null;
+				base_width = null;
+				prev_bp_vw = null;
+
+			</script>
+		</div>
+		<!--googleon: all-->
+		<!--/noindex-->
+		<div  class="owl-carousel">
+			{% for category in categories %}
+			<div class="category-item w-100">
+
+				<div class="position-relative border rounded bg-white p-3 m-1 m-sm-2 overflow-hidden {% if category.active %}border-primary{% endif %}">
+					<a class="text-dark text-decoration-none d-block text-center " {% if category.children and click_action == 1 %}data-toggle="collapse" href="#subcategory-wall-{{ category.category_id }}-{{ module }}"{% else %}href="{{ category.href }}"{% endif %}>
+						<div class="d-inline-block position-relative">
+							<svg class="d-block img-fluid w-100" width="{{ category.img_width }}" height="{{ category.img_height }}" xmlns="http://www.w3.org/2000/svg"></svg>
+
+							{% if lazyload_imgs %}
+							<picture>
+								{% if category.thumb2x %}
+								<source class="owl-lazy" data-srcset="{{ category.thumb }} 1x, {{ category.thumb2x }} 2x, {{ category.thumb3x }} 3x, {{ category.thumb4x }} 4x" srcset="{{ category.thumb_holder }}">
+								{% endif %}
+								<img src="{{ category.thumb_holder }}" data-src="{{ category.thumb }}" alt="{{ category.name }}" title="{{ category.name }}" class="position-absolute t-0 l-0 img-fluid w-100 d-block owl-lazy">
+							</picture>
+							<div class="d-flex justify-content-center align-items-center position-absolute t-0 b-0 r-0 l-0 w-100 h-100 lazy-spinner">
+								<div class="spinner-border text-gray-400"></div>
+							</div>
+							{% else %}
+							<picture>
+								{% if category.thumb2x %}
+								<source srcset="{{ category.thumb }} 1x, {{ category.thumb2x }} 2x, {{ category.thumb3x }} 3x, {{ category.thumb4x }} 4x">
+								{% endif %}
+								<img src="{{ category.thumb }}" alt="{{ category.name }}" title="{{ category.name }}" class="position-absolute t-0 l-0 img-fluid w-100 d-block">
+							</picture>
+							{% endif %}
+
+
+						</div>
+						<div class="h6 d-block mb-0 mt-2 line-clamp-1">{{ category.name }}</div>
+					</a>
+					{% if category.children and click_action == 1 %}
+					<div class="collapse w-100 position-absolute b-0 l-0 z-index-2" id="subcategory-wall-{{ category.category_id }}-{{ module }}" data-parent="#ftCategoryWall_{{ module }}">
+						<div class="bg-white border-top shadow px-3 pb-2 pt-2 rounded-0 {% if category.active %}border-primary{% endif %}">
+							<ul class="list-unstyled m-0">
+								{% for child in category.children %}
+								<li class="mt-1 d-block"><a class="text-dark line-clamp-1" href="{{ child.href }}">{{ child.name }}</a></li>
+								{% endfor %}
+								<li><hr class="my-2 mx-n3"></li>
+								<li class="d-block bg-light mx-n3 my-n2 px-3 py-2"><a class="text-dark text-decoration-none line-clamp-1" href="{{ category.href }}">{{ g_text_all }}</a></li>
+							</ul>
+							<a class="d-block position-absolute t-0 r-0 p-1 rounded-circle m-1" data-toggle="collapse" href="#subcategory-wall-{{ category.category_id }}-{{ module }}">
+								<svg class="d-block ft-icon-18 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+									<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+								</svg>
+							</a>
+						</div>
+					</div>
+					{% endif %}
+				</div>
+
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% if 'pagination' in controls %}
+	<div class="owl-pagination text-center text-sm-left px-2 py-2">
+		<button class="btn btn-dot bg-dark shadow-none rounded-pill border-0 bg-secondary p-0 mr-0"><span></span></button>
+	</div>
+	{% endif %}
+<script>
+	$(function () {
+
+		var ftCategoryWall_{{ module }} = $('#ftCategoryWall_{{ module }} .owl-carousel');
+
+		ftCategoryWall_{{ module }}.owlCarousel({
+			mouseDrag: false,
+			touchDrag: true,
+			loop: false,
+			rewind: true,
+
+			items: {{ items }},
+
+			{% if responsive_items %}
+				responsive: {
+				{% for item in responsive_items %}
+				{{ item.breakpoint }} : { items: {{ item.amount }} },
+				{% endfor %}
+				},
+			{% endif %}
+
+			stageClass: 'owl-stage d-flex justify-content-between',
+			itemClass: 'owl-item d-flex float-none',
+
+			nav: false,
+			{% if 'pagination' in controls %}
+			dots: true,
+			dotsContainer: '#ftCategoryWall_{{ module }} .owl-pagination',
+			dotClass: 'btn btn-dot bg-dark shadow-none rounded-pill border-0 bg-secondary p-0',
+			{% else %}
+			dots: false,
+			{% endif %}
+			{% if autoplay %}
+			autoplay: true,
+			autoplayTimeout: {{ autoplay_speed }},
+			autoplayHoverPause: true,
+			{% endif %}
+
+			{% if lazyload_imgs %}
+			lazyLoad: true,
+			{% else %}
+			lazyLoad: false,
+			{% endif %}
+
+			lazyLoadEager: 0,
+
+			onLoadedLazy: function(e) { e.element.parent().parent().find('.lazy-spinner').remove() },
+			onInitialized: function(e) { $(e.target).parent().find('.carousel-placeholder').remove()},
+			onRefreshed: function(e) {
+
+				$(e.target).find('.owl-item').each(function() { this.style.minWidth = this.style.width });
+				let arrows = $('#ftCategoryWall_{{ module }} .btn-prev, #ftCategoryWall_{{ module }} .btn-next ');
+				if (e.item.count <= e.page.size) { arrows.attr('disabled','disabled') } else { arrows.removeAttr('disabled') }
+
+			},
+		});
+
+		$('#ftCategoryWall_{{ module }} .btn-prev').click(function() { ftCategoryWall_{{ module }}.trigger('prev.owl.carousel'); });
+		$('#ftCategoryWall_{{ module }} .btn-next').click(function() { ftCategoryWall_{{ module }}.trigger('next.owl.carousel'); });
+
+	});
+</script>
+
+</div>
+{% endif %}
+
+{% if type == 1 %}
+
+{% if heading_title %}
+<div class="pt-2 mb-3 ml-2">
+	<div class="row align-items-center {% if cssclass is not empty %}{{ cssclass }}{% endif %}">
+		{#<div class="col-8 col-lg-8">
+			<div class="h5 mb-0 ml-1 text-center">{{ heading_title }}</div>
+		</div>
+		<div class="col-2 col-lg-2 wallclose">
+		</div>#}
+		<div class="col my-1">
+			{{ heading_title }}
+		</div>
+		<div class="col-1 text-right wallclose">
+			<svg class="d-none ft-icon-24 m-0 text-gray-500" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="m437.019 74.98a256 256 0 0 0 -362.038 362.04 256 256 0 0 0 362.038-362.04zm-22.627 339.413a224.254 224.254 0 0 1 -316.784 0c-87.337-87.338-87.337-229.448 0-316.786s229.446-87.336 316.784 0 87.337 229.448 0 316.786zm-50.913-243.246-84.852 84.853 82.206 82.206a16 16 0 1 1 -22.627 22.627l-82.206-82.206-84.853 84.852a16 16 0 0 1 -22.626-22.626l84.852-84.853-82.206-82.206a16 16 0 0 1 22.627-22.627l82.206 82.206 84.853-84.852a16 16 0 0 1 22.626 22.626z"/></svg>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+
+{#<div id="category-wall-{{ module }}" class="category-wall row no-gutters row-cols-2 row-cols-sm-3 row-cols-lg-5 row-cols-xxl-6  mb-3 mx-n2">#}
+<div id="category-wall-{{ module }}" class="category-wall row no-gutters row-cols-4 row-cols-sm-5 row-cols-md-6 row-cols-lg-8 row-cols-xxl-8  mb-3 mx-n2">
+{% for category in categories %}
+<div class="col mb-3">
+	{#<div class="h-100 position-relative card card-body p-3 mx-2 overflow-hidden {% if category.active %}border-primary{% endif %}">#}
+	<div class="position-relative card card-body p-0 pb-1 mx-2 overflow-hidden {% if category.active %}border-primary{% endif %}">
+		<a class="text-dark text-decoration-none  text-center " {% if category.children and click_action == 1 %}data-toggle="collapse" href="#subcategory-wall-{{ category.category_id }}-{{ module }}"{% else %}href="{{ category.href }}"{% endif %}>
+			<div class="d-inline-block position-relative mt-3 mb-2">
+				{% if category.svg is not empty %}
+					{# <div class="d-block mt-2">{{ category.svg|raw }}</div> #}
+					<svg class="d-block img-fluid" width="{{ category.img_width }}" height="{{ category.img_height }}" xmlns="http://www.w3.org/2000/svg"></svg>
+					<img src="/image/{{ category.svg }}" width="{{ category.img_width }}" height="{{ category.img_height }}" alt="" class="position-absolute t-0 l-0 img-fluid d-block w-auto">
+				{% else %}
+					<svg class="d-block img-fluid" width="{{ category.img_width }}" height="{{ category.img_height }}" xmlns="http://www.w3.org/2000/svg"></svg>
+					<img src="{{ category.thumb }}" alt="" {% if category.thumb2x %}srcset="{{ category.thumb }} 1x, {{ category.thumb2x }} 2x, {{ category.thumb3x }} 3x, {{ category.thumb4x }} 4x"{% endif %} class="position-absolute t-0 l-0 img-fluid d-block w-auto">
+				{% endif %}
+			</div>
+			<div class="h6 d-block mb-0 mt-0 wc-name">{{ category.name }}</div>
+		</a>
+		{% if category.children and click_action == 1 %}
+		<div class="collapse w-100 position-absolute b-0 l-0 z-index-2" id="subcategory-wall-{{ category.category_id }}-{{ module }}" data-parent="#category-wall-{{ module }}">
+			<div class="bg-white border-top shadow px-3 pb-2 pt-2 rounded-0 {% if category.active %}border-primary{% endif %}">
+				<ul class="list-unstyled m-0">
+					{% for child in category.children %}
+					<li class="mt-1 d-block"><a class="text-dark line-clamp-1" href="{{ child.href }}">{{ child.name }}</a></li>
+					{% endfor %}
+					<li><hr class="my-2 mx-n3"></li>
+					<li class="d-block bg-light mx-n3 my-n2 px-3 py-2"><a class="text-dark text-decoration-none line-clamp-1" href="{{ category.href }}">{{ g_text_all }}</a></li>
+				</ul>
+				<a class="d-block position-absolute t-0 r-0 p-1 rounded-circle m-1" data-toggle="collapse" href="#subcategory-wall-{{ category.category_id }}-{{ module }}">
+					<svg class="d-block ft-icon-18 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+					</svg>
+				</a>
+			</div>
+		</div>
+		{% endif %}
+	</div>
+</div>
+{% endfor %}
+</div>
+<div class="col-12 col-lg row mb-5">
+	<button type="button" class="btn btn-catwall-showhide py-1 px-2 pl-md-1 pr-md-2 btn-light">
+		<span class="row no-gutters align-items-center justify-content-center flex-nowrap">
+			<span class="col-auto">
+				<span class="text-truncate mx-2 ">{{ button_showall }}</span>
+			</span>
+			<span class="col-auto">
+<svg class="d-block ft-icon-18 m-0 text-gray-500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 487.23 487.23" style="enable-background:new 0 0 487.23 487.23;"
+	 xml:space="preserve">
+		<path d="M55.323,203.641c15.664,0,29.813-9.405,35.872-23.854c25.017-59.604,83.842-101.61,152.42-101.61
+			c37.797,0,72.449,12.955,100.23,34.442l-21.775,3.371c-7.438,1.153-13.224,7.054-14.232,14.512
+			c-1.01,7.454,3.008,14.686,9.867,17.768l119.746,53.872c5.249,2.357,11.33,1.904,16.168-1.205
+			c4.83-3.114,7.764-8.458,7.796-14.208l0.621-131.943c0.042-7.506-4.851-14.144-12.024-16.332
+			c-7.185-2.188-14.947,0.589-19.104,6.837l-16.505,24.805C370.398,26.778,310.1,0,243.615,0C142.806,0,56.133,61.562,19.167,149.06
+			c-5.134,12.128-3.84,26.015,3.429,36.987C29.865,197.023,42.152,203.641,55.323,203.641z"/>
+		<path d="M464.635,301.184c-7.27-10.977-19.558-17.594-32.728-17.594c-15.664,0-29.813,9.405-35.872,23.854
+			c-25.018,59.604-83.843,101.61-152.42,101.61c-37.798,0-72.45-12.955-100.232-34.442l21.776-3.369
+			c7.437-1.153,13.223-7.055,14.233-14.514c1.009-7.453-3.008-14.686-9.867-17.768L49.779,285.089
+			c-5.25-2.356-11.33-1.905-16.169,1.205c-4.829,3.114-7.764,8.458-7.795,14.207l-0.622,131.943
+			c-0.042,7.506,4.85,14.144,12.024,16.332c7.185,2.188,14.948-0.59,19.104-6.839l16.505-24.805
+			c44.004,43.32,104.303,70.098,170.788,70.098c100.811,0,187.481-61.561,224.446-149.059
+			C473.197,326.043,471.903,312.157,464.635,301.184z"/>
+</svg>
+			</span>
+		</span>
+	</button>
+</div>
+<script>
+	function getRowSize(cssSelector) {
+		var firstTop = document.querySelector( cssSelector ).offsetTop;
+		var rowArray = Array.prototype.filter.call(document.querySelectorAll( cssSelector ), function(element) {
+			if( element.offsetTop == firstTop ) return element;
+		});
+		return rowArray.length;
+	}
+
+	function updateCatwall() {
+		if (!$('.btn-catwall-showhide').hasClass('onclose')) {
+			var windowWidth = $(window).width();
+			var showLines;
+
+			if ($(window).width() < 768) {
+				showLines = 1;
+			} else {
+				showLines = 2;
+			}
+
+			var catwallLines = getRowSize('.category-wall .col');
+			var showItems = catwallLines * showLines;
+
+			$('.category-wall .col').each(function (index) {
+				$(this).toggleClass('d-none', index >= showItems);
+			});
+		}
+	}
+
+	$(document).ready(function () {
+     updateCatwall();
+   });
+
+	var resizeTimer;
+	$(window).on('resize', function () {
+		clearTimeout(resizeTimer);
+		resizeTimer = setTimeout(function () {
+			updateCatwall();
+		}, 250);
+	});
+
+	$(document).on('click', '.btn-catwall-showhide, .wallclose', function(){
+		if ($(window).width() < 768) {
+			showLines = 1;
+		} else {
+			showLines = 2;
+		}
+
+		var catwallLines = getRowSize('.category-wall .col');
+		var showItems = catwallLines * showLines;
+
+		if ($('.btn-catwall-showhide').hasClass('onclose')) {
+
+			$('.btn-catwall-showhide').removeClass('onclose');
+
+			$('.wallclose svg').addClass('d-none');
+
+			$('.category-wall .col').each(function() {
+				var el_index = $(this).index()+1;
+				if (el_index > showItems) {
+					$(this).addClass('d-none');
+				}
+			});
+
+			$('.btn-catwall-showhide').html('<span class="row no-gutters align-items-center justify-content-center flex-nowrap"><span class="col-auto"><span class="text-truncate mx-2 ">{{ button_showall }}</span>      </span><span class="col-auto"><svg class="d-block ft-icon-18 m-0 text-gray-500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 487.23 487.23" style="enable-background:new 0 0 487.23 487.23;" xml:space="preserve"><path d="M55.323,203.641c15.664,0,29.813-9.405,35.872-23.854c25.017-59.604,83.842-101.61,152.42-101.61      c37.797,0,72.449,12.955,100.23,34.442l-21.775,3.371c-7.438,1.153-13.224,7.054-14.232,14.512c-1.01,7.454,3.008,14.686,9.867,17.768l119.746,53.872c5.249,2.357,11.33,1.904,16.168-1.205      c4.83-3.114,7.764-8.458,7.796-14.208l0.621-131.943c0.042-7.506-4.851-14.144-12.024-16.332     c-7.185-2.188-14.947,0.589-19.104,6.837l-16.505,24.805C370.398,26.778,310.1,0,243.615,0C142.806,0,56.133,61.562,19.167,149.06      c-5.134,12.128-3.84,26.015,3.429,36.987C29.865,197.023,42.152,203.641,55.323,203.641z"/><path d="M464.635,301.184c-7.27-10.977-19.558-17.594-32.728-17.594c-15.664,0-29.813,9.405-35.872,23.854      c-25.018,59.604-83.843,101.61-152.42,101.61c-37.798,0-72.45-12.955-100.232-34.442l21.776-3.369c7.437-1.153,13.223-7.055,14.233-14.514c1.009-7.453-3.008-14.686-9.867-17.768L49.779,285.089      c-5.25-2.356-11.33-1.905-16.169,1.205c-4.829,3.114-7.764,8.458-7.795,14.207l-0.622,131.943c-0.042,7.506,4.85,14.144,12.024,16.332c7.185,2.188,14.948-0.59,19.104-6.839l16.505-24.805      c44.004,43.32,104.303,70.098,170.788,70.098c100.811,0,187.481-61.561,224.446-149.059C473.197,326.043,471.903,312.157,464.635,301.184z"/></svg></span></span>');
+
+			$([document.documentElement, document.body]).animate({
+				scrollTop: $(".catwall").offset().top
+			}, 800);
+		} else {
+			$('.btn-catwall-showhide').addClass('onclose');
+
+			$('.wallclose svg').removeClass('d-none');
+
+			$('.category-wall .col').each(function() {
+				$(this).removeClass('d-none');
+				$(this).delay(500).fadeIn();
+			});
+
+			$('.btn-catwall-showhide').html('<span class="row no-gutters align-items-center justify-content-center flex-nowrap"><span class="col-auto"><span class="text-truncate mx-2 ">{{ button_hideall }}</span>      </span><span class="col-auto"><svg class="d-block ft-icon-18 m-0 text-gray-500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 487.23 487.23" style="enable-background:new 0 0 487.23 487.23;" xml:space="preserve"><path d="M55.323,203.641c15.664,0,29.813-9.405,35.872-23.854c25.017-59.604,83.842-101.61,152.42-101.61      c37.797,0,72.449,12.955,100.23,34.442l-21.775,3.371c-7.438,1.153-13.224,7.054-14.232,14.512c-1.01,7.454,3.008,14.686,9.867,17.768l119.746,53.872c5.249,2.357,11.33,1.904,16.168-1.205      c4.83-3.114,7.764-8.458,7.796-14.208l0.621-131.943c0.042-7.506-4.851-14.144-12.024-16.332     c-7.185-2.188-14.947,0.589-19.104,6.837l-16.505,24.805C370.398,26.778,310.1,0,243.615,0C142.806,0,56.133,61.562,19.167,149.06      c-5.134,12.128-3.84,26.015,3.429,36.987C29.865,197.023,42.152,203.641,55.323,203.641z"/><path d="M464.635,301.184c-7.27-10.977-19.558-17.594-32.728-17.594c-15.664,0-29.813,9.405-35.872,23.854      c-25.018,59.604-83.843,101.61-152.42,101.61c-37.798,0-72.45-12.955-100.232-34.442l21.776-3.369c7.437-1.153,13.223-7.055,14.233-14.514c1.009-7.453-3.008-14.686-9.867-17.768L49.779,285.089      c-5.25-2.356-11.33-1.905-16.169,1.205c-4.829,3.114-7.764,8.458-7.795,14.207l-0.622,131.943c-0.042,7.506,4.85,14.144,12.024,16.332c7.185,2.188,14.948-0.59,19.104-6.839l16.505-24.805      c44.004,43.32,104.303,70.098,170.788,70.098c100.811,0,187.481-61.561,224.446-149.059C473.197,326.043,471.903,312.157,464.635,301.184z"/></svg></span></span>');
+		}
+	});
+</script>
+{% endif %}

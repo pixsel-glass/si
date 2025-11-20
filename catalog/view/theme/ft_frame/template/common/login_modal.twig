@@ -1,0 +1,595 @@
+<div class="modal-dialog modal-dialog-right modal-dialog-scrollable mh-100 vh-100 m-0 ml-auto ">
+	<div class="modal-content border-0 rounded-0 mh-100 h-100">
+			<div class="modal-header border-0 no-gutters">
+				<button type="button" class="btn ml-auto pl-0 pr-0 shadow-none" data-dismiss="modal">
+					<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body px-4 pt-0">
+				<ul class="nav d-none">
+					<li class="nav-item">
+						<a href="#login-popup-account-view" id="login-popup-account-view-button" class="nav-link active" data-toggle="tab"></a>
+					</li>
+					<li class="nav-item">
+						<a href="#login-popup-forgotten-view" id="login-popup-forgotten-view-button" class="nav-link" data-toggle="tab"></a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div id="login-popup-account-view" class="tab-pane fade active show">
+						<ul class="nav nav-pills login-register-pills nav-justified pb-2 border-bottom border-gray-150">
+							<li class="nav-item">
+								<a class="nav-link active" data-toggle="pill" href="#login-popup-login">{{ text_login }}</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="pill" href="#login-popup-register">{{ text_register }}</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade active show" id="login-popup-login">
+								{#<ul class="nav email-sms-authorization nav-justified pb-2 mt-3">
+									<li class="nav-item">
+										<a class="nav-link active" data-toggle="pill" href="#email-authorization">
+											<svg id="email-aicon" width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+												<path d="M22.6199 4H3.38018C2.06768 4 1 5.06763 1 6.38018V17.3311C1 18.6436 2.06768 19.7113 3.38018 19.7113H22.6199C23.9324 19.7113 25 18.6436 25 17.3311V6.38018C25 5.06763 23.9324 4 22.6199 4ZM23.4133 6.38018V17.3311C23.4133 17.4563 23.3781 17.5706 23.3261 17.6759L17.717 12.0664L23.4117 6.37162C23.4117 6.37478 23.4133 6.37706 23.4133 6.38018ZM2.58678 17.3311V6.38018C2.58678 6.37706 2.58839 6.37483 2.58839 6.37167L8.28312 12.0664L2.67359 17.6759C2.62204 17.5705 2.58678 17.4563 2.58678 17.3311ZM13.2449 14.2947C13.114 14.4256 12.8861 14.4256 12.7552 14.2947L4.04766 5.58678H21.9528L13.2449 14.2947ZM9.40503 13.1884L11.6333 15.4167C11.9986 15.7819 12.484 15.983 13 15.983C13.516 15.983 14.0015 15.7819 14.3668 15.4167L16.5952 13.1884L21.5309 18.1245H4.46882L9.40503 13.1884Z" fill="currentColor"/>
+											</svg>{{ email_authorization }}</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" data-toggle="pill" href="#sms-authorization">
+											<svg id="sms-aicon" enable-background="new 0 0 512 512" width="24" height="24" viewBox="0 0 512 512"  xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="m365.3 0h-218.6c-20.4 0-37 16.6-37 37v438c0 20.4 16.6 37 37 37h218.6c20.4 0 37-16.6 37-37v-438c0-20.4-16.6-37-37-37zm-218.6 24h218.6c7.2 0 13 5.8 13 13v388.4h-244.6v-388.4c0-7.2 5.8-13 13-13zm218.6 464h-218.6c-7.2 0-13-5.8-13-13v-25.6h244.6v25.6c0 7.2-5.8 13-13 13zm-83.3-19.3c0 6.6-5.4 12-12 12h-28c-6.6 0-12-5.4-12-12s5.4-12 12-12h28c6.6 0 12 5.4 12 12zm-77.9-184.8c17.5 17.5 41.3 31.6 63.8 37.7 8.7 2.4 17.2 3.5 25.2 3.5 19.3 0 36.3-6.7 49.4-19.8 4.3-4.3 6.7-10.1 6.7-16.3s-2.4-11.9-6.7-16.3l-24.9-24.9c-5.2-5.2-12.1-8-19.4-8s-14.2 2.8-19.4 8l-3.6 3.6c-2.4 2.4-6.5 2.4-9 0l-29.8-29.8c-2.4-2.4-2.4-6.5 0-9l3.6-3.6c5.2-5.2 8-12.1 8-19.4s-2.8-14.2-8-19.4l-24.9-24.9c-9-9-23.6-9-32.5 0-18.5 18.5-24.3 45-16.2 74.6 6.1 22.6 20.2 46.5 37.7 64zm-5.2-120.7 24.2 24.2c.9.9 1 1.9 1 2.4s-.1 1.6-1 2.4l-3.6 3.6c-11.8 11.8-11.8 31.1 0 42.9l29.8 29.8c11.8 11.8 31.1 11.8 42.9 0l3.6-3.6c.9-.9 1.9-1 2.4-1s1.6.1 2.4 1l24.2 24.2c-28.4 27.2-78.6 3-103.8-22.2-25.1-25.2-49.3-75.3-22.1-103.7z"/></svg>{{ sms_authorization }}</a>
+									</li>
+								</ul>#}
+								<div class="tab-content">
+									<div class="tab-pane fade active show" id="email-authorization">
+										<form id="login-data" enctype="multipart/form-data" class="form-horizontal">
+											<div class="form-group mb-4 mt-4 position-relative">
+												<input type="email" name="email" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" placeholder="{{ entry_email }}">
+												<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+													<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+														<path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"></path>
+													</svg>
+												</div>
+											</div>
+											<div class="form-group mb-4 position-relative">
+												<input id="pixsel-input-password" autocomplete="off" type="password" name="password" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" placeholder="{{ entry_password }}">
+												<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+													<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+														<path d="M280-240q-100 0-170-70T40-480q0-100 70-170t170-70q66 0 121 33t87 87h352q33 0 56.5 23.5T920-520v80q0 33-23.5 56.5T840-360v40q0 33-23.5 56.5T760-240h-80q-33 0-56.5-23.5T600-320v-40H488q-32 54-87 87t-121 33Zm0-80q66 0 106-40.5t48-79.5h246v120h80v-120h80v-80H434q-8-39-48-79.5T280-640q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-80q33 0 56.5-23.5T360-480q0-33-23.5-56.5T280-560q-33 0-56.5 23.5T200-480q0 33 23.5 56.5T280-400Zm0-80Z"></path>
+													</svg>
+												</div>
+												<button id="pixsel-show-password" type="button" class="btn btn-link position-absolute h-100 align-items-center d-flex h-100 r-0 t-0 b-0 pr-2 pl-0 py-0 shadow-none" tabindex="-1">
+													<svg class="d-block mr-1 ft-icon text-gray-500 darker-on-hover" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+														<path d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z"></path>
+													</svg>
+												</button>
+											</div>
+											<div class="form-group mb-0 pt-2 position-relative">
+												<button type="button" id="button-login-popup" data-loading="{{ text_loading }}" class="btn btn-dark-gray btn-lg btn-block border-radius-4">{{ text_login_btn }}</button>
+												<button type="button" class="btn btn-block btn-link text-dark mt-3 text-decoration-none shadow-none" onclick="$('#login-popup-forgotten-view-button').trigger('click')">{{ text_forgotten }}</button>
+											</div>
+										</form>
+									</div>
+									<div class="tab-pane fade position-relative" id="sms-authorization">
+										<div class="sap-authorization-block">
+											{{ sap_otp_login|trim }}
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="login-popup-register">
+								<form id="register-data" enctype="multipart/form-data" class="form-horizontal">
+									<div class="mt-3 mb-2"><b>{{ text_enter_you_data }}</b></div>
+									<div class="form-group required">
+										<label><b>{{ entry_customer_type }}</b></label>
+										<div class="form-group">
+											{% if customer_type %}
+												<div class="form-check form-check-inline">
+													<label class="form-check-label {{ customer_type }}">
+														<input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="0" />
+														{{ text_customer_private }}
+													</label>
+												</div>
+												<div class="form-check form-check-inline">
+													<label class="form-check-label">
+														<input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="1" checked="checked" />
+														{{ text_customer_firma }}
+													</label>
+												</div>
+											{% else %}
+												<div class="form-check form-check-inline">
+													<label class="form-check-label {{ customer_type }}">
+														<input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="0" checked="checked" />
+														{{ text_customer_private }}
+													</label>
+												</div>
+												<div class="form-check form-check-inline">
+													<label class="form-check-label">
+														<input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="1" />
+														{{ text_customer_firma }}
+													</label>
+												</div>
+											{% endif %}
+										</div>
+									</div>
+									{#<div class="firma_fields d-none">
+										<div class="form-group mb-4 mt-4 position-relative">
+											<input type="text" name="company_name" value="{{ company_name }}" placeholder="{{ entry_company_name }}" id="input-company-name" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" />
+										</div>
+										<div class="form-group mb-4 mt-4 position-relative">
+											<input type="text" name="company_nip" value="{{ company_nip }}" placeholder="{{ entry_company_nip }}" id="input-lascompany-nip" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" />
+										</div>
+										<div class="form-group mb-4 mt-4 position-relative cmvatcode d-none">
+											<input type="text" name="company_vatcode" value="{{ company_vatcode }}" placeholder="{{ entry_company_vatcode }}" id="input-lascompany-vatcode" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" />
+										</div>
+									</div>#}
+									<div class="form-group required mb-4 mt-4 position-relative">
+										<select autocomplete="off" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" name="country_id" id="input-country">
+											<option value="">{{ entry_country }}</option>
+											{% for country in countries %}
+											<option value="{{ country.country_delivery_id }}" data-zone="{{ country.geo_zone_id }}">{{ country.name }}</option>
+											{% endfor %}
+										</select>
+										<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+											<svg fill="#6c757d" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 31.416 31.416" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M28.755,6.968l-0.47,0.149L25.782,7.34l-0.707,1.129l-0.513-0.163L22.57,6.51l-0.289-0.934L21.894,4.58l-1.252-1.123 l-1.477-0.289l-0.034,0.676l1.447,1.412l0.708,0.834L20.49,6.506l-0.648-0.191L18.871,5.91l0.033-0.783l-1.274-0.524l-0.423,1.841 l-1.284,0.291l0.127,1.027l1.673,0.322l0.289-1.641l1.381,0.204l0.642,0.376h1.03l0.705,1.412l1.869,1.896l-0.137,0.737 l-1.507-0.192l-2.604,1.315l-1.875,2.249l-0.244,0.996h-0.673l-1.254-0.578l-1.218,0.578l0.303,1.285l0.53-0.611l0.932-0.029 l-0.065,1.154l0.772,0.226l0.771,0.866l1.259-0.354l1.438,0.227l1.67,0.449l0.834,0.098l1.414,1.605l2.729,1.605l-1.765,3.372 l-1.863,0.866l-0.707,1.927l-2.696,1.8l-0.287,1.038c6.892-1.66,12.019-7.851,12.019-15.253 C31.413,12.474,30.433,9.465,28.755,6.968z"></path> <path d="M17.515,23.917l-1.144-2.121l1.05-2.188l-1.05-0.314l-1.179-1.184l-2.612-0.586l-0.867-1.814v1.077h-0.382l-2.251-3.052 v-2.507L7.43,8.545L4.81,9.012H3.045L2.157,8.43L3.29,7.532L2.16,7.793c-1.362,2.326-2.156,5.025-2.156,7.916 c0,8.673,7.031,15.707,15.705,15.707c0.668,0,1.323-0.059,1.971-0.137l-0.164-1.903c0,0,0.721-2.826,0.721-2.922 C18.236,26.357,17.515,23.917,17.515,23.917z"></path> <path d="M5.84,5.065l2.79-0.389l1.286-0.705l1.447,0.417l2.312-0.128l0.792-1.245l1.155,0.19l2.805-0.263L19.2,2.09l1.09-0.728 l1.542,0.232l0.562-0.085C20.363,0.553,18.103,0,15.708,0C10.833,0,6.474,2.222,3.596,5.711h0.008L5.84,5.065z M16.372,1.562 l1.604-0.883l1.03,0.595l-1.491,1.135l-1.424,0.143l-0.641-0.416L16.372,1.562z M11.621,1.691l0.708,0.295l0.927-0.295 l0.505,0.875l-2.14,0.562l-1.029-0.602C10.591,2.526,11.598,1.878,11.621,1.691z"></path> </g> </g> </g></svg>
+										</div>
+									</div>
+									<div class="firma_fields d-none">
+										<div class="form-group mb-4 mt-4 position-relative">
+											{#<div class="input-group">#}
+												<input type="text" name="company_nip" value="{{ company_nip }}" placeholder="{{ entry_company_nip }}" id="input-lascompany-nip" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" />
+												{#<span class="input-group-btn">
+													<button id="button-nip" class="btn btn-light" style="width: 42px; height: 42px; border-radius: 0 5px 5px 0;"><svg fill="#868383" height="18px" width="18px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330.006 330.006" xml:space="preserve" stroke="#868383"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M304.302,209.419c-7.594-3.318-16.435,0.148-19.751,7.739c-20.766,47.527-67.69,78.236-119.546,78.236 c-41.106,0-79.108-19.32-103.445-51.003l51.23,10.19c8.126,1.617,16.021-3.661,17.638-11.786 c1.616-8.125-3.661-16.022-11.786-17.638l-84.004-16.709c-8.125-1.612-16.021,3.661-17.638,11.786L0.291,304.238 c-1.616,8.125,3.661,16.022,11.786,17.638c0.988,0.196,1.972,0.291,2.942,0.291c7.01,0,13.276-4.94,14.696-12.077l9.148-45.992 c29.972,38.123,76.202,61.296,126.142,61.296c63.78,0,121.496-37.77,147.036-96.225 C315.358,221.579,311.893,212.736,304.302,209.419z"></path> <path d="M317.929,8.12c-8.125-1.614-16.022,3.661-17.638,11.786l-9.149,45.997C261.169,27.783,214.94,4.611,165.005,4.611 c-63.779,0-121.495,37.771-147.038,96.224c-3.317,7.591,0.148,16.434,7.739,19.751c1.956,0.854,3.993,1.259,5.999,1.259 c5.781,0,11.29-3.362,13.753-8.998c20.768-47.527,67.693-78.237,119.548-78.237c41.099,0,79.1,19.316,103.437,50.995 l-51.228-10.191c-8.127-1.615-16.022,3.66-17.639,11.785c-1.616,8.125,3.66,16.022,11.785,17.639l84.006,16.711 c0.971,0.193,1.951,0.288,2.927,0.288c2.945,0,5.849-0.868,8.333-2.528c3.308-2.21,5.602-5.644,6.378-9.546l16.709-84.006 C331.331,17.633,326.054,9.736,317.929,8.12z"></path> </g> </g></svg></button>
+												</span>
+											</div>#}
+										</div>
+										<div class="form-group mb-4 mt-4 position-relative cmvatcode d-none">
+											<input type="text" name="company_vatcode" value="{{ company_vatcode }}" placeholder="{{ entry_company_vatcode }}" id="input-lascompany-vatcode" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" />
+										</div>
+										<div class="form-group mb-4 mt-4 position-relative">
+											<input type="text" name="pl_company_name" value="{{ pl_company_name }}" placeholder="{{ entry_company }}" id="input-pl-company-name" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none d-none" />
+										</div>
+										<div class="form-group mb-4 mt-4 position-relative">
+											<input type="text" name="company_region" value="{{ company_region }}" placeholder="{{ entry_city }}" id="input-company-region" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none d-none" />
+										</div>
+										<div class="form-group mb-4 mt-4 position-relative">
+											<input type="text" name="company_address" value="{{ company_address }}" placeholder="{{ entry_address_1 }}" id="input-company-address" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none d-none" />
+										</div>
+										<div class="form-group mb-4 mt-4 position-relative">
+											<input type="text" name="company_zip" value="{{ company_zip }}" placeholder="{{ entry_postcode }}" id="input-company-zip" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none d-none" />
+										</div>
+									</div>
+									<div class="form-group required mb-4 mt-4 position-relative">
+										<input type="text" name="firstname" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" placeholder="{{ entry_firstname }}">
+										<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+											<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+												<path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"></path>
+											</svg>
+										</div>
+									</div>
+									<div class="form-group required mb-4 mt-4 position-relative">
+										<input type="text" name="lastname" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" placeholder="{{ entry_lastname }}">
+										<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+											<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+												<path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"></path>
+											</svg>
+										</div>
+									</div>
+									<div class="form-group mb-4 mt-2 position-relative">
+										<input type="tel" id="input-telephone-register" name="telephone" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" placeholder="{{ entry_telephone }}">
+										<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+											<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+												<path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"></path>
+											</svg>
+										</div>
+									</div>
+									<div class="form-group required mb-4 mt-2 position-relative">
+										<input type="email" name="email" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" placeholder="{{ entry_email }}">
+										<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+											<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+												<path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm640-480L501-453q-5 3-10.5 4.5T480-447q-5 0-10.5-1.5T459-453L160-640v400h640v-400ZM480-520l320-200H160l320 200ZM160-640v10-59 1-32 32-.5 58.5-10 400-400Z"></path>
+											</svg>
+										</div>
+									</div>
+									<div class="form-group required mb-4 position-relative">
+										<input type="password" name="password" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg px-5 shadow-none" placeholder="{{ entry_password }}">
+										<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+											<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+												<path d="M280-240q-100 0-170-70T40-480q0-100 70-170t170-70q66 0 121 33t87 87h352q33 0 56.5 23.5T920-520v80q0 33-23.5 56.5T840-360v40q0 33-23.5 56.5T760-240h-80q-33 0-56.5-23.5T600-320v-40H488q-32 54-87 87t-121 33Zm0-80q66 0 106-40.5t48-79.5h246v120h80v-120h80v-80H434q-8-39-48-79.5T280-640q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-80q33 0 56.5-23.5T360-480q0-33-23.5-56.5T280-560q-33 0-56.5 23.5T200-480q0 33 23.5 56.5T280-400Zm0-80Z"></path>
+											</svg>
+										</div>
+										<button type="button" class="btn btn-link position-absolute h-100 align-items-center d-flex h-100 r-0 t-0 b-0 pr-2 pl-0 py-0 shadow-none" tabindex="-1" onmousedown="$(this).parent().find('input').attr('type','text')" onmouseup="$(this).parent().find('input').attr('type','password')">
+											<svg class="d-block mr-1 ft-icon text-gray-500 darker-on-hover" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+												<path d="M12 6c3.79 0 7.17 2.13 8.82 5.5C19.17 14.87 15.79 17 12 17s-7.17-2.13-8.82-5.5C4.83 8.13 8.21 6 12 6m0-2C7 4 2.73 7.11 1 11.5 2.73 15.89 7 19 12 19s9.27-3.11 11-7.5C21.27 7.11 17 4 12 4zm0 5c1.38 0 2.5 1.12 2.5 2.5S13.38 14 12 14s-2.5-1.12-2.5-2.5S10.62 9 12 9m0-2c-2.48 0-4.5 2.02-4.5 4.5S9.52 16 12 16s4.5-2.02 4.5-4.5S14.48 7 12 7z"></path>
+											</svg>
+										</button>
+									</div>
+									<div class="form-group mb-0 pt-2 position-relative">
+										<button type="button" id="button-register-popup" data-loading="{{ text_loading }}" class="btn btn-dark-gray btn-lg btn-block border-radius-4">{{ text_register_btn }}</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div id="login-popup-forgotten-view" class="tab-pane fade">
+						<button type="button" class="btn btn-link shadow-none d-flex text-dark align-items-center text-decoration-none px-0 mb-4" onclick="$('#login-popup-account-view-button').trigger('click')">
+							<svg class="mr-2" fill="currentColor" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+								<path d="m142-480 294 294q15 15 14.5 35T435-116q-15 15-35 15t-35-15L57-423q-12-12-18-27t-6-30q0-15 6-30t18-27l308-308q15-15 35.5-14.5T436-844q15 15 15 35t-15 35L142-480Z"></path>
+							</svg>
+							<span class="font-size-16">{{ text_go_back_btn }}</span>
+						</button>
+						<div class="h4">{{ text_forgotten }}</div>
+						<p class="mb-4">{{ text_recovery_password }}</p>
+						<ul class="nav nav-pills forgotten-method-pills nav-justified m-0 p-0">
+							<li class="nav-item mr-2">
+								<a class="nav-link h-100 rounded-lg py-2 active d-flex flex-column" href="#fogin-popup-forgotten-email" data-toggle="pill">
+									<svg class="d-block mb-2" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+										<path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"></path>
+									</svg>
+									<span class="text-dark mt-auto lh-1-2">{{ text_by_email }}</span>
+								</a>
+							</li>
+							<li class="nav-item rounded-lg ml-2">
+								<a class="nav-link h-100 rounded-lg py-2 d-flex flex-column" href="#fogin-popup-forgotten-phone" data-toggle="pill">
+									<svg class="d-block mb-2" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+										<path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"></path>
+									</svg>
+									<span class="text-dark mt-auto lh-1-2">{{ text_by_telephone }}</span>
+								</a>
+							</li>
+						</ul>
+
+						<div class="tab-content">
+							<div class="tab-pane fade show active" id="fogin-popup-forgotten-email">
+								<p class="my-4">
+									{{ entry_email_recovery }}
+								</p>
+								<form id="recover-password-data" enctype="multipart/form-data" class="form-horizontal">
+									<div class="form-group mb-4 mt-2 position-relative">
+										<input type="email" name="email" class="form-control form-control-lg rounded-3px border-2 border-gray-150 px-5 shadow-none" placeholder="{{ entry_email }}" onfocus="$(this).removeClass('border-gray-150')" onblur="$(this).addClass('border-gray-150')">
+										<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+											<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+												<path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"></path>
+											</svg>
+										</div>
+									</div>
+									<div class="form-group mb-0 pt-2 position-relative">
+										<button id="recover_password_by_email" data-loading="{{ text_loading }}" type="button" class="btn btn-dark-gray btn-lg btn-block border-radius-4">{{ button_send_new_password }}</button>
+									</div>
+								</form>
+							</div>
+							<div class="tab-pane fade position-relative" id="fogin-popup-forgotten-phone">
+								<p class="my-4">{{ entry_telephone_recovery }}</p>
+								<div class="sap-forgotten-block">
+
+								</div>
+								{# <form enctype="multipart/form-data" class="form-horizontal">
+									<div class="form-group mb-4 mt-2 position-relative">
+										<input type="text" name="phote" class="form-control form-control-lg rounded-3px border-2 border-gray-150 px-5 shadow-none" placeholder="{{ entry_telephone }}" onfocus="$(this).removeClass('border-gray-150')" onblur="$(this).addClass('border-gray-150')">
+										<div class="position-absolute h-100 align-items-center d-flex h-100 l-0 t-0 b-0 pl-2 text-gray-500">
+											<svg class="d-block ml-1" width="24" height="24" fill="currentColor" viewBox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+												<path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12ZM241-600l66-66-17-94h-89q5 41 14 81t26 79Zm358 358q39 17 79.5 27t81.5 13v-88l-94-19-67 67ZM241-600Zm358 358Z"></path>
+											</svg>
+										</div>
+									</div>
+									<div class="form-group mb-0 pt-2 position-relative">
+										<button type="button" data-loading="{{ text_loading }}" class="btn btn-dark-gray btn-lg btn-block border-radius-4">{{ button_send_new_password }}</button>
+									</div>
+								</form> #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+</div>
+{#<script src="catalog/view/javascript/opc/maskedinput.js"></script>#}
+
+<script>
+$("#input-telephone-register").mask('+999999999999');
+/*const inputd_tel = document.querySelector("#input-telephone-register");
+const itid_tel = window.intlTelInput(inputd_tel, {
+    allowDropdown: true,
+    autoPlaceholder: "polite",
+    fixDropdownWidth: true,
+    formatAsYouType: true,
+    formatOnDisplay: true,
+  	initialCountry: "nl",
+    nationalMode: true,
+    onlyCountries: ["at", "be", "bg", "hr", "cz", "dk", "ee", "fl", "fr", "de", "gr", "hu", "ie", "it", "lt", "lv", "lu", "nl", "pl", "pt", "ro", "sk", "sl", "se", "es", "globe"],
+    placeholderNumberType: "MOBILE",
+    showFlags: true,
+    separateDialCode: false,
+    strictMode: true,
+    useFullscreenPopup: false,
+    validationNumberType: "MOBILE",
+});*/
+
+//console.log(document.querySelectorAll("#phone-login")[1]);
+/*if (document.querySelectorAll("#phone-login").length > 1) {
+	const inputp_tel = document.querySelectorAll("#phone-login")[1];
+	const itip_tel = window.intlTelInput(inputp_tel, {
+	    allowDropdown: true,
+	    autoPlaceholder: "polite",
+	    fixDropdownWidth: true,
+	    formatAsYouType: true,
+	    formatOnDisplay: true,
+	  	initialCountry: "es",
+	    nationalMode: true,
+	    onlyCountries: ["at", "be", "bg", "hr", "cz", "dk", "ee", "fl", "fr", "de", "gr", "hu", "ie", "it", "lt", "lv", "lu", "nl", "pl", "pt", "ro", "sk", "sl", "se", "es", "globe"],
+	    placeholderNumberType: "MOBILE",
+	    showFlags: true,
+	    separateDialCode: false,
+	    strictMode: true,
+	    useFullscreenPopup: false,
+	    validationNumberType: "MOBILE",
+	});
+} else if (document.querySelectorAll("#phone-login").length == 1) {
+	const inputp_tel = document.querySelector("#phone-login");
+	const itip_tel = window.intlTelInput(inputp_tel, {
+	    allowDropdown: true,
+	    autoPlaceholder: "polite",
+	    fixDropdownWidth: true,
+	    formatAsYouType: true,
+	    formatOnDisplay: true,
+	  	initialCountry: "es",
+	    nationalMode: true,
+	    onlyCountries: ["at", "be", "bg", "hr", "cz", "dk", "ee", "fl", "fr", "de", "gr", "hu", "ie", "it", "lt", "lv", "lu", "nl", "pl", "pt", "ro", "sk", "sl", "se", "es", "globe"],
+	    placeholderNumberType: "MOBILE",
+	    showFlags: true,
+	    separateDialCode: false,
+	    strictMode: true,
+	    useFullscreenPopup: false,
+	    validationNumberType: "MOBILE",
+	});
+}*/
+$('#phone-login').mask('+999999999999');
+
+// nip validate
+$('input[name="company_nip"]').keypress(function (e) {
+	if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+	}
+});
+$('input[name="company_nip"]').keyup(function (e) {
+	if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+	}
+});
+$('input[name="company_nip"]').keydown(function (e) {
+	if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+	}
+});
+
+$(document).on('change', '#input-country', function (e) {
+    // var country_arr = {14:'at',21:'be',33:'bg',53:'hr',56:'cz',57:'dk',67:'ee',72:'fl',74:'fr',81:'de',84:'gr',97:'hu',103:'ie',105:'it',117:'lv',123:'lt',124:'lu',150:'nl',170:'pl',171:'pt',175:'ro',189:'sk',190:'sl',195:'es',203:'se'};
+
+	setTimeout(function() {
+
+		// var country_arr = {14:'at',21:'be',33:'bg',53:'hr',56:'cz',57:'dk',67:'ee',72:'fl',74:'fr',81:'de',84:'gr',97:'hu',103:'ie',105:'it',117:'lv',123:'lt',124:'lu',150:'nl',170:'pl',171:'pt',175:'ro',189:'sk',190:'sl',195:'es',203:'se'};
+		// window.intlTelInput.getInstance(document.querySelector("#input-telephone-register")).setCountry(country_arr[$('#input-country option:selected').val()]);
+
+	}, 400);
+
+    checkFirma();
+});
+
+function checkFirma(){
+	var selectedValue = $('#register-data input[name="customer_type"]:checked').val();
+	if (selectedValue == 1) {
+		$('#register-data .firma_fields').removeClass('d-none');
+
+		if ($('select[id="input-country"] option:selected').val() != 170 && $('select[id="input-country"] option:selected').val() != '') {
+			$('input[name="company_nip"]').closest('.form-group').addClass('d-none');
+			$('#button-nip').addClass('d-none');
+			$('.cmvatcode').removeClass('d-none');
+
+			if ($('select[name="country_id"] option:selected').val() > 0) {
+				$('input[name="pl_company_name"]').removeClass('d-none');
+				$('input[name="company_region"]').removeClass('d-none');
+				$('input[name="company_address"]').removeClass('d-none');
+				$('input[name="company_zip"]').removeClass('d-none');
+			}
+		} else {
+			$('input[name="company_nip"]').closest('.form-group').removeClass('d-none');
+			$('#button-nip').removeClass('d-none');
+			$('.cmvatcode').addClass('d-none');
+
+			if ($('select[name="country_id"] option:selected').val() > 0) {
+				$('input[name="pl_company_name"]').addClass('d-none');
+				$('input[name="company_region"]').addClass('d-none');
+				$('input[name="company_address"]').addClass('d-none');
+				$('input[name="company_zip"]').addClass('d-none');
+			}
+		}
+	} else {
+		$('#register-data .firma_fields').addClass('d-none');
+	}
+}
+$(document).on('change', '#register-data input[name="customer_type"]', function () {
+	checkFirma();
+});
+
+$(document).on('click', '#login-popup-account-view-button', function () {
+	$('.sap-authorization-block').append( $('.sap-forgotten-block').contents() );
+});
+
+$(document).on('click', '#login-popup-forgotten-view-button', function () {
+	$('.sap-forgotten-block').append( $('.sap-authorization-block').contents() );
+});
+
+function loading_mask(action){
+	if (action) {
+		if(!$('.loading_mask').length){
+			$('body').append('<div class="loading_mask"></div>');
+		}
+		$('.loading_mask').html('<div class="center-body"><div class="opc-loader-circle"></div></div>');
+		$('.loading_mask').show();
+	} else {
+		$('.loading_mask').html('');
+		$('.loading_mask').hide();
+	}
+};
+
+checkFirma();
+
+$(document).on('keypress', '#pixsel-input-password, #login-data input[name="email"]', function(e) {
+	if(e.which == 13) {
+		$('#button-login-popup').trigger('click');
+	}
+});
+
+$(document).on('click', '#button-login-popup', function(e) {
+	var $btn = $('#button-login-popup');
+   var originalText = $btn.text();
+   $('#login-data .alert').remove();
+
+	$.ajax({
+		url: 'index.php?route=common/login_modal/login_validate',
+		type: 'post',
+		data: $('#login-data').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+			loading_mask(true);
+    		$btn.text($btn.attr('data-loading'));
+		},
+		complete: function() {
+			$btn.text(originalText);
+		},
+		success: function(json) {
+
+			if(json['islogged']){
+				location.reload();
+			}
+
+			if (json['error']) {
+				loading_mask(false);
+				$('#login-data').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+			}
+
+			setTimeout(function () {
+				$('#login-data .alert').remove();
+			}, 3000);
+
+			if(json['success']){
+				self.loading_mask(false);
+				$('#ft-login-modal').modal('hide');
+				// location.reload();
+				// lm_setCookie('languageauto', '1', {expires: 180});
+				if (json['language_id']) {
+					$('button[data-lang-id="'+json['language_id']+'"]').trigger('click');
+				} else {
+					window.location = window.location;
+				}
+				// window.location = window.location;
+			}
+
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$(document).on('click', '#button-register-popup', function(e) {
+	var $btn = $('#button-register-popup');
+   	var originalText = $btn.text();
+
+	$.ajax({
+		url: 'index.php?route=common/login_modal/register_validate',
+		type: 'post',
+		data: $('#register-data').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+    		$btn.text($btn.attr('data-loading'));
+		},
+		complete: function() {
+			$btn.text(originalText);
+		},
+		success: function(json) {
+
+			if (json['error']) {
+				$('#register-data').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+			}
+
+			setTimeout(function () {
+				$('#register-data .alert').remove();
+			}, 3000);
+
+			if(json['success']){
+				$('#register-data').prepend('<div class="alert alert-success alert-dismissible mt-4 mb-4">' + json['success'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+				setTimeout(function () {
+					$('#ft-login-modal').modal('hide');
+					location.reload();
+				}, 1500);
+			}
+
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$(document).on('click', '#recover_password_by_email', function(e) {
+	var $btn = $('#recover_password_by_email');
+   var originalText = $btn.text();
+
+	$.ajax({
+		url: 'index.php?route=common/login_modal/recover_password',
+		type: 'post',
+		data: $('#recover-password-data').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+    		$btn.text($btn.attr('data-loading'));
+		},
+		complete: function() {
+			$btn.text(originalText);
+		},
+		success: function(json) {
+
+			if (json['error']) {
+				$('#recover-password-data').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+			}
+
+			setTimeout(function () {
+				$('#recover-password-data .alert').remove();
+			}, 3000);
+
+			if(json['success']){
+				$('#recover-password-data').prepend('<div class="alert alert-success alert-dismissible mt-4 mb-4">' + json['success'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+				// setTimeout(function () {
+				// 	$('#ft-login-modal').modal('hide');
+				// 	location.reload();
+				// }, 1500);
+			}
+
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+document.getElementById('pixsel-show-password').addEventListener('mousedown', function() {
+    var passwordInput = document.getElementById('pixsel-input-password');
+    passwordInput.setAttribute('type', 'text');
+});
+
+document.getElementById('pixsel-show-password').addEventListener('mouseup', function() {
+    var passwordInput = document.getElementById('pixsel-input-password');
+    passwordInput.setAttribute('type', 'password');
+});
+
+document.getElementById('pixsel-show-password').addEventListener('touchstart', function() {
+    var passwordInput = document.getElementById('pixsel-input-password');
+    passwordInput.setAttribute('type', 'text');
+});
+
+document.getElementById('pixsel-show-password').addEventListener('touchend', function() {
+    var passwordInput = document.getElementById('pixsel-input-password');
+    passwordInput.setAttribute('type', 'password');
+});
+
+</script>

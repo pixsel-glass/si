@@ -1,0 +1,51 @@
+{% if mainstatus is not empty or otpstatus is not empty %}
+{% if popup %}
+<script>
+if (typeof jQuery !== 'undefined' && jQuery.isReady) {
+	{% for script in scripts %}
+	if (!$("script[src='{{ script }}']").length) {
+        jQuery.getScript('{{ script }}');
+    }
+	{% endfor %}
+	{% for style in styles %}
+	if (!$("link[href='{{ style }}']").length) {
+        jQuery("head").append('<link href="' + '{{ style }}' + '" rel="stylesheet"/>');
+    }
+	{% endfor %}
+}
+</script>
+{% endif %}
+<p class="login-info-text text-center margintop20">{{ text_title_otp }}</p>
+<div class="form-group">
+	{% if sociallogin %}
+    <div class="form">
+    {% endif %}
+    <div class="form-group{{ sociallogin ? ' group-telephone' : '' }} otpbox{{ otppage }}" id="otpbox">
+        <div class="input-group telephone-error-{{ otppage }}">
+            <input type="hidden" name="page" value="{{ otppage }}">
+            <input type="hidden" name="otp_country_code" id="otp_country_code-{{ otppage }}">
+			<input type="text" inputmode="tel" id="{{ id }}" name="telephone" class="{{ sociallogin ? 'form-field' : 'form-control' }}{{ show_country_code ? ' iti--sap-tel-input' : '' }} numeric telephonenew{{ otppage }}{{ is_mask ? ' mask' : '' }}" {{ show_country_code ? 'data-phone-input-id="'~id~'" data-phone-dial-code-input="#otp_country_code-'~otppage~'"' : '' }} data-config-type="sms"{{ is_mask ? mask : '' }} value="{{ telephone }}" placeholder="{{ entry_telephone }}" {{ maximum ? 'maxlength="'~maximum~'"' : '' }} autocomplete="off">
+			<span class="input-group-btn">
+                <button class="{{ sociallogin ? 'send_otp_btn otp_btn-s' : 'btn btn-success' }} btnverify{{ otppage }}" type="button" title="{{ button_login }}"><i class="fa fa-check" aria-hidden="true"></i> {{ button_login }}</button>
+            </span>
+        </div>
+    </div>
+    {% if sociallogin %}
+    </div>
+    {% else %}
+	<style>.iti {position: unset !important;}</style>
+	{% endif %}
+	{% if show_country_code %}
+	<script async>
+		var sapTelSMSInputConfig = {{ config_tel_input }};
+	</script>
+	{% else %}
+	{% if mask %}
+	<script>
+		var maskPhone = '{{ mask }}';
+		$('#otp_country_code-{{ otppage }}').val(maskPhone.replace(/[^0-8]/g, ''));
+	</script>
+	{% endif %}
+	{% endif %}
+</div>
+{% endif %}

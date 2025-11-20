@@ -1,0 +1,25 @@
+<file path="admin/controller/common/header.php">
+    <operation error="skip">
+        <search  position="before"><![CDATA[$this->render]]></search>
+        <add position="before"><![CDATA[
+					$this->load->model('seolang/seolang');
+			        $this->model_seolang_seolang->control('seolang/seolang');
+			        if (is_callable(array($this->controller_seolang_seolang, 'seolang_menu'))) {
+			        	$data['seolang_menus'] = $this->controller_seolang_seolang->seolang_menu();
+			        	if (!$data['seolang_menus']) {
+			        		unset($data['seolang_menus']);
+			        	} else {
+			        		$this->data['seolang_menus'] = $data['seolang_menus'];
+			        		unset($data['seolang_menus']);
+			        	}
+			        }
+    ]]></add>
+    </operation>
+</file>
+
+<file path="admin/view/template/common/header.tpl">
+    <operation error="skip">
+        <search  position="before"><![CDATA[<li id="store">]]></search>
+        <add position="before"><![CDATA[<?php if (isset($seolang_menus)) { echo $seolang_menus; } ?>]]></add>
+    </operation>
+</file>

@@ -1,0 +1,39 @@
+{% if links_status and links %}
+<div class="mb-3 mb-lg-3">
+	{% if is_mobile == 0 %}
+	<div class="row no-gutters">
+		<div class="col">
+			<div class="h5 mb-0">
+				{{ links_title }}
+			</div>
+		</div>
+		<div class="col-auto">
+			<a href="#collapse-hlinks" class="d-block d-sm-none" data-toggle="collapse">
+				<svg class="toggle-hidden ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+				</svg>
+				<svg class="toggle-shown ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="M19 13H5v-2h14v2z"/>
+				</svg>
+			</a>
+		</div>
+	</div>
+	{% endif %}
+	<div class="collapse show collapse-xs" id="collapse-hlinks">
+		<ul class="list-unstyled mb-0 {% if is_mobile == 0 %}mt-3{% endif %}">
+		{% for link in links %}
+			<li class="row no-gutters pb-1">
+				<span class="col-auto">
+					<svg class="ft-icon-18 d-block text-gray-500 darker-on-hover mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"></path>
+					</svg>
+				</span>
+				<span class="col">
+					<a class="text-dark" href="{{ link.href }}">{{ link.title }}</a>
+				</span>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endif %}

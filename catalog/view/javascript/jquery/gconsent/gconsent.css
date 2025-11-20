@@ -1,0 +1,238 @@
+/*
+ * Google Consent v2 OpenCart Extension
+ * https://opencartbot.com/en/google-consent-v2
+ */
+#gmc_cookie_banner {
+    position: fixed;
+    width: 100%;
+    text-align: center;
+    z-index: 99999;
+    background-color: #ffffff;
+    box-shadow: 0 -2px 18px rgb(0 0 0 / 6%);
+    color: #444444;
+}
+
+#gmc_cookie_banner.center{
+    top: 50%;
+    left: 50%;
+    max-width: 600px;
+    transform: translate(-50%,-50%);
+}
+
+#gmc_cookie_banner.top{
+    top: 0;
+    left: 0;
+}
+
+#gmc_cookie_banner.bottom{
+    bottom: 0;
+    left: 0;
+}
+
+#gmc_cookie_banner .gmc_banner_inner{
+    padding: 20px;
+    margin: auto;
+}
+
+#gmc_cookie_banner .gcm_close_banner{
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+#gmc_cookie_banner .settings-panel {
+    display: none;
+    padding-top: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#gmc_cookie_banner .settings-panel.show {
+    display: block;
+}
+
+#gmc_cookie_banner .toggle-switch {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 18px;
+    text-align: left;
+}
+
+#gmc_cookie_banner .toggle-switch input {
+    display: none;
+}
+
+#gmc_cookie_banner .slider {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+    background-color: #ccc;
+    border-radius: 30px;
+    cursor: pointer;
+    float: right;
+}
+
+#gmc_cookie_banner .slider:before {
+    position: absolute;
+    content: '';
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+#gmc_cookie_banner input:checked+.slider:before {
+    transform: translateX(20px);
+}
+
+#gmc_cookie_banner input:checked+.slider {
+    background-color: #007bff;
+}
+
+#gmc_cookie_banner .gcm_label_description {
+    font-size: 14px;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+#gmc_cookie_banner #gcm_essential_cookies+.slider {
+    opacity: 0.3;
+}
+
+#gmc_cookie_banner .gmc_title {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+#gmc_cookie_banner .gmc_setting_title {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+#gmc_cookie_banner .gmc_button {
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 30px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+#gmc_cookie_banner .gmc_button:hover {
+    opacity: 0.8;
+}
+
+#gmc_cookie_banner #settings-btn {
+    background-color: #dfe4eb;
+    color: #666666;
+}
+
+#gmc_cookie_banner #decline-btn {
+    background-color: #ff7171;
+}
+
+#gmc_cookie_banner #accept-btn.
+#gmc_cookie_banner #save-settings-btn {
+    background-color: #5384ec;
+}
+
+#gmc_cookie_banner .gmc_description {
+    letter-spacing: .25px;
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 10px;
+}
+
+#gmc_backdrop {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1042;
+    overflow: hidden;
+    position: fixed;
+    background: #0b0b0b;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
+
+#gmc_cookie_banner.gmc_minimal .cookies-panel {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+
+#gmc_cookie_banner .buttons {
+    margin: 0 !important;
+    justify-content: center !important;
+}
+
+#gmc_cookie_banner.gmc_minimal .buttons {
+    min-width: 210px;
+    margin-left: 10px;
+}
+
+#gmc_cookie_banner.gmc_minimal .gmc_button {
+    margin: 0;
+    margin-bottom: 8px;
+    margin-left: 10px;
+    font-size: 14px;
+    padding: 5px 20px;
+}
+
+#gmc_cookie_banner.gmc_minimal .gmc_description {
+    margin-bottom: 8px;
+}
+
+#gmc_cookie_banner.gmc_minimal .gmc_banner_inner {
+    padding: 0px;
+    padding-top: 10px;
+    max-width: 85%;
+}
+
+#gmc_cookie_banner .hide,
+#gmc_cookie_banner .hidden {
+    display: none !important;
+}
+
+@media(max-width:767px) {
+    #gmc_cookie_banner.gmc_minimal .cookies-panel {
+        flex-direction: column;
+    }
+    #gmc_cookie_banner.gmc_minimal .buttons {
+        margin-left: 0;
+    }
+    #gmc_cookie_banner .toggle-switch {
+        margin-bottom: 2px;
+        font-size: 17px;
+    }
+    #gmc_cookie_banner .gmc_button {
+        padding: 10px 9px;
+    }
+    #gmc_cookie_banner .toggle-switch {
+        margin-bottom: 0;
+        line-height: 35px;
+        font-size: 17px;
+    }
+    #gmc_cookie_banner .gcm_label_description {
+        font-size: 14px;
+        line-height: 16px;
+        margin-bottom: 2px;
+    }
+    #gmc_cookie_banner .gmc_title {
+        font-size: 22px;
+        margin-bottom: 0px;
+    }
+}

@@ -1,0 +1,18 @@
+				
+			</div>
+		</div>
+
+		{% for script in scripts %}
+		<script src="{{ script }}"></script>
+		{% endfor %}
+
+		{% if livesearch %}
+		<script id="ftLiveSearchScript" src="catalog/view/theme/{{ theme_dir }}/javascript/ft.livesearch.js{{ theme_version }}"></script>
+		{% endif %}
+
+		<script src="catalog/view/theme/{{ theme_dir }}/javascript/common.js{{ theme_version }}"></script>
+
+		{{ cust_code }}
+
+	</body>
+</html>

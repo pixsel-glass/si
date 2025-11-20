@@ -1,0 +1,57 @@
+#shipping-methods-wrapper .shipping-method-col .fa,
+#delivery-services-wrapper .delivery-service-col .fa {
+    font-size: 22px;
+}
+#shipping-methods-wrapper .shipping-method-col .fa-times-circle,
+#delivery-services-wrapper .delivery-service-col .fa-times-circle {
+    color: #d61010;
+}
+#shipping-methods-wrapper .shipping-method-col .fa-check-circle,
+#delivery-services-wrapper .delivery-service-col .fa-check-circle {
+    color: #32ae23;
+}
+
+#inpostShippingMethodModal .has-form-error {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #c73029;
+}
+
+.inpost-logo-img {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.shipments-table tbody tr td .btn {
+    display:block;
+    margin-bottom: 2px;
+}
+
+.inpost-shipping tbody .mode-span {
+    position: relative;
+    float: right;
+    border: 1px solid;
+    padding: 1px 3px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 12px;
+
+}
+
+.inpost-shipping tbody .live-mode-span {
+    background-color: green;
+    color: #fff;
+}
+
+.inpost-shipping tbody .sbx-mode-span {
+    background-color: royalblue;
+    color: #fff;
+}
+
+.inpost-shipping tbody .na-mode-span {
+    background-color: dimgrey;
+    color: #fff;
+}

@@ -1,0 +1,1020 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+		{% if feed_merchant_feed_key %}
+		<a href="{{ category_page }}" data-toggle="tooltip" title="{{ button_category }}" class="btn btn-default"><i class="fa fa-list"></i></a>
+		{% endif %}
+        <button type="submit" form="form-feed" data-toggle="tooltip" title="{{ button_apply }}" id="button-apply" class="btn btn-success"><i class="fa fa-save"></i></button>
+        <button type="submit" form="form-feed" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+	{% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+	{% if success %}
+	<div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+	</div>
+	{% endif %}
+	{% if info %}
+	<div class="alert alert-info"><i class="fa fa-check-circle"></i> {{ info }}</div>
+	{% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+			<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-feed" class="form-horizontal">
+			<div class="col-sm-12 {% if feed_merchant_feed_key %}hidden{% endif %}">
+				<div class="form-horizontal text-center">
+					<div class="form-group" id="license" style="max-width: 600px;margin: 0 auto;">
+						<label class="pull-left control-label" for="input-key" style="    margin-right: 10px;">{{ entry_key }}</label>
+							<div class="col-sm-6 input-group">
+								<input type="text" name="feed_merchant_feed_key" value="{{ feed_merchant_feed_key }}" id="input-key" class="form-control" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default" id="activate">{{ button_apply }}</button>
+								</span>
+							</div>
+					</div>
+					<div class="clearfix col-sm-12">{{ text_license }}</div>
+				</div>
+			</div>
+			
+			{% if feed_merchant_feed_key %}
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+					<div class="col-sm-10">
+						<select name="feed_merchant_feed_status" id="input-status" class="form-control">
+							{% if feed_merchant_feed_status %}
+							<option value="1" selected="selected">{{ text_enabled }}</option>
+							<option value="0">{{ text_disabled }}</option>
+							{% else %}
+							<option value="1">{{ text_enabled }}</option>
+							<option value="0" selected="selected">{{ text_disabled }}</option>
+							{% endif %}
+						</select>
+					</div>
+				</div>
+				<hr>
+				<ul class="nav nav-tabs">
+					{% for tab, value in feed_merchant_feed_settings %}
+						<li class="tab-cont{{ tab }} {% if tab == 1 %}active{% endif %}"><a href="#tab-{{ tab }}" data-toggle="tab" aria-expanded="true">{{ value.profil_title }} <span style="cursor:pointer;" onclick="removeTab({{ tab }}); return false;" title="{{ text_delete_tab }}"><i class="fa fa-times-circle" aria-hidden="true"></i></span></a>
+					{% endfor %}
+					<li id="addtab"><a href="#" onclick="addTab(); return false;" title="{{ text_add_module }}"><i class="fa fa-plus-square" aria-hidden="true"></i> {{ text_add_module }}</a></li>
+				</ul>
+				<div class="tab-content">
+					{% set tab_count = 1 %}
+					{% if feed_merchant_feed_settings %}
+						{% for tab, value in feed_merchant_feed_settings %}
+						<div class="tab-pane {% if tab == 1 %}active{% endif %}" id="tab-{{ tab }}">
+							<div class="col-sm-12">
+								<ul class="nav nav-tabs">
+									<li class="active"><a href="#tab-general{{ tab }}" data-toggle="tab">{{ tab_general }}</a></li>
+									<li><a href="#tab-data{{ tab }}" data-toggle="tab">{{ tab_data }}</a></li>
+									<li><a href="#tab-generate{{ tab }}" data-toggle="tab">{{ tab_generate }}</a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab-general{{ tab }}">
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-title-profile-{{ tab }}">{{ entry_feed_title_profile }}</label>
+										<div class="col-sm-10">
+											<input type="text" name="feed_merchant_feed_settings[{{ tab }}][profil_title]" value="{{ value.profil_title }}" id="input-title-profile-{{ tab }}" onkeyup="changeTabName({{ tab }}, $(this).val());" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-language-id-{{ tab }}">{{ entry_lang }}</label>
+											<div class="col-sm-10">
+												<select id="input-language-id-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][language_id]" class="form-control">
+													{% for language in languages %}
+													{% if language.language_id == value.language_id %}
+													<option value="{{ language.language_id }}" selected="selected">{{ language.name }}</option>
+													{% else %}
+													<option value="{{ language.language_id }}">{{ language.name }}</option>
+													{% endif %}
+													{% endfor %}
+												</select>
+											</div>
+									</div>	
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-currency-{{ tab }}">{{ entry_currency }}</label>
+											<div class="col-sm-10">
+												<select id="input-currency-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][currency]" class="form-control">
+													{% for currency in currencies %}
+													{% if currency.code == value.currency %}
+													<option value="{{ currency.code }}" selected="selected">{{ currency.title }}</option>
+													{% else %}
+													<option value="{{ currency.code }}">{{ currency.title }}</option>
+													{% endif %}
+													{% endfor %}
+												</select>
+											</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-store-id-{{ tab }}">{{ entry_store }}</label>
+											<div class="col-sm-10">
+												<select id="input-store-id-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][store_id]" class="form-control">
+													<option value="0" {% if value.profil_title == 0 %}selected="selected"{% endif %}>{{ text_default_store }}</option>
+													{% for store in stores %}
+													{% if store.store_id == value.store_id %}
+													<option value="{{ store.store_id }}" selected="selected">{{ store.name }}</option>
+													{% else %}
+													<option value="{{ store.store_id }}">{{ store.name }}</option>
+													{% endif %}
+													{% endfor %}
+												</select>
+											</div>
+									</div>									
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-save-file-{{ tab }}">{{ entry_save_file }}</label>
+											<div class="col-sm-10">
+											  <select id="input-save-file-{{ tab }}" onchange="showCron({{ tab }});" name="feed_merchant_feed_settings[{{ tab }}][save_file]" class="form-control">
+												{% if value.save_file %}
+												<option value="1" selected="selected">{{ text_yes }}</option>
+												<option value="0">{{ text_no }}</option>
+												{% else %}
+												<option value="1">{{ text_yes }}</option>
+												<option value="0" selected="selected">{{ text_no }}</option>
+												{% endif %}
+											  </select>
+											  {{ text_save_file }}
+											</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-title-{{ tab }}">{{ entry_feed_title }}</label>
+										<div class="col-sm-10">
+											<input type="text" name="feed_merchant_feed_settings[{{ tab }}][title]" value="{{ value.title }}" id="input-title-{{ tab }}" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-description-{{ tab }}">{{ entry_feed_description }}</label>
+										<div class="col-sm-10">
+										  <input type="text" name="feed_merchant_feed_settings[{{ tab }}][description]" value="{{ value.description }}" id="input-description-{{ tab }}" class="form-control" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-url-prefix-{{ tab }}">{{ entry_url_prefix }}</label>
+										<div class="col-sm-10">
+										  <input type="text" name="feed_merchant_feed_settings[{{ tab }}][url_prefix]" onkeyup="setPrefix({{ tab }});" value="{{ value.url_prefix }}" id="input-url-prefix-{{ tab }}" class="form-control" />
+										{{ text_url_prefix_notice }}
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" for="input-feed-cron-key-{{ tab }}">{{ entry_data_feed_cron_key }}</label>
+										<div class="col-sm-10">
+											<div class="input-group">
+												<input type="text" name="feed_merchant_feed_settings[{{ tab }}][cron_key]" value="{{ value.cron_key }}" id="input-feed-cron-key-{{ tab }}" placeholder="{{ entry_key_generate }}" class="form-control" />
+												<span class="input-group-btn">
+													<button onclick="str_rand({{ tab }});" type="button" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="{{ text_generate }}"><i class="fa fa-cog"></i></button>
+												</span>
+											</div>
+										</div>
+									</div>	
+									<div class="form-group" {% if value.save_file %}style="display: none;"{% endif %}>
+										<label class="col-sm-2 control-label" for="input-data-feed-{{ tab }}">{{ entry_data_feed }}</label>
+										<div class="col-sm-10">
+										  <textarea rows="2" readonly id="input-data-feed-{{ tab }}" class="form-control">{{ value.data_feed }}</textarea>
+										{{ text_feed_notice }}
+										</div>
+									</div>
+									<div class="form-group" {% if value.save_file == false %}style="display: none;"{% endif %}>
+										<label class="col-sm-2 control-label" for="input-data-feed-cron-{{ tab }}">{{ entry_data_feed_cron }}</label>
+										<div class="col-sm-10">
+											<textarea name="feed_merchant_feed_settings[{{ tab }}][data_feed_cron]" rows="2" readonly id="input-data-feed-cron-{{ tab }}" class="form-control">{{ value.data_feed_cron }}</textarea>
+											{{ text_feed_generate }}
+										</div>
+									</div>									
+									<div class="form-group" {% if value.save_file == false %}style="display: none;"{% endif %}>
+										<label class="col-sm-2 control-label" for="input-data-feed-hand-{{ tab }}">{{ entry_data_feed_hand }}</label>
+										<div class="col-sm-10">
+											<textarea name="feed_merchant_feed_settings[{{ tab }}][data_feed_hand]" rows="2" readonly id="input-data-feed-hand-{{ tab }}" class="form-control">{{ value.data_feed_hand }}</textarea>
+											{{ text_feed_generate_hand }}
+										</div>
+									</div>									
+									<div class="form-group" {% if value.save_file == false %}style="display: none;"{% endif %}>
+										<label class="col-sm-2 control-label" for="input-data-feed-stat-{{ tab }}">{{ entry_data_feed_stat }}</label>
+										<div class="col-sm-10">
+											<textarea name="feed_merchant_feed_settings[{{ tab }}][data_feed_stat]" rows="2" readonly id="input-data-feed-stat-{{ tab }}" class="form-control">{{ value.data_feed_stat }}</textarea>
+											{{ text_feed_generate_stat}} {{ text_feed_notice }}
+										</div>
+									</div>
+									<div class="form-group">
+                                        <label class="col-sm-2 control-label" for="input-data-feed-reviews-{{ tab }}">{{ entry_data_feed_reviews }}</label>
+                                        <div class="col-sm-10">
+                                          <textarea rows="2" readonly id="input-data-feed-reviews-{{ tab }}" class="form-control">{{ value.data_feed_reviews }}</textarea>
+                                        {{ text_feed_reviews_notice }}
+                                        </div>
+                                    </div>
+								</div>			
+									<div class="tab-pane" id="tab-data{{ tab }}">
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-stock-{{ tab }}">{{ entry_product_stock }}</label>
+											<div class="col-sm-10">
+												<select id="input-product-stock-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][product_stock]" class="form-control">
+													{% if value.product_stock %}
+													<option value="1" selected="selected">{{ text_yes }}</option>
+													<option value="0">{{ text_no }}</option>
+													{% else %}
+													<option value="1">{{ text_yes }}</option>
+													<option value="0" selected="selected">{{ text_no }}</option>
+													{% endif %}
+												</select>
+												{{ text_feed_no_stock }}
+											</div>
+										</div>					
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-stock-status-{{ tab }}">{{ entry_stock_status }}</label>
+											<div class="col-sm-10">
+												<select id="input-product-stock-status-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][product_stock_status][]" multiple="multiple" class="form-control"  style="min-height: 100px;">
+													<option value="">{{ text_not }}</option>
+													{% for status in stock_statuses %}
+													{% if status.stock_status_id in value.product_stock_status %}
+													<option value="{{ status.stock_status_id }}" selected="selected">{{ status.name }}</option>
+													{% else %}
+													<option value="{{ status.stock_status_id }}">{{ status.name }}</option>
+													{% endif %}
+													{% endfor %}
+												</select>
+												{{ text_feed_stock_status }}
+											</div>
+										</div>					
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-gtin-{{ tab }}">{{ entry_product_gtin }}</label>
+											<div class="col-sm-10">
+												 <input type="text" name="feed_merchant_feed_settings[{{ tab }}][product_gtin]" value="{{ value.product_gtin }}" id="input-product-gtin-{{ tab }}" class="form-control" />
+													<a href="#" data-toggle="modal" data-target="#popup-sett">{{ text_popup }}</a>
+											</div>
+										</div>				
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-mpn-{{ tab }}">{{ entry_product_mpn }}</label>
+											<div class="col-sm-10">
+												 <input type="text" name="feed_merchant_feed_settings[{{ tab }}][product_mpn]" value="{{ value.product_mpn }}" id="input-product-mpn-{{ tab }}" class="form-control" />
+												 <a href="#" data-toggle="modal" data-target="#popup-sett">{{ text_popup }}</a>
+											</div>
+										</div>				
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-adult-{{ tab }}">{{ entry_product_adult }}</label>
+											<div class="col-sm-10">
+												<select id="input-product-adult-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][product_adult]" class="form-control">
+													{% if value.product_adult %}
+													<option value="1" selected="selected">{{ text_yes }}</option>
+													<option value="0">{{ text_no }}</option>
+													{% else %}
+													<option value="1">{{ text_yes }}</option>
+													<option value="0" selected="selected">{{ text_no }}</option>
+													{% endif %}
+												</select>
+											</div>
+										</div>				
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-condition-{{ tab }}">{{ entry_product_condition }}</label>
+											<div class="col-sm-10">
+												<select id="input-product-condition-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][product_condition]" class="form-control">
+													{% if value.product_condition %}
+													<option value="1" selected="selected">{{ text_new }}</option>
+													<option value="0">{{ text_bu }}</option>
+													{% else %}
+													<option value="1">{{ text_new }}</option>
+													<option value="0" selected="selected">{{ text_bu }}</option>
+													{% endif %}
+												</select>
+											</div>
+										</div>					
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-id-{{ tab }}">{{ entry_product_id }}</label>
+											<div class="col-sm-10">
+												<select id="input-product-id-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][product_id]" class="form-control">
+													{% if value.product_id %}
+													<option value="1" selected="selected">ProductID</option>
+													<option value="0">Model</option>
+													{% else %}
+													<option value="1">ProductID</option>
+													<option value="0" selected="selected">Model</option>
+													{% endif %}
+												</select>
+											</div>
+										</div>			
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-descr-{{ tab }}">{{ entry_product_descr }}</label>
+											<div class="col-sm-10">
+												<select id="input-product-descr-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][product_descr]" class="form-control">
+													{% if value.product_descr %}
+													<option value="1" selected="selected">{{ text_meta }}</option>
+													<option value="0">{{ text_description }}</option>
+													{% else %}
+													<option value="1">{{ text_meta }}</option>
+													<option value="0" selected="selected">{{ text_description }}</option>
+													{% endif %}
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-html-{{ tab }}">{{ entry_product_html }}</label>
+											<div class="col-sm-10">
+												<select id="input-product-html-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][product_html]" class="form-control">
+													{% if value.product_html %}
+													<option value="1" selected="selected">{{ text_yes }}</option>
+													<option value="0">{{ text_no }}</option>
+													{% else %}
+													<option value="1">{{ text_yes }}</option>
+													<option value="0" selected="selected">{{ text_no }}</option>
+													{% endif %}
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-special-{{ tab }}">{{ entry_product_special }}</label>
+											<div class="col-sm-10">
+												<select id="input-product-special-{{ tab }}" name="feed_merchant_feed_settings[{{ tab }}][product_special]" class="form-control">
+													{% if value.product_special %}
+													<option value="1" selected="selected">{{ text_yes }}</option>
+													<option value="0">{{ text_no }}</option>
+													{% else %}
+													<option value="1">{{ text_yes }}</option>
+													<option value="0" selected="selected">{{ text_no }}</option>
+													{% endif %}
+												</select>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-category-{{ tab }}">{{ entry_category }}</label>
+											<div class="col-sm-10">
+												<div class="well well-sm" style="min-height: 150px;max-height: 500px;overflow: auto;">
+													<table class="table table-striped">
+														{% for category in categories %}
+														<tr>
+															<td class="checkbox">
+																<label>
+																  <input type="checkbox" name="feed_merchant_feed_settings[{{ tab }}][product_category][]" value="{{ category.category_id }}" {% if category.category_id in value.product_category %}checked="checked"{% endif%} />
+																	  {{ category.name }}
+																</label>
+															</td>
+														</tr>
+														{% endfor %}
+													</table>
+												</div>
+												<a onclick="$(this).parent().find(':checkbox').prop('checked', true);">{{ text_select_all }}</a> / <a onclick="$(this).parent().find(':checkbox').prop('checked', false);">{{ text_unselect_all }}</a></div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-category-{{ tab }}">{{ entry_manufacturer }}</label>
+												<div class="col-sm-10">
+													<div class="well well-sm" style="min-height: 150px;max-height: 500px;overflow: auto;">
+														<table class="table table-striped">
+															{% for manufacturer in manufacturers %}
+															<tr>
+																<td class="checkbox">
+																	<label>
+																		<input type="checkbox" name="feed_merchant_feed_settings[{{ tab }}][manufacturer_category][]" value="{{ manufacturer.manufacturer_id }}" {% if manufacturer.manufacturer_id in value.manufacturer_category %}checked="checked"{% endif%} />
+																		{{ manufacturer.name }}
+																	</label>
+																</td>
+															</tr>
+															{% endfor %}
+														</table>
+													</div>
+													<a onclick="$(this).parent().find(':checkbox').prop('checked', true);">{{ text_select_all }}</a> / <a onclick="$(this).parent().find(':checkbox').prop('checked', false);">{{ text_unselect_all }}</a>
+												</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-product-black-list-{{ tab }}">{{ entry_product_black_list }}</label>
+												<div class="col-sm-10">
+													<input type="text" name="black_list" value="" id="input-product-black-list-{{ tab }}" data-tab-num="{{ tab }}" class="form-control" />
+														<div id="product-black-list-{{ tab }}" class="well well-sm" style="height: 150px; overflow: auto;">
+															{% for product in value.product_black_list %}
+															<div id="product-related{{ product.product_id }}"><i class="fa fa-minus-circle"></i> {{ product.name }}
+																<input type="hidden" name="feed_merchant_feed_settings[{{ tab }}][product_black_list][]" value="{{ product.product_id }}" />
+															</div>
+															{% endfor %}
+														 </div>
+												</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-parent-{{ tab }}">{{ entry_attribute }}</label>
+											<div class="col-sm-10">
+												<select name="feed_merchant_feed_settings[{{ tab }}][attribute_id]" class="form-control">
+													<option value="0" selected="selected">{{ text_none }}</option>
+													{% for attribute in attributes %}
+													{% if attribute.attribute_id in value.attribute_id %}
+													<option value="{{ attribute.attribute_id }}" selected="selected">{{ attribute.name }}</option>
+													{% else %}
+													<option value="{{ attribute.attribute_id }}">{{ attribute.name }}</option>
+													{% endif %}
+													{% endfor %}
+												</select>
+												{{ text_feed_size }}
+											</div>
+										</div>					
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="input-parent-{{ tab }}">{{ entry_option }}</label>
+											<div class="col-sm-10">
+												<select name="feed_merchant_feed_settings[{{ tab }}][option_id]" class="form-control">
+													<option value="0" selected="selected">{{ text_none }}</option>
+													{% for option in options %}
+													{% if option.option_id in value.option_id %}
+													<option value="{{ option.option_id }}" selected="selected">{{ option.name }}</option>
+													{% else %}
+													<option value="{{ option.option_id }}">{{ option.name }}</option>
+													{% endif %}
+													{% endfor %}
+												</select>
+												{{ text_feed_size }}
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane" id="tab-generate{{ tab }}">
+									<div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_generate_info }}</div>
+									<div class="progress">
+										<div class="progress-bar progress-bar-striped active" id="progress-bar-{{ tab }}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+									<button class="btn btn-success" id="button-generate-{{ tab }}" onclick="startGeneration({{ tab }}); return false;"><i class="fa fa-play"></i> {{ button_generate }}</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% set tab_count = tab_count + 1 %}
+						{% endfor %}
+					{% endif %}
+				</div>
+				{% else %}
+					<input type="hidden" name="reload" value="1" />
+				{% endif %}
+			</form>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="popup-sett" tabindex="-1" role="dialog" aria-labelledby="popup-sett-label" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+			  <span aria-hidden="true">×</span>
+			</button>
+			<h4 class="modal-title" id="popup-sett-label">{{ text_modal_head }}</h4>
+		  </div>
+		  <div class="modal-body">
+			<div class="form-group clearfix">
+				<div class="col-sm-3"><input value="model" readonly type="text" class="form-control" id="popup-model" /></div>
+				<label for="popup-model" class="col-sm-9 control-label">{{ text_popup_model }}</label>
+			</div>			
+			<div class="form-group clearfix">
+				<div class="col-sm-3"><input value="sku" readonly type="text" class="form-control" id="popup-sku" /></div>
+				<label for="popup-sku" class="col-sm-9 control-label">{{ text_popup_sku }}</label>
+			</div>				
+			<div class="form-group clearfix">
+				<div class="col-sm-3"><input value="mpn" readonly type="text" class="form-control" id="popup-mnp" /></div>
+				<label for="popup-mnp" class="col-sm-9 control-label">{{ text_popup_mnp }}</label>
+			</div>			
+			<div class="form-group clearfix">
+				<div class="col-sm-3"><input value="upc" readonly type="text" class="form-control" id="popup-upc" /></div>
+				<label for="popup-upc" class="col-sm-9 control-label">{{ text_popup_upc }}</label>
+			</div>			
+			<div class="form-group clearfix">
+				<div class="col-sm-3"><input value="ean" readonly type="text" class="form-control" id="popup-ean" /></div>
+				<label for="popup-ean" class="col-sm-9 control-label">{{ text_popup_ean }}</label>
+			</div>			
+			<div class="form-group clearfix">
+				<div class="col-sm-3"><input value="jan" readonly type="text" class="form-control" id="popup-jan" /></div>
+				<label for="popup-jan" class="col-sm-9 control-label">{{ text_popup_jan }}</label>
+			</div>			
+			<div class="form-group clearfix">
+				<div class="col-sm-3"><input value="location" readonly type="text" class="form-control" id="popup-location" /></div>
+				<label for="popup-location" class="col-sm-9 control-label">{{ text_popup_location }}</label>
+			</div>
+			{{ text_popup_other }}
+		  </div>
+		</div>
+	  </div>
+	</div> 
+</div>
+<script>
+
+{% if feed_merchant_feed_key %}
+var tab_num = {{ tab_count }};
+
+function addTab() {
+	
+	$('#addtab').before('<li class="tab-cont' + tab_num + '"><a href="#tab-' + tab_num + '" data-toggle="tab">{{ text_feed_tab }} ' + tab_num + ' <span style="cursor:pointer;" onclick="removeTab(' + tab_num + '); return false;" title="{{ text_delete_tab }}"><i class="fa fa-times-circle" aria-hidden="true"></i></span></a></li>');
+	
+	html = '<div class="tab-pane" id="tab-' + tab_num + '">';
+	html += '	<div class="col-sm-12">';
+	html += '		<ul class="nav nav-tabs">';
+	html += '			<li class="active"><a href="#tab-general' + tab_num + '" data-toggle="tab">{{ tab_general }}</a></li>';
+	html += '			<li><a href="#tab-data' + tab_num + '" data-toggle="tab">{{ tab_data }}</a></li>';
+	html += '			<li><a href="#tab-generate' + tab_num + '" data-toggle="tab">{{ tab_generate }}</a></li>';
+	html += '		</ul>';
+	html += '	<div class="tab-content">';
+	html += '		<div class="tab-pane active" id="tab-general' + tab_num + '">';
+	html += '		<div class="form-group">';
+	html += '			<label class="col-sm-2 control-label" for="input-title-profile-' + tab_num + '">{{ entry_feed_title_profile }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '				<input type="text" name="feed_merchant_feed_settings[' + tab_num + '][profil_title]" value="" id="input-title-profile-' + tab_num + '" onkeyup="changeTabName(' + tab_num + ', $(this).val());" class="form-control" />';
+	html += '			</div>';
+	html += '		</div>';
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-language-id-' + tab_num + '">{{ entry_lang }}</label>';
+	html += '					<div class="col-sm-10">';
+	html += '						<select id="input-language-id-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][language_id]" class="form-control">';
+									{% for language in languages %}
+	html += '							<option value="{{ language.language_id }}">{{ language.name }}</option>';
+									{% endfor %}
+	html += '						</select>';
+	html += '					</div>';
+	html += '			</div>	';	 	
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-currency-' + tab_num + '">{{ entry_currency }}</label>';
+	html += '					<div class="col-sm-10">';
+	html += '						<select id="input-currency-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][currency]" class="form-control">';
+									{% for currency in currencies %}
+	html += '							<option value="{{ currency.code }}">{{ currency.title }}</option>';
+									{% endfor %}
+	html += '						</select>';
+	html += '					</div>';
+	html += '			</div>	';	    
+	html += '		<div class="form-group">';
+	html += '			<label class="col-sm-2 control-label" for="input-store-id-' + tab_num + '">{{ entry_store }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select id="input-store-id-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][store_id]" class="form-control">';
+	html += '						<option value="0" selected="selected">{{ text_default_store }}</option>';
+								{% for store in stores %}
+	html += '						<option value="{{ store.store_id }}">{{ store.name }}</option>';
+								{% endfor %}
+	html += '					</select>';
+	html += '				</div>';
+	html += '		</div>';
+	html += '		<div class="form-group">';
+	html += '			<label class="col-sm-2 control-label" for="input-save-file-' + tab_num + '">{{ entry_save_file }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '				  <select id="input-save-file-' + tab_num + '" onchange="showCron(' + tab_num + ');" name="feed_merchant_feed_settings[' + tab_num + '][save_file]" class="form-control">';
+	html += '					<option value="1">{{ text_yes }}</option>';
+	html += '					<option value="0" selected="selected">{{ text_no }}</option>';
+	html += '				  </select>';
+	html += '				  {{ text_save_file }}';
+	html += '				</div>';
+	html += '		</div>';
+	html += '		<div class="form-group">';
+	html += '			<label class="col-sm-2 control-label" for="input-title-' + tab_num + '">{{ entry_feed_title }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '				<input type="text" name="feed_merchant_feed_settings[' + tab_num + '][title]" value="" id="input-title-' + tab_num + '" class="form-control" />';
+	html += '			</div>';
+	html += '		</div>';
+	html += '		<div class="form-group">';
+	html += '			<label class="col-sm-2 control-label" for="input-description-' + tab_num + '">{{ entry_feed_description }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '			  <input type="text" name="feed_merchant_feed_settings[' + tab_num + '][description]" value="" id="input-description-' + tab_num + '" class="form-control" />';
+	html += '			</div>';
+	html += '		</div>';
+	html += '		<div class="form-group">';
+	html += '			<label class="col-sm-2 control-label" for="input-url-prefix-' + tab_num + '">{{ entry_url_prefix }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '			  <input type="text" name="feed_merchant_feed_settings[' + tab_num + '][url_prefix]" onkeyup="setPrefix(' + tab_num + ');" value="" id="input-url-prefix-' + tab_num + '" class="form-control" />';
+	html += '			{{ text_url_prefix_notice }}';
+	html += '			</div>';
+	html += '		</div>';
+	html += '		<div class="form-group">';
+	html += '			<label class="col-sm-2 control-label" for="input-feed-cron-key-' + tab_num + '">{{ entry_data_feed_cron_key }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '				<div class="input-group">';
+	html += '					<input type="text" name="feed_merchant_feed_settings[' + tab_num + '][cron_key]" value="" id="input-feed-cron-key-' + tab_num + '"  placeholder="{{ entry_key_generate }}" class="form-control" />';
+	html += '					<span class="input-group-btn">';
+	html += '						<button onclick="str_rand(' + tab_num + ');" type="button" class="btn btn-info" data-toggle="tooltip" title="" data-original-title="{{ text_generate }}"><i class="fa fa-cog"></i></button>';
+	html += '					</span>';
+	html += '				</div>';
+	html += '			</div>';
+	html += '		</div>	';	
+	html += '		<div class="form-group">';
+	html += '			<label class="col-sm-2 control-label" for="input-data-feed-' + tab_num + '">{{ entry_data_feed }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '			  <textarea rows="2" readonly id="input-data-feed-' + tab_num + '" class="form-control"></textarea>';
+	html += '		    {{ text_feed_notice }}';
+	html += '			</div>';
+	html += '		</div>';			
+	html += '		<div class="form-group" style="display: none;">';
+	html += '			<label class="col-sm-2 control-label" for="input-data-feed-cron-' + tab_num + '">{{ entry_data_feed_cron }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '				<textarea name="feed_merchant_feed_settings[' + tab_num + '][data_feed_cron]" rows="2" readonly id="input-data-feed-cron-' + tab_num + '" class="form-control"></textarea>';
+	html += '				{{ text_feed_generate }}';
+	html += '			</div>';
+	html += '		</div>';	
+	html += '		<div class="form-group" style="display: none;">';
+	html += '			<label class="col-sm-2 control-label" for="input-data-feed-hand-' + tab_num + '">{{ entry_data_feed_hand }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '				<textarea name="feed_merchant_feed_settings[' + tab_num + '][data_feed_hand]" rows="2" readonly id="input-data-feed-hand-' + tab_num + '" class="form-control"></textarea>';
+	html += '				{{ text_feed_generate_hand }}';
+	html += '			</div>';
+	html += '		</div>';	
+	html += '		<div class="form-group" style="display: none;">';
+	html += '			<label class="col-sm-2 control-label" for="input-data-feed-stat-' + tab_num + '">{{ entry_data_feed_stat }}</label>';
+	html += '			<div class="col-sm-10">';
+	html += '				<textarea name="feed_merchant_feed_settings[' + tab_num + '][data_feed_stat]" rows="2" readonly id="input-data-feed-stat-' + tab_num + '" class="form-control"></textarea>';
+	html += '				{{ text_feed_generate_stat }}';
+	html += '			</div>';
+	html += '		</div>';
+    html += '        <div class="form-group">';
+    html += '            <label class="col-sm-2 control-label" for="input-data-feed-reviews-' + tab_num + '">{{ entry_data_feed_reviews }}</label>';
+    html += '            <div class="col-sm-10">';
+    html += '              <textarea rows="2" readonly id="input-data-feed-reviews-' + tab_num + '" class="form-control"></textarea>';
+    html += '            {{ text_feed_reviews_notice }}';
+    html += '            </div>';
+    html += '        </div>';	
+	html += '	</div>';			
+	html += '		<div class="tab-pane" id="tab-data' + tab_num + '">';
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-stock-' + tab_num + '">{{ entry_product_stock }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select id="input-product-stock-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][product_stock]" class="form-control">';
+	html += '						<option value="1">{{ text_yes }}</option>';
+	html += '						<option value="0" selected="selected">{{ text_no }}</option>';
+	html += '					</select>';
+	html += '					{{ text_feed_no_stock }}';
+	html += '				</div>';
+	html += '			</div>';					
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-stock-status-' + tab_num + '">{{ entry_stock_status }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select id="input-product-stock-status-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][product_stock_status][]" multiple="multiple" class="form-control" style="min-height: 100px;">';
+	html += '						<option value="">{{ text_not }}</option>';
+									{% for status in stock_statuses %}
+	html += '						<option value="{{ status.stock_status_id }}">{{ status.name }}</option>';
+									{% endfor %}
+	html += '					</select>';
+	html += '					{{ text_feed_stock_status }}';
+	html += '				</div>';
+	html += '			</div>	';				
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-gtin-' + tab_num + '">{{ entry_product_gtin }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					 <input type="text" name="feed_merchant_feed_settings[' + tab_num + '][product_gtin]" value="" id="input-product-gtin-' + tab_num + '" class="form-control" />';
+	html += '						<a href="#" data-toggle="modal" data-target="#popup-sett">{{ text_popup }}</a>';
+	html += '				</div>';
+	html += '			</div>';				
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-mpn-' + tab_num + '">{{ entry_product_mpn }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					 <input type="text" name="feed_merchant_feed_settings[' + tab_num + '][product_mpn]" value="" id="input-product-mpn-' + tab_num + '" class="form-control" />';
+	html += '				     <a href="#" data-toggle="modal" data-target="#popup-sett">{{ text_popup }}</a>';
+	html += '				</div>';
+	html += '			</div>';				
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-adult-' + tab_num + '">{{ entry_product_adult }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select id="input-product-adult-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][product_adult]" class="form-control">';
+	html += '						<option value="1">{{ text_yes }}</option>';
+	html += '						<option value="0" selected="selected">{{ text_no }}</option>';
+	html += '					</select>';
+	html += '				</div>';
+	html += '			</div>';				
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-condition-' + tab_num + '">{{ entry_product_condition }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '			  		<select id="input-product-condition-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][product_condition]" class="form-control">';
+	html += '						<option value="1" selected="selected">{{ text_new }}</option>';
+	html += '						<option value="0">{{ text_bu }}</option>';
+	html += '					</select>';
+	html += '				</div>';
+	html += '			</div>	';				
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-id-' + tab_num + '">{{ entry_product_id }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select id="input-product-id-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][product_id]" class="form-control">';
+	html += '						<option value="1" selected="selected">ProductID</option>';
+	html += '						<option value="0">Model</option>';
+	html += '					</select>';
+	html += '				</div>';
+	html += '			</div>';			
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-descr-' + tab_num + '">{{ entry_product_descr }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select id="input-product-descr-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][product_descr]" class="form-control">';
+	html += '						<option value="1">{{ text_meta }}</option>';
+	html += '						<option value="0" selected="selected">{{ text_description }}</option>';
+	html += '					</select>';
+	html += '				</div>';
+	html += '			</div>';
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-html-' + tab_num + '">{{ entry_product_html }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select id="input-product-html-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][product_html]" class="form-control">';
+	html += '						<option value="1" selected="selected">{{ text_yes }}</option>';
+	html += '						<option value="0">{{ text_no }}</option>';
+	html += '				  	</select>';
+	html += '				</div>';
+	html += '			</div>';
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-special-' + tab_num + '">{{ entry_product_special }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select id="input-product-special-' + tab_num + '" name="feed_merchant_feed_settings[' + tab_num + '][product_special]" class="form-control">';
+	html += '						<option value="1" selected="selected">{{ text_yes }}</option>';
+	html += '						<option value="0">{{ text_no }}</option>';
+	html += '					</select>';
+	html += '				</div>';
+	html += '			</div>';
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-category-' + tab_num + '">{{ entry_category }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<div class="well well-sm" style="min-height: 150px;max-height: 500px;overflow: auto;">';
+	html += '						<table class="table table-striped">';
+									{% for category in categories %}
+	html += '							<tr>';
+	html += '								<td class="checkbox">';
+	html += '									<label>';
+	html += '									  <input type="checkbox" name="feed_merchant_feed_settings[' + tab_num + '][product_category][]" value="{{ category.category_id }}" />';
+	html += '										  {{category.name|replace({"'": "’‎"})}}';
+	html += '									</label>';
+	html += '								</td>';
+	html += '							</tr>';
+									{% endfor %}
+	html += '						</table>';
+	html += '					</div>';
+	html += '					<a onclick="$(this).parent().find(\':checkbox\').prop(\'checked\', true);">{{ text_select_all }}</a> / <a onclick="$(this).parent().find(\':checkbox\').prop(\'checked\', false);">{{ text_unselect_all }}</a></div>';
+	html += '			</div>';
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-category-' + tab_num + '">{{ entry_manufacturer }}</label>';
+	html += '					<div class="col-sm-10">';
+	html += '						<div class="well well-sm" style="min-height: 150px;max-height: 500px;overflow: auto;">';
+	html += '							<table class="table table-striped">';
+										{% for manufacturer in manufacturers %}
+	html += '								<tr>';
+	html += '									<td class="checkbox">';
+	html += '										<label>';
+	html += '											<input type="checkbox" name="feed_merchant_feed_settings[' + tab_num + '][manufacturer_category][]" value="{{ manufacturer.manufacturer_id }}" />';
+	html += '											{{manufacturer.name|replace({"'": "’‎"})}}';
+	html += '										</label>';
+	html += '									</td>';
+	html += '								</tr>';
+										{% endfor %}
+	html += '							</table>';
+	html += '						</div>';
+	html += '						<a onclick="$(this).parent().find(\':checkbox\').prop(\'checked\', true);">{{ text_select_all }}</a> / <a onclick="$(this).parent().find(\':checkbox\').prop(\'checked\', false);">{{ text_unselect_all }}</a>';
+	html += '					</div>';
+	html += '			</div>';
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-product-black-list-' + tab_num + '">{{ entry_product_black_list }}</label>';
+	html += '					<div class="col-sm-10">';
+	html += '						<input type="text" name="black_list" value="" id="input-product-black-list-' + tab_num + '" data-tab-num="' + tab_num + '" class="form-control" />';
+	html += '							<div id="product-black-list-' + tab_num + '" class="well well-sm" style="height: 150px; overflow: auto;"></div>';
+	html += '					</div>';
+	html += '			</div>';
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-parent-' + tab_num + '">{{ entry_attribute }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select name="feed_merchant_feed_settings[' + tab_num + '][attribute_id]" class="form-control">';
+	html += '						<option value="0" selected="selected">{{ text_none }}</option>';
+									{% for attribute in attributes %}
+	html += '						<option value="{{ attribute.attribute_id }}">{{attribute.name|replace({"'": "’‎"})}}</option>';
+									{% endfor %}
+	html += '					</select>';
+	html += '					{{ text_feed_size }}';
+	html += '				</div>';
+	html += '			</div>	';				
+	html += '			<div class="form-group">';
+	html += '				<label class="col-sm-2 control-label" for="input-parent-' + tab_num + '">{{ entry_option }}</label>';
+	html += '				<div class="col-sm-10">';
+	html += '					<select name="feed_merchant_feed_settings[' + tab_num + '][option_id]" class="form-control">';
+	html += '						<option value="0" selected="selected">{{ text_none }}</option>';
+									{% for option in options %}
+	html += '						<option value="{{ option.option_id }}">{{option.name|replace({"'": "’‎"})}}</option>';
+									{% endfor %}
+	html += '					</select>';
+	html += '					{{ text_feed_size }}';
+	html += '				</div>';
+	html += '			</div>';
+	html += '		</div>';
+	html += '		<div class="tab-pane" id="tab-generate' + tab_num + '">';
+	html += '			<div class="alert alert-info"><i class="fa fa-info-circle"></i> {{ text_generate_info_save }}</div>';
+	html += '			<div class="progress">';
+	html += '				<div class="progress-bar progress-bar-striped active" id="progress-bar-' + tab_num + '" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>';
+	html += '			</div>';
+	html += '			<button class="btn btn-success" onclick="return false;" disabled><i class="fa fa-play"></i> {{ button_generate }}</button>';
+	html += '		</div>';
+	html += '	</div>';
+	html += '</div>';
+	html += '</div>';
+	
+	
+	$('#form-feed>.tab-content').append(html);
+	$('#form-feed>.tab-content>.tab-pane').removeClass('active');
+	
+	$('.tab-cont' + tab_num).tab('show');
+	$('#tab-' + tab_num).addClass('active');
+	
+	str_rand(tab_num);
+	
+	$('input[name=\'black_list\']').autocomplete({
+		'source': function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+				dataType: 'json',
+				success: function(json) {
+					response($.map(json, function(item) {
+						return {
+							label: item['name'],
+							value: item['product_id']
+						}
+					}));
+				}
+			});
+		},
+		'select': function(item) {
+			var tab_n = $(this).attr('data-tab-num');
+			
+			$('input[name=\'black_list\']').val('');
+
+			$('#product-black-list-' + tab_n + item['value']).remove();
+
+			$('#product-black-list-' + tab_n).append('<div id="product-black-list-' + tab_n + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="feed_merchant_feed_settings[' + tab_n + '][product_black_list][]" value="' + item['value'] + '" /></div>');
+		}
+	});
+
+	$('#product-black-list-' + tab_num).delegate('.fa-minus-circle', 'click', function() { 
+		$(this).parent().remove();
+	});
+	
+	tab_num++;
+}
+
+$('input[name=\'black_list\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=catalog/product/autocomplete&user_token={{ user_token }}&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['product_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		var tab_n = $(this).attr('data-tab-num');
+		
+		$('input[name=\'black_list\']').val('');
+
+		$('#product-black-list-' + tab_n + item['value']).remove();
+
+		$('#product-black-list-' + tab_n).append('<div id="product-black-list-' + tab_n + item['value'] + '"><i class="fa fa-minus-circle"></i> ' + item['label'] + '<input type="hidden" name="feed_merchant_feed_settings[' + tab_n + '][product_black_list][]" value="' + item['value'] + '" /></div>');
+	}
+});
+
+$('.well').delegate('.fa-minus-circle', 'click', function() { 
+	$(this).parent().remove();
+});
+
+{% endif %}
+$('#activate').on('click', function() {
+	var key = $('#input-key').val();
+	
+	$.ajax({
+		url: 'index.php?route=extension/feed/merchant_feed/activate&user_token={{ user_token }}',
+		type: 'post',
+		dataType: 'json',
+		data: 'key=' + key,
+		beforeSend: function() {
+			$('#activate').button('loading');
+		},
+		complete: function() {
+			$('#activate').button('reset');
+		},
+		success: function(json) {
+			$('.alert').remove();
+			$('#license').removeClass('has-error');
+			
+			if (json['error']) {
+				$('.panel').before('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+				$('#license').addClass('has-error');
+			}
+
+			if (json['success']) {
+				$('.panel').before('<div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> ' + json['success'] + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+				
+				setTimeout(function () {
+					$('button[form="form-feed"]').trigger('click');
+				}, 2000);
+			}
+		}
+	});
+});
+
+$('#button-apply').on('click', function() {
+	$('#form-feed').append('<input type="hidden" name="reload" value="true" />');
+});
+
+function str_rand(tab_num) {
+    var result       = '';
+    var words        = '0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
+    var max_position = words.length - 1;
+        
+		for( i = 0; i < 45; ++i ) {
+            position = Math.floor ( Math.random() * max_position );
+            result = result + words.substring(position, position + 1);
+        }
+		
+	$('#input-feed-cron-key-' + tab_num).val(result);
+
+	setFeeds(result, tab_num);
+}
+
+function setFeeds(result, tab_num) {
+	var lang_pref = $('#input-url-prefix-' + tab_num).val();
+	lang_pref = lang_pref ? lang_pref.trim() + '/' : '';
+	
+	$('#input-data-feed-cron-' + tab_num).val('wget -O - -q -t 1 ' + '\'{{ server }}' + 'index.php?route=extension/feed/merchant_feed/generateCron&key=' + result + '&feed_id=' + tab_num + '\'');
+	$('#input-data-feed-' + tab_num).val('{{ server }}' + lang_pref + 'index.php?route=extension/feed/merchant_feed&key=' + result + '&feed_id=' + tab_num);
+	$('#input-data-feed-hand-' + tab_num).val('{{ server }}index.php?route=extension/feed/merchant_feed/generateCron&key=' + result + '&feed_id=' + tab_num);
+	$('#input-data-feed-stat-' + tab_num).val('{{ server }}google_feed_' + tab_num + '.xml');
+	$('#input-data-feed-reviews-' + tab_num).val('{{ server }}' + lang_pref + 'index.php?route=extension/feed/merchant_feed/reviewFeed&key=' + result);
+}
+
+function setPrefix(tab_num) {
+	var result = $('#input-feed-cron-key-' + tab_num).val();
+	
+	setFeeds(result, tab_num);
+}
+
+function removeTab(tab_num) {
+	result = confirm("{{ text_confirm }}");
+	
+	if(result) {
+		$('#form-feed>.nav-tabs>.tab-cont' + tab_num).closest('li').prev().addClass('active');
+		$('#form-feed>.tab-content>#tab-' + tab_num).prev().addClass('active');
+		
+		$('#form-feed>.nav-tabs>.tab-cont' + tab_num).remove();
+		$('#form-feed>.tab-content>#tab-' + tab_num).remove();
+	}
+}
+
+function changeTabName(tab_num, val) {
+	$('a[href=#tab-' + tab_num + ']').html(val + ' <span style="cursor:pointer;" onclick="removeTab(' + tab_num + '); return false;" title="{{ text_delete_tab }}"><i class="fa fa-times-circle" aria-hidden="true"></i></span>');
+}
+
+function showCron(tab_num) {
+	var val = $('#input-save-file-' + tab_num ).val();
+
+	if(val == true) {
+		$('#input-data-feed-cron-' + tab_num + ', #input-data-feed-hand-' + tab_num + ', #input-data-feed-stat-' + tab_num).closest('.form-group').show();
+		$('#input-data-feed-' + tab_num).closest('.form-group').hide();
+	} else {
+		$('#input-data-feed-cron-' + tab_num + ', #input-data-feed-hand-' + tab_num + ', #input-data-feed-stat-' + tab_num).closest('.form-group').hide();
+		$('#input-data-feed-' + tab_num).closest('.form-group').show();
+	}
+}
+
+function startGeneration(feed_id) {
+	$('.progress-bar-' + feed_id).addClass('active');
+	$('#button-generate-' + feed_id).addClass('disabled').prop('disabled', true);
+	generation(0, feed_id);
+}
+
+function generation(start, feed_id, count_all = 0){
+	$.ajax({
+		type: 'GET',
+		url:  '{{ server }}index.php?route=extension/feed/merchant_feed/generate&start=' + start + '&feed_id=' + feed_id + '&count_all=' + count_all,
+		dataType: 'json',
+		success: function(result){
+			var bar = $('#progress-bar-' + feed_id);
+			
+			$('.alert-success').remove();
+			
+			if (parseInt(result['success']) < result['count_all']){
+				
+				setTimeout(function () {
+					generation(result['success'], result['feed_id'], result['count_all']);
+				}, 300);
+				
+				bar.css('width', result['percent'] + '%');
+				bar.attr('aria-valuemin', result['success']);
+				bar.attr('aria-valuemax', result['count_all']);
+				bar.text(result['percent'] + '%');
+			} else {
+				bar.text(result['percent'] + '%');
+				bar.css('width', result['percent'] + '%');
+				bar.attr('aria-valuemin',result['success']);
+				bar.attr('aria-valuemax',result['count_all']);
+				bar.removeClass('active');
+				$('#button-generate-' + feed_id).removeClass('disabled').prop('disabled', false);
+				bar.parent().before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ text_product_count }}' + result['count_all'] + ' {{ text_feed_link }}<a href="' + result['link'] + '" target="_blank">' + result['link'] + '</a><button type="button" class="close" data-dismiss="alert">×</button></div>');
+			}
+
+		}
+	});
+	
+}
+
+{% if no_license %}
+	$('#license').addClass('has-error');
+{% endif%}
+</script>
+{{ footer }}

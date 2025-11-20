@@ -1,0 +1,43 @@
+<?php
+// Croatian   v.2.x.x     Datum: 01.10.2014		Author: Gigo (Igor Ilić - igor@iligsoft.hr)
+// $_['heading_title']				= 'Amazon Pay'; // postojalo u verziji OC 3.0.2.0
+$_['breadcrumb_cart'] = 'Shopping Cart';
+$_['breadcrumb_payment'] = 'Payment';
+$_['breadcrumb_shipping'] = 'Shipping';
+$_['breadcrumb_summary'] = 'Summary';
+$_['error_constraint_amount_not_set'] = 'Narudžba nije uspjela zbog tehničke pogreške, odaberite drugi način plaćanja ili kontaktirajte našu podršku.';
+$_['error_constraint_payment_method_not_allowed'] = 'Odabrani način plaćanja nije dostupan za ovu transakciju. Odaberite drugi ili dodajte novi način plaćanja u dodatku (widget-u) za novčanik.';
+$_['error_constraint_payment_plan_not_set'] = 'Za ovu narudžbu nije odabran nijedan instrument plaćanja, pokušajte osvježiti stranicu ili dodajte novi instrument plaćanja u dodatak (widget) za novčanik.';
+$_['error_decline_amazon_rejected'] = 'Plaćanje nije moguće obraditi. Pokušajte ponovno naručiti pomoću drugog načina plaćanja.';
+$_['error_decline_invalid_payment_method'] = 'Vaša uplata nije mogla biti obrađena. Slijedite upute u okviru načina plaćanja.';
+$_['error_decline_processing_failure'] = 'Vaša narudžba nije mogla biti obrađena zbog sistemske pogreške. Pokušajte ponovno naručiti.';
+$_['error_decline_transaction_timed_out'] = 'Plaćanje nije moguće obraditi. Pokušajte ponovno naručiti pomoću drugog načina plaćanja.';
+$_['error_login']				= 'Neuspješna prijava (Login)';
+$_['error_login_email']			= 'Neuspješna prijava (Login): %s e-mail adresa u korisničkom računu ne podudara se s e-mail adresom u korisničkom računu Amazon-a';
+$_['error_minimum']             = 'Minimalni iznos narudžbe za Amazon Pay (plaćanje) i Prijavu preko Amazona je %s!';
+$_['error_no_shipping_methods'] = 'Nema opcije dostave za odabranu adresu. Molim odaberite drugu adresu za dostavu.';
+$_['error_order_total_zero'] = 'Nažalost, Amazon Pay ne prihvaća narudžbe s ukupnim iznosom od <strong>%s</strong>. Umjesto toga možete upotrijebiti <strong>Standardno plaćanje</strong>.';
+$_['error_payment_method']		= 'Molim odaberite način plaćanja';
+$_['error_process_order']		= 'Nastala je greška kod procesiranja Vaše narudžbe. Za pomoć molimo kontaktirajte administratora web trgovine.';
+$_['error_session_expired'] = 'Vaša sesija je istekla. Ponovno se prijavite klikom na gumb (button) Amazon Pay.';
+$_['error_shipping']			= 'Molim odaberite način dostave';
+$_['error_shipping_address']	= 'Molim odaberite adresu za dostavu';
+$_['error_shipping_methods']	= 'Nastala je greška kod dohvata Vaše adrese s Amazon-a. Za pomoć molimo kontaktirajte administratora web trgovine.';
+$_['heading_address']			= 'Molim odaberite adresu za dostavu';
+$_['heading_confirm']			= 'Sažetak narudžbe';
+$_['heading_payment']			= 'Molim odaberite način plaćanja';
+$_['heading_title'] = 'Amazon Pay (plaćanje) i Prijava preko Amazona';
+$_['text_amount_converted'] = 'Upozorenje: Ukupni uplaćeni iznos pretvorit će se u <strong>%s</strong> po stopi konverzije od <strong>%s</strong>. Očekivani iznos transakcije bit će <strong>%s</strong>.';
+
+$_['text_back']					= 'Nazad';
+$_['text_cart']					= 'Košarica';
+$_['text_confirm']				= 'Potvrdi';
+$_['text_continue']				= 'Nastavi';
+$_['text_continue_checkout'] = 'Nastavite s naplatom ovdje';
+$_['text_coupon']				= 'Kupon';
+$_['text_enter_coupon']			= 'Ovje unesite kod Vašeg kupona. Ako ga nemate, ostavite prazno.';
+$_['text_lpa']					= 'Amazon Pay (plaćanje)';
+$_['text_must_apply_coupon'] = 'Primijenite kupon.';
+$_['text_payment_success']		= 'Vaša narudžba uspješno je poslana. Ispod su detalji narudžbe';
+$_['text_success_title']		= 'Vaša narudžba je poslana!';
+$_['text_tax_other']			= 'Porezi / Drugi manipulativni troškovi';

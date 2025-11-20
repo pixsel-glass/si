@@ -1,0 +1,75 @@
+{% if languages|length > 1 %}
+<style>
+	#form-language {
+		margin-top: 12px;
+	}
+</style>
+<div class="lang js-toggle">
+	<div id="form-language">
+		<button class="lang__btn js-toggle-btn">
+			{% for language in languages %}
+				{% if language.current %}
+					{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}
+						<img src="catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}">
+					{% endif %}
+					{{ language.name }}
+				{% endif %}
+			{% endfor %}
+		</button>
+
+		<div class="lang__dropdown js-toggle-dropdown">
+			<ul class="lang__menu">
+				{% for language in languages %}
+
+					{% if language.main %}
+						<li data-lang="{{ language.code }}">
+							<a class="lang__link" href="{{ language.url }}" onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'">
+								{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}<img src="catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}"/>
+								{% endif %}
+								{{ language.name }}</a>
+						</li>
+					{% else %}
+						<li data-lang="{{ language.code }}">
+							<a class="lang__link" href="{{ language.url }}" onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'">
+								{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}<img src="catalog/language/{{ language.code }}/{{ language.code }}.png" alt="{{ language.name }}" title="{{ language.name }}"/>
+								{% endif %}
+								{{ language.name }}</a>
+						</li>
+					{% endif %}
+
+				{% endfor %}
+			</ul>
+		</div>
+
+
+	</div>
+</div>
+
+<script>
+function lm_setCookie(name, value, options = {}) {
+options = {
+  path: '/',
+  ...options
+};
+
+let date = new Date(Date.now() + (86400e3 * options.expires));
+date = date.toUTCString();
+options.expires = date;
+
+let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+for (let optionKey in options) {
+  updatedCookie += "; " + optionKey;
+  let optionValue = options[optionKey];
+  if (optionValue !== true) {
+    updatedCookie += "=" + optionValue;
+  }
+}
+document.cookie = updatedCookie;
+}
+
+function lm_deleteCookie(name) {
+  lm_setCookie(name, "", {'max-age': -1});
+}
+</script>
+{% endif %}

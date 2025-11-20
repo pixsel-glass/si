@@ -1,0 +1,44 @@
+<file path="catalog/model/setting/module.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[$query = $this->db->query]]></search>
+        <add position="before"><![CDATA[
+		// Code
+		if (isset($module_id) && strpos($module_id, 'seolang|') !== false) {
+       		if ($this->registry->get('seolanglib')) {
+       			$query = new stdClass();
+       			$query->row = $this->seolanglib->getModule(str_replace('seolang|', '', $module_id));
+       		}
+		} else {
+		// End of code
+]]></add>
+    </operation>
+</file>
+
+
+<file path="catalog/model/setting/module.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[return $query->rows]]></search>
+        <add position="before"><![CDATA[
+		// Code for fs so-themes, where add function getModulesByCode($code)
+		}
+		// End of code
+]]></add>
+    </operation>
+</file>
+
+
+
+<file path="catalog/model/setting/module.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[if ($query->row)]]></search>
+        <add position="before"><![CDATA[
+		// Code
+		}
+		// End of code
+]]></add>
+    </operation>
+</file>
+
+
+
+

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <code>EasyShip</code>
+  <name>EasyShip</name>
+  <version>1.0</version>
+  <author>[29aleksey]</author>
+	<file path="catalog/controller/checkout/{*}.php">
+	 <operation error="skip">
+	   <search><![CDATA[$quote = $this->{'model_extension_shipping_' . $result['code']}->getQuote($this->session->data['shipping_address']);]]></search>
+	  <add position="after"><![CDATA[
+		if($result['code'] == 'easyship'){
+			foreach($quote as $key_code => $val_quote){
+				$method_data[$key_code] = array(
+					'image'      => $val_quote['image'],
+					'title'      => $val_quote['title'],
+					'quote'      => $val_quote['quote'],
+					'sort_order' => $val_quote['sort_order'],
+					'error'      => $val_quote['error']
+				);
+			}
+			continue;
+		}
+	  ]]></add>
+	</operation>
+	<operation error="skip">
+	   <search><![CDATA[$quote = $this->{'model_shipping_' . $result['code']}->getQuote($address);]]></search>
+	  <add position="after"><![CDATA[
+		if($result['code'] == 'easyship'){
+			foreach($quote as $key_code => $val_quote){
+				$method_data[$key_code] = array(
+					'title'      => $val_quote['title'],
+					'quote'      => $val_quote['quote'],
+					'sort_order' => $val_quote['sort_order'],
+					'error'      => $val_quote['error']
+				);
+			}
+			continue;
+		}
+	  ]]></add>
+	</operation>
+	</file>
+	<file path="catalog/controller/api/{*}.php">
+		<operation error="skip">
+			<search><![CDATA[$quote = $this->{'model_extension_shipping_' . $result['code']}->getQuote($data['shipping_address']);]]></search>
+			<add position="after"><![CDATA[
+			if($result['code'] == 'easyship'){
+				foreach($quote as $key_code => $val_quote){
+					$json['shipping_methods'][$key_code] = array(
+						'title'      => $val_quote['title'],
+						'quote'      => $val_quote['quote'],
+						'sort_order' => $val_quote['sort_order'],
+						'error'      => $val_quote['error']
+					);
+				}
+				continue;
+			}
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/view/theme/default/template/checkout/onepcheckout_shipping_method.twig">
+		<operation error="skip">
+			<search><![CDATA[<div class="shipping_method_title">{{ shipping_method['title'] }}</div>]]></search>
+			<add position="replace"><![CDATA[<div class="shipping_method_title">{% if shipping_method['image'] %}<img class="img-responsive" width="80" height="50" src="{{ shipping_method['image'] }}" alt="">{% endif %}{{ shipping_method['title'] }}</div>]]></add>
+		</operation>
+	</file>
+</modification>

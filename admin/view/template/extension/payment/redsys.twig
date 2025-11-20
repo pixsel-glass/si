@@ -1,0 +1,84 @@
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form" data-toggle="tooltip" title="{{ button_save }}"
+                        class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}"
+                   class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+            <h1>{{ heading_title }}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        {% if error_warning %}
+        <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        {% endif %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+            </div>
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
+                {% for fieldkey, field in fields %}
+                    <div class="form-group {%  if field['required'] %}required{%  endif %}">
+                        <label class="col-sm-4 control-label" for="{{ field['name'] }}-id">{{ field['entry'] }}</label>
+                        <div class="col-sm-4">
+                        {% if field['type'] == 'select' %}
+                            <select class="form-control" id="{{ field['name'] }}-id" name="{{ field['name'] }}"
+                                {% if field['multiple'] %} multiple="multiple" {% endif %}
+                                {% if field['size'] %} size="{{ field['size'] }}" {% endif %} >
+                            {% for key,value in field['options'] %}
+                                <option value="{{ key }}"
+                                        {% if field['value'] %}{% if key in field['value']|split(',') %} selected="selected" {% endif %}{% else %}{% if field['default'] == key %} selected="selected"{% endif %}{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                            </select>
+                        {% elseif field['type'] == 'radio' %}
+                            {% for key,value in field['options'] %}
+                            <input class="form-control" id="{{ field['name'] }}-id" type="radio"
+                                   name="{{ field['name'] }}"
+                                   id="{{ field['name'] }}"
+                                   value="{{ key }}" {% if field['value'] %}{% if field['value'] == key %} checked="checked" {% endif %}{% else %}{% if field['default'] == key %} checked="checked" {% endif %}{% endif %}/><label
+                                    for="{{ field['name'] }}">{{ value }}</label>
+                            {% endfor %}
+                        {% elseif field['type'] == 'checkbox' %}
+                            <input class="form-control" id="{{ field['name'] }}-id" type="checkbox"
+                                   name="{{ field['name'] }}"
+                                   id="{{ field['name'] }}" value="1"
+                                   {% if field['value'] %}checked="checked"{% endif %}
+                            />{% elseif field['type'] == 'file' %}
+                            <input class="form-control" id="{{ field['name'] }}-id" type="file"
+                                   name="{{ field['name'] }}"
+                                   value="" {% if field['size'] %} size="{{ field['size'] }}" {% endif %}/>
+                        {% elseif field['type'] == 'textarea' %}
+                            <textarea class="form-control" name="{{ field['name'] }}" cols="{{ field['cols'] }}"
+                            rows="{{ field['rows'] }}">{% if field['value'] %}{{ field['value'] }}{% else %}{{ field['default'] }}{% endif %}</textarea>
+                        {% else %}
+                            <input class="form-control" id="{{ field['name'] }}-id" type="{{ field['type'] }}"
+                                   name="{{ field['name'] }}"
+                                   value="{% if field['value'] %}{{ field['value'] }}{% else %}{{ field['default'] }}{% endif %}" {% if field['size'] %}
+                                   size="{{ field['size'] }}" {% endif %}/>
+                        {% endif %}
+                        {% if field['help'] %}
+                            <span class=" help">{{ field['help'] }}</span><br/>
+                        {% endif %}
+                        {% if field['error'] %}
+                            <span class="error">{{ field['error'] }}</span>
+                        {% endif %}
+
+                        </div>
+                    </div>
+                {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{ footer }}

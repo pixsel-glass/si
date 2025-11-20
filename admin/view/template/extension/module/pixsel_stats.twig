@@ -1,0 +1,195 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        {# <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button> #}
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title_price }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li>
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    {% if success %}
+      <div class="alert alert-success alert-dismissible">
+        <i class="fa fa-check-circle"></i> {{ success }}
+      </div>
+    {% endif %}
+    <form action="{{ action }}" method="get" id="form-pixsel-stats">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="fa fa-bar-chart"></i>{{ heading_title_stats }}</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <div class="input-group date date-start">
+                <input type="text" name="filter_date_start" value="{{ filter_date_start }}" placeholder="{{ entry_date_start }}" data-date-format="YYYY-MM-DD" class="form-control" />
+                <span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="input-group date date-end">
+                <input type="text" name="filter_date_end" value="{{ filter_date_end }}" placeholder="{{ entry_date_end }}" data-date-format="YYYY-MM-DD" class="form-control" />
+                <span class="input-group-btn"><button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button></span>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="input-group">
+                <span class="input-group-btn"><button type="button" class="btn btn-default" id="prev-month"><i class="fa fa-arrow-left"></i></button></span>
+                <input type="text" class="form-control text-center" value="{{ current_month }}" readonly />
+                <span class="input-group-btn"><button type="button" class="btn btn-default" id="next-month"><i class="fa fa-arrow-right"></i></button></span>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <button type="submit" id="button-filter" class="btn btn-primary"><i class="fa fa-filter"></i> {{ button_filter }}</button>
+              {% if filter_date_start or filter_date_end %}
+                <button type="button" class="btn btn-danger" id="button-clear-filter"><i class="fa fa-times"></i> {{ button_clear }}</button>
+              {% endif %}
+            </div>
+          </div>
+
+          <hr>
+
+          {% if is_today %}
+          <p><b>{{text_report}}:</b> {{text_today}}</p>
+          {% else %}
+          <p><b>{{text_report}}:</b> {{text_start_date}} - {{text_end_date}}</p>
+          {% endif %}
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>{{text_rashod}}</th>
+                  <th>{{text_pributok}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width:50%;">
+                  {% for key, item in totals.optionTypes %}
+                    {% if item.area > 0 %}
+                    <div class="stats-item">{{key}} - <span>{{item.area}} m<sup>2</sup></span></div>
+                    {% endif %}
+                  {% endfor %}
+
+                   {% for key, item in totals.boxes %}
+                    {% if item > 0 %}
+                    <div class="stats-item">Box {{key}} - <span>{{item}}</span></div>
+                    {% endif %}
+                  {% endfor %}
+
+                  </td>
+                  <td style="width: 50%;">
+                
+                  <div class="stats-item">
+                    {{text_total_order}} - <span>{{totals.order}}</span>
+                  </div>
+                  <div class="stats-item">
+                    {{text_total_product}} - <span>{{totals.products}}</span>
+                  </div>
+                  <div class="stats-item">
+                    {{text_total_percentages}} - 
+                     <span>{% for key, value in totals.percentages %}
+                      {{value}}% ({{key}}) {% if not loop.last %} / {% endif %}
+                     {% endfor %}</span>
+                  </div>
+
+                   <div class="stats-item">
+                    {{text_total_order_sum}} - <span>{{totals.totalPrice}}</span>
+                  </div>
+
+                   <div class="stats-item">
+                    {{text_total_order_cost_sum}} - <span>{{totals.totalCostPrice}}</span>
+                  </div>
+
+                   <div class="stats-item">
+                    {{text_total_order_win_sum}} - <span>{{totals.totalWinPrice}}</span>
+                  </div>
+     
+
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('.date').datetimepicker({
+    language: '{{ datepicker }}',
+    pickTime: false
+    // useCurrent: false
+  })
+  
+  $('#form-pixsel-stats').on('submit', function (e) {
+    e.preventDefault()
+  
+    var url = ''
+  
+    var filter_date_start = $("input[name='filter_date_start']").val()
+    if (filter_date_start) {
+      url += '&filter_date_start=' + encodeURIComponent(filter_date_start)
+    }
+  
+    var filter_date_end = $("input[name='filter_date_end']").val()
+    if (filter_date_end) {
+      url += '&filter_date_end=' + encodeURIComponent(filter_date_end)
+    }
+  
+    location = 'index.php?route=extension/module/pixsel_stats&user_token={{ user_token }}' + url
+  })
+  
+  $('#button-clear-filter').on('click', function () {
+    location = 'index.php?route=extension/module/pixsel_stats&user_token={{ user_token }}'
+  })
+  
+  function updateMonth(offset) {
+    var startDatePicker = $('.date-start').data('DateTimePicker')
+    var endDatePicker = $('.date-end').data('DateTimePicker')
+  
+    var startDate = startDatePicker.getDate()
+    var endDate = endDatePicker.getDate()
+  
+    startDate.add(offset, 'months').startOf('month')
+    endDate.add(offset, 'months').endOf('month')
+  
+    startDatePicker.setDate(startDate)
+    endDatePicker.setDate(endDate)
+  
+    // Optionally, trigger the filter
+    $('#form-pixsel-stats').submit()
+  }
+  
+  // Attach the updateMonth function to buttons
+  $('#prev-month').click(function () {
+    updateMonth(-1)
+  })
+  
+  $('#next-month').click(function () {
+    updateMonth(1)
+  })
+</script>
+
+<style>
+
+.stats-item span{
+  opacity: 0.7;
+  /* font-weight: 700; */
+}
+</style>
+
+{{ footer }}

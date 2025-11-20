@@ -1,0 +1,15 @@
+<div>
+  <div class="row align-items-center {% if image is not empty %}mb-5{% endif %}">
+    <div class="{% if image is not empty %}col-12 col-lg-8{% else %}col-12 col-lg-12{% endif %} my-1 pr-5">
+      {% if heading_title %}
+      <h2>{{ heading_title }}</h2>
+      {% endif %}
+      {{ html }}
+    </div>
+    {% if image is not empty %}
+    <div class="col-12 col-lg-4 text-right">
+      <img src="{{ image }}" class="img-thumbnail-html" alt="" title="">
+    </div>
+    {% endif %}
+  </div>
+</div>

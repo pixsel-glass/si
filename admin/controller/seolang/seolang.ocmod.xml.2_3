@@ -1,0 +1,14 @@
+<file path="catalog/model/design/layout.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[return $query->rows;]]></search>
+        <add position="before"><![CDATA[
+		// Code
+        if (isset($layout_id) && isset($position)) {
+       		if ($this->registry->get('seolanglib')) {
+       			$query->rows = $this->seolanglib->getLayoutModules($layout_id, $position, $query->rows);
+       		}
+        }
+		// End of code
+]]></add>
+    </operation>
+</file>

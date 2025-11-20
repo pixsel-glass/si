@@ -1,0 +1,468 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}"
+                class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i
+          class="fa fa-reply"></i></a>
+      </div>
+      <h1>{{ heading_title_price }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li>
+            <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    {# {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible">
+        <i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      </div>
+    {% endif %} #}
+    {% if success %}
+      <div class="alert alert-success alert-dismissible">
+        <i class="fa fa-check-circle"></i> {{ success }}
+      </div>
+    {% endif %}
+    <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" style="max-width: 1000px;">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{ heading_sub_title_price }}</h3>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th>{{ column_pixel_price_type }}</th>
+                {% for group in customer_groups %}
+                  <th>{{ group.name }}</th>
+                {% endfor %}
+              </tr>
+              </thead>
+              <tbody>
+              {% for type in pixsel_price_types %}
+                <tr>
+                  <td>
+                    <b>{{ type.pixsel_price_type }}</b>
+                  </td>
+                  {% for group in customer_groups %}
+                    <td>
+                      <input type="number" step="any" class="form-control"
+                             name="prices[{{ type.pixsel_price_type }}][{{ group.customer_group_id }}]" min="0"
+                             value="{% if prices[type.pixsel_price_type][group.customer_group_id] > 0 %}{{ prices[type.pixsel_price_type][group.customer_group_id] }}{% endif %}"/>
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <!--<div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ heading_sub_title_rate }}</h3>
+            </div>
+            <div class="panel-body">
+
+              <div class="col-xs-6">
+                <input type="number" step="any" class="form-control" name="module_pixsel_price_rate" min="0"
+                       value="{{ module_pixsel_price_rate }}"/>
+              </div>
+
+              <div class="col-xs-6">
+                <div id="file-upload-container" class="file-upload-container">
+                  <div id="file-name-display" class="file-name-display">
+                    {% if file_exists %}
+                      {{ file_name }}
+                    {% else %}
+                      Select File...
+                    {% endif %}
+                  </div>
+                  <input type="file" id="file-upload-input" hidden/>
+                  <button type="button" id="file-upload-btn" class="file-upload-btn btn btn-default"
+                          {% if file_exists %}style="display:none;"{% endif %}><i class="fa fa-upload"></i></button>
+                  <div id="file-actions" class="file-actions" {% if not file_exists %}style="display:none;"{% endif %}>
+                    <button type="button" id="edit-file-btn" class="action-btn btn btn-primary"><i
+                      class="fa fa-edit"></i></button>
+                    {% if file_exists %}
+                      <a
+                      href="index.php?route=extension/module/pixsel_price/downloadFile&amp;file={{ file_name }}&amp;user_token={{ user_token }}"
+                      class="action-btn btn btn-success"><i class="fa fa-download"></i></a>
+                    {% endif %}
+                    <button type="button" id="delete-file-btn" class="action-btn btn btn-danger"><i
+                      class="fa fa-trash"></i></button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>-->
+
+
+        <div class="col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ heading_sub_title_tax }}</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+
+                <div class="col-sm-6">
+
+                  <div>
+                    <input type="checkbox" name="module_pixsel_price_tax_on" value="1" id="tax-on" {% if module_pixsel_price_tax_on %} checked {% endif %}>
+                    <label class="control-label" for="tax-on">{{ text_tax_on_off }}</label>
+                  </div>
+                  <br>
+                  <div>
+                    <label class="control-label text-right" for="tax-rate">{{ text_tax_rate }}</label>
+                    <input class="form-control" type="text" name="module_pixsel_price_tax_rate" value="{{ module_pixsel_price_tax_rate }}" id="tax-rate">
+                  </div>
+                  <br>
+                  <div>
+                    <label for="control-label">{{ text_tax_add_minus }}:</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <label><input type="radio" value="plus" name="module_pixsel_price_tax_znak" {% if module_pixsel_price_tax_znak == 'plus' %}checked{% endif %}>&nbsp; {{ text_tax_plus }}</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label><input type="radio" value="minus" name="module_pixsel_price_tax_znak" {% if module_pixsel_price_tax_znak == 'minus' %}checked{% endif %}>&nbsp; {{ text_tax_minus }}</label>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <br>
+              <br>
+              <div class="row">
+                <div class="col-sm-6">
+                  <h4 class="text-center">{{ text_tax_names_with }}</h4>
+                  <table class="table table-bordered">
+                    <tbody>
+                    {% for language in languages %}
+                      <tr>
+                        <td>
+                          <strong><img src="language/{{ language.code }}/{{ language.code }}.png"
+                                       alt="{{ language.name }}" title="{{ language.name }}"/> {{ language.name }}
+                          </strong>
+                        </td>
+                        <td>
+                          {% set prefix = module_pixsel_price_tax_names_with[language.code] is defined ? module_pixsel_price_tax_names_with[language.code] : '' %}
+                          <input type="text" name="module_pixsel_price_tax_names_with[{{ language.code }}]"
+                                 value="{{ prefix }}" placeholder="{{ entry_prefix }}"
+                                 id="input-tax-prefix-with-{{ language.code }}" class="form-control"/>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="col-sm-6">
+                  <h4 class="text-center">{{ text_tax_names_without }}</h4>
+                  <table class="table table-bordered">
+                    <tbody>
+                    {% for language in languages %}
+                      <tr>
+                        <td>
+                          <strong><img src="language/{{ language.code }}/{{ language.code }}.png"
+                                       alt="{{ language.name }}" title="{{ language.name }}"/> {{ language.name }}
+                          </strong>
+                        </td>
+                        <td>
+                          {% set prefix = module_pixsel_price_tax_names_without[language.code] is defined ? module_pixsel_price_tax_names_without[language.code] : '' %}
+                          <input type="text" name="module_pixsel_price_tax_names_without[{{ language.code }}]"
+                                 value="{{ prefix }}" placeholder="{{ entry_prefix }}"
+                                 id="input-tax-prefix-without-{{ language.code }}" class="form-control"/>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ heading_sub_title_material }}</h3>
+            </div>
+            <div class="panel-body">
+              {% if option_id %}
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                      <th>{{ column_pixel_material }}</th>
+                      <th>{{ column_pixel_material_price }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for value in option_values %}
+                      <tr>
+                        <td>
+                          <b>{{ value.name }}</b>
+                        </td>
+                        <td>
+                          <input type="number" step="any" class="form-control"
+                                 name="pixsel_material[{{ option_id }}][{{ value.option_value_id }}]" min="0"
+                                 value="{% if pixsel_material_price[option_id][value.option_value_id] > 0 %}{{ pixsel_material_price[option_id][value.option_value_id] }}{% endif %}"/>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <p class="text-danger">{{ text_not_select_option }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">{{ heading_sub_title_box }}</h3>
+            </div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                    <th>{{ column_pixel_box }}</th>
+                    <th>{{ column_pixel_box_price }}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for box in pixsel_box %}
+                    <tr>
+                      <td>
+                        <b>{{ box.pixsel_box }}</b>
+                      </td>
+                      <td>
+                        <input type="number" step="any" class="form-control" name="pixsel_box[{{ box.pixsel_box }}]"
+                               min="0"
+                               value="{% if pixsel_box_price[box.pixsel_box] > 0 %}{{ pixsel_box_price[box.pixsel_box] }}{% endif %}"/>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{ heading_sub_title_desc }}</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class="form-group">
+            <input id="is-description" name="module_pixsel_price_is_desc" type="checkbox"
+                   value="1" {% if module_pixsel_price_is_desc %} checked {% endif %}>
+            <label class="control-label" for="is-description">{{ text_is_desc }}</label>
+          </div>
+
+          <div class="tab-pane">
+            <ul class="nav nav-tabs" id="language">
+              {% for language in languages %}
+                <li {% if loop.first %} class="active" {% endif %}>
+                  <a href="#language{{ language.language_id }}" data-toggle="tab">
+                    <img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/>
+                    {{ language.name }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+            <div class="tab-content">
+              {% for language in languages %}
+                <div class="tab-pane{% if loop.first %} active{% endif %}" id="language{{ language.language_id }}">
+                  <div class="form-group row">
+
+                    <label class="col-sm-2 control-label text-right"
+                           for="input-description{{ language.language_id }}">{{ entry_description }}</label>
+                    <div class="col-sm-10">
+                      <textarea name="module_pixsel_price_desc[{{ language.language_id }}][description]"
+                                placeholder="{{ entry_description }}" id="input-description{{ language.language_id }}"
+                                data-toggle="summernote" data-lang="{{ summernote }}"
+                                class="form-control">{{ module_pixsel_price_desc[language.language_id] ? module_pixsel_price_desc[language.language_id].description }}</textarea>
+                    </div>
+
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> {{ button_price_save }}</button>
+      <button type="button" id="import-button" class="btn btn-warning"><i
+        class="fa fa-download"></i> {{ button_price_import }}</button>
+    </form>
+  </div>
+</div>
+
+<link href="view/javascript/codemirror/lib/codemirror.css" rel="stylesheet"/>
+<link href="view/javascript/codemirror/theme/monokai.css" rel="stylesheet"/>
+<script type="text/javascript" src="view/javascript/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="view/javascript/codemirror/lib/xml.js"></script>
+<script type="text/javascript" src="view/javascript/codemirror/lib/formatting.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+<link href="view/javascript/summernote/summernote.css" rel="stylesheet"/>
+<script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script>
+<script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+
+{{ footer }}
+
+
+<script>
+
+
+  $('#import-button').on('click', function () {
+
+    $btn = $(this);
+    var formData = new FormData($('#form-module')[0]);
+
+    $.ajax({
+      url: 'index.php?route=extension/module/pixsel_price/save_ajax&user_token={{ user_token }}',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      // dataType: 'json',
+      beforeSend: function () {
+        $btn.button('loading');
+      },
+      success: function (json) {
+        if (json['success']) {
+          alert(json['success']);
+        } else if (json['error']) {
+          alert(json['error']);
+        }
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      },
+      complete: function () {
+        $btn.button('reset');
+      },
+    });
+
+
+  });
+
+
+</script>
+
+<style>
+    .file-upload-container {
+        border: 2px dashed #ddd;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .file-name-display {
+        margin-bottom: 10px;
+    }
+
+    .action-btn {
+        margin: 0 5px;
+    }
+
+    #file-upload-input {
+        display: none;
+        opacity: 0;
+    }
+</style>
+
+<script>
+
+
+  {% if not file_exists %}
+  document.getElementById('file-upload-container').addEventListener('click', function () {
+    document.getElementById('file-upload-input').click();
+  });
+  {% endif %}
+
+  document.getElementById('file-upload-input').addEventListener('change', function () {
+    var fileName = this.files[0].name;
+    document.getElementById('file-name-display').textContent = fileName;
+    uploadFile(this.files[0]);
+  });
+
+  function uploadFile(file) {
+    var formData = new FormData();
+    formData.append('file', file);
+    formData.append('action', 'create');
+
+    $.ajax({
+      url: 'index.php?route=extension/module/pixsel_price/rate_file&user_token={{ user_token }}&action=create',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        // Обробка відповіді сервера
+        if (response.success) {
+          alert(response.success);
+          location.reload();
+          // Відображення кнопок дій після завантаження файлу
+          // document.getElementById('file-upload-btn').style.display = 'none';
+          // document.getElementById('file-actions').style.display = 'block';
+        } else {
+          alert(response.error);
+        }
+      },
+      error: function () {
+        alert('Помилка завантаження файлу.');
+      }
+    });
+  }
+
+  document.getElementById('delete-file-btn').addEventListener('click', function () {
+
+    if (!confirm('Are you sure you want to delete?')) {
+      return;
+    }
+    $.ajax({
+      url: 'index.php?route=extension/module/pixsel_price/rate_file&user_token={{ user_token }}&action=delete',
+      type: 'POST',
+      data: {},
+      success: function (response) {
+        location.reload();
+      },
+      error: function () {
+        alert('Помилка видалення файлу.');
+      }
+    });
+  });
+
+  document.getElementById('edit-file-btn').addEventListener('click', function () {
+    document.getElementById('file-upload-input').click();
+  });
+
+
+</script>

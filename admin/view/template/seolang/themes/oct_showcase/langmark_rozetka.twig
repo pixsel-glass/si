@@ -1,0 +1,123 @@
+{% if languages|length > 1 %}
+	<div id="oct_desktop_language" class="pull-left language nav langmark">
+	<div id="language">
+	<div id="form-language" class="langmark">	
+	<style>
+		.lm_modal .modal-body {
+			padding: 30px;
+			min-height: 100px;
+		}	
+		.langmark {
+			margin-top: -2px;
+			margin-right: 0;
+			margin-left: 11px;
+		}
+
+		.langmark a {
+			color: #bbbfff;
+			font-size: .875rem !important;
+			font-weight: 600 !important;
+		}
+		.langmark a.langmarkactive {
+			color: #FFF;
+		}
+		.langmark a:hover {
+			color: #FFF;
+			text-decoration: none;
+		}
+		@media (max-width: 768px) {
+				.langmark {
+					margin-left: 0;
+				}	
+				.langmark a.langmarkactive {
+					color: #000;
+				}
+				.langmark a:hover {
+					color: #000;
+					text-decoration: none;
+				}
+		}	
+		.langmark li {
+			color: #bbbfff;
+			text-align: center; 
+			vertical-align: middle;			
+			display: inline;
+			margin: 0 0 0 4px;
+			padding: 0;
+		}
+
+
+
+		.langmark .uf {
+			text-align: center; 
+			vertical-align: middle;			
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			margin-right: 0px;
+			margin-top: -3px;
+			background-image: linear-gradient(to bottom, #0082D1, #0082D1 50%, #FFD100 50%, #FFD100);
+		}
+	</style>
+
+		<ul class="list-inline">
+			{% for language in languages %}
+				
+				{% if language.code_short == 'uk' or language.code_short == 'ua' %}
+				{% if language.main %}
+					<li>
+						<a {% if (not language['current']) %} href="{{ language.url }}" {% endif %} {% if (language['current']) %} class="langmarkactive" {% endif %} onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'"><div class="uf"></div></a>
+					</li>
+				{% else %}
+					<li>
+						<a {% if (not language['current']) %} href="{{ language.url }}" {% endif %} {% if (language['current']) %} class="langmarkactive" {% endif %} onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'"><div class="uf"></div></a>
+					</li>
+				{% endif %}
+				{% endif %}
+
+				{% if language.main %}
+					<li>
+						<a {% if (not language['current']) %} href="{{ language.url }}" {% endif %} {% if (language['current']) %} class="langmarkactive" {% endif %} onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'">{{ language.name }}</a>
+					</li>
+				{% else %}
+					<li>
+						<a {% if (not language['current']) %} href="{{ language.url }}" {% endif %} {% if (language['current']) %} class="langmarkactive" {% endif %} onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'">{{ language.name }}</a>
+					</li>
+				{% endif %}
+				{% if not loop.last %}
+					<li>{{ "|" }}</li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+
+<script>
+function lm_setCookie(name, value, options = {}) {
+	options = {
+	path: '/',
+	...options
+	};
+	let date = new Date(Date.now() + (86400e3 * options.expires));
+	date = date.toUTCString();
+	options.expires = date;
+
+	let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+	for (let optionKey in options) {
+		updatedCookie += "; " + optionKey;
+		let optionValue = options[optionKey];
+		if (optionValue !== true) {
+			updatedCookie += "=" + optionValue;
+		}
+	}
+	document.cookie = updatedCookie;
+}
+
+function lm_deleteCookie(name) {
+	lm_setCookie(name, "", {'max-age': -1});
+}
+</script>
+	</div>
+	</div>
+	</div>
+{% endif %}

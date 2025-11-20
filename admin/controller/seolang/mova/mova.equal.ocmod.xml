@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{NAME}<div class='uf'></div></name>
+    <code>{MOD}</code>
+    <id>{MOD}</id>
+    <version>{VERSION}</version>
+    <vqmver required="true">2.4.0</vqmver>
+    <author>{AUTHOR}</author>
+    <link>{LINK}</link>
+
+    <file path="admin/controller/catalog/category.php" error="skip">
+    <operation error="skip">
+        <search><![CDATA[$this->error['keyword'][$store_id][$language_id]]]></search>
+        <add position="replace"><![CDATA[// $this->error['keyword'][$store_id][$language_id]]]></add>
+    </operation>
+    </file>
+
+    <file path="admin/controller/catalog/product.php" error="skip">
+    <operation error="skip">
+        <search><![CDATA[$this->error['keyword'][$store_id][$language_id]]]></search>
+        <add position="replace"><![CDATA[// $this->error['keyword'][$store_id][$language_id]]]></add>
+    </operation>
+    </file>
+
+    <file path="admin/controller/catalog/information.php" error="skip">
+    <operation error="skip">
+        <search><![CDATA[$this->error['keyword'][$store_id][$language_id]]]></search>
+        <add position="replace"><![CDATA[// $this->error['keyword'][$store_id][$language_id]]]></add>
+    </operation>
+    </file>
+
+    <file path="admin/controller/catalog/manufacturer.php" error="skip">
+    <operation error="skip">
+        <search><![CDATA[$this->error['keyword'][$store_id][$language_id]]]></search>
+        <add position="replace"><![CDATA[// $this->error['keyword'][$store_id][$language_id]]]></add>
+    </operation>
+    </file>
+
+    <file path="admin/controller/blog/category.php" error="skip">
+    <operation error="skip">
+        <search><![CDATA[$this->error['keyword'][$store_id][$language_id]]]></search>
+        <add position="replace"><![CDATA[// $this->error['keyword'][$store_id][$language_id]]]></add>
+    </operation>
+    </file>
+
+    <file path="admin/controller/blog/article.php" error="skip">
+    <operation error="skip">
+        <search><![CDATA[$this->error['keyword'][$store_id][$language_id]]]></search>
+        <add position="replace"><![CDATA[// $this->error['keyword'][$store_id][$language_id]]]></add>
+    </operation>
+    </file>
+
+
+
+    <file path="admin/controller/octemplates/blog/oct_blogcategory.php" error="skip">
+    <operation error="skip">
+        <search><![CDATA[$this->error['keyword'][$store_id][$language_id]]]></search>
+        <add position="replace"><![CDATA[// $this->error['keyword'][$store_id][$language_id]]]></add>
+    </operation>
+    </file>
+
+    <file path="admin/controller/octemplates/blog/oct_blogarticle.php" error="skip">
+    <operation error="skip">
+        <search><![CDATA[$this->error['keyword'][$store_id][$language_id]]]></search>
+        <add position="replace"><![CDATA[// $this->error['keyword'][$store_id][$language_id]]]></add>
+    </operation>
+    </file>
+
+
+
+
+</modification>

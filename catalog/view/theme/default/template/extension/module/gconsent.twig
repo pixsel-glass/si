@@ -1,0 +1,76 @@
+{% if 'backdrop' in settings %}<div id="gmc_backdrop"{{ 'delay' in settings ? ' class="hidden"' : '' }}></div>{% endif %}
+<div id="gmc_cookie_banner" class="cookie-banner{{ position ? ' '~position : ' center' }}{{ 'minimal' in settings ? ' gmc_minimal' : '' }}{{ 'delay' in settings ? ' hidden' : '' }}" style="{{ background ? 'background-color:' ~ background ~ ';' : '' }}{{ color ? 'color:' ~ color ~ ';' : '' }}">
+		<div class="gmc_banner_inner">
+			{% if 'close' in settings %}
+				<span class="gcm_close_banner"> &#x2715; </span>
+			{% endif %}
+			{% if 'notitle' not in settings %}
+				<div class="gmc_title">
+					{{ title ? title : text_gconsent_title }}
+				</div>
+			{% endif %}
+			<div id="cookies-panel" class="cookies-panel">
+				<div class="gmc_description">
+					{{ description ? description : text_gconsent_desc }}
+				</div>
+
+				<div class="buttons">
+					{% if 'disagree' in settings %}
+						<button id="decline-btn" class="gmc_button"{{ dis_color ? ' style="background-color:' ~ dis_color ~ '"' : '' }}>{{ button_disagree ? button_disagree : text_gconsent_disagree }}</button>
+					{% endif %}
+					
+					<button id="settings-btn" class="gmc_button"{{ set_color ? ' style="background-color:' ~ set_color ~ '"' : '' }}>{{ button_settings ? button_settings : text_gconsent_pref }}</button>
+
+					<button id="accept-btn" class="gmc_button"{{ agree_color ? ' style="background-color:' ~ agree_color ~ '"' : '' }}>{{ button_agree ? button_agree : text_gconsent_agree }}</button>
+				</div>
+			</div>
+			<div id="settings-panel" class="settings-panel">
+				<label class="toggle-switch">
+					{{ title_cookie ? title_cookie : text_gconsent_cookie }}
+					<input type="checkbox" id="gcm_essential_cookies" checked disabled>
+					<span class="slider"></span>
+				</label>
+				{% if not hide_descr %}<div class="gcm_label_description">{{ desc_cookie ? desc_cookie : help_gconsent_cookie }}</div>{% endif %}
+
+				<label class="toggle-switch">
+					{{ title_func ? title_func : text_gconsent_func }}
+					<input type="checkbox" id="gcm_functional_cookies" checked>
+					<span class="slider"></span>
+				</label>
+				{% if not hide_descr %}<div class="gcm_label_description">{{ desc_func ? desc_func : help_gconsent_func }}</div>{% endif %}
+
+				<label class="toggle-switch">
+					{{ title_track ? title_track : text_gconsent_track }}
+					<input type="checkbox" id="gcm_tracking_toggle" checked>
+					<span class="slider"></span>
+				</label>
+				{% if not hide_descr %}<div class="gcm_label_description">{{ desc_track ? desc_track : help_gconsent_track }}</div>{% endif %}
+
+				<label class="toggle-switch">
+					{{ title_ads ? title_ads : text_gconsent_ads }}
+					<input type="checkbox" id="gcm_marketing_toggle" checked>
+					<span class="slider"></span>
+				</label>
+				{% if not hide_descr %}<div class="gcm_label_description">{{ desc_ads ? desc_ads : help_gconsent_ads }}</div>{% endif %}
+
+				<button id="save-settings-btn" class="gmc_button"{{ agree_color ? ' style="background-color:' ~ agree_color ~ '"' : '' }}>{{ button_save ? button_save :text_gconsent_save }}</button>
+			</div>
+		</div>
+</div>
+{% if agree_color %}
+<style>
+#gmc_cookie_banner input:checked+.slider {
+	background-color: {{ agree_color }};
+}
+</style>
+{% endif %}
+{% if 'delay' in settings %}
+<script>
+setTimeout(function() {
+	{% if 'backdrop' in settings %}
+	$('#gmc_backdrop').removeClass('hidden');
+	{% endif %}
+	$('#gmc_cookie_banner').removeClass('hidden');
+}, 3000);
+</script>
+{% endif %}

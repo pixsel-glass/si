@@ -1,0 +1,103 @@
+<file path="system/engine/loader.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function view[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+// SEO multilang code - begin
+	public function lm_reset_replace() {
+		$this->registry->set('lm_replace_array', array());
+	}
+
+	public function lm_route_replace() {
+		$this->registry->set('lm_route_array', array());
+	}
+
+	public function lm_reset_data() {
+		$this->registry->set('lm_data_array', array());
+	}
+
+	public function lm_get_data() {
+		$data_array_return = $this->registry->get('lm_data_array');
+		$this->lm_reset_data();
+		return $data_array_return;
+	}
+
+	public function lm_set_replacedata($replace_array, $route = 0) {
+		$route_array = array();
+		foreach ($replace_array as $val => $result) {
+			$route_array[$route][$val] = $result;
+		}
+
+		if (!is_array($this->registry->get('lm_replace_array'))) $this->lm_reset_replace();
+		if (!is_array($this->registry->get('lm_route_array'))) $this->lm_route_replace();
+
+		$this->registry->set('lm_replace_array', array_merge($this->registry->get('lm_replace_array'), $replace_array));
+		$this->registry->set('lm_route_array', array_merge($this->registry->get('lm_route_array'), $route_array));
+	}
+
+	public function lm_replacedata($data_array, $replace_array, $route) {
+		if (!empty($replace_array)) {
+
+			$replace_array_new = array();
+			foreach ($this->registry->get('lm_route_array') as $val_route => $result_val) {
+				if ($val_route == $route || $val_route === 0) {
+					foreach ($result_val as $val_r => $result_r) {
+						$replace_array_new[$val_r] = $replace_array[$val_r];
+					}
+				}
+			}
+
+			$data_array = array_replace($data_array, $replace_array_new);
+
+			if (!is_array($this->registry->get('lm_data_array'))) $this->lm_reset_data();
+			$this->registry->set('lm_data_array', array_merge($this->registry->get('lm_data_array'), $replace_array));
+		}
+		return $data_array;
+	}
+
+	public function lm_replacecontroller($route) {
+		if (!empty($this->registry->get('lm_route_array'))) {
+			foreach ($this->registry->get('lm_route_array') as $val_route => $result_val) {
+				if ($val_route == $route || $val_route === 0) {
+					foreach ($result_val as $val_r => $result_r) {
+						if ($val_route == $route && $route == $val_r && $val_route == $val_r) {
+							return $result_r;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}	
+// SEO multilang code - end
+
+$1function view($2{
+		
+		if (!defined('DIR_CATALOG')) {
+			if (!defined('SC_VERSION')) define('SC_VERSION', substr(str_replace('.', '', VERSION), 0, 2));
+			$seolang_langmark_settings = $this->registry->get('config')->get('seolang_langmark_settings');
+			if (isset($seolang_langmark_settings) && $seolang_langmark_settings && $seolang_langmark_settings['langmark_widget_status']) {
+		
+				if (!is_object($this->registry->get('model_seolang_seolang'))) {
+					$this->registry->get('load')->model('seolang/seolang');
+				}
+		
+				if (!is_object($this->registry->get('controller_seolang_mova_mova'))) {
+					$this->registry->get('model_seolang_seolang')->control('seolang/mova/mova');
+				}
+				if (!$this->registry->get('seolangmova')) {
+					$this->registry->set('seolangmova', $this->registry->get('controller_seolang_mova_mova'));
+					if (SC_VERSION < 20) {
+						$this->registry->get('config')->set('seolangmova', $this->registry->get('controller_seolang_mova_mova'));
+					}
+				}
+			}
+		 
+			if (is_callable(array($this->registry, 'get')) && $this->registry->get('seolangmova')) {
+				$this->registry->get('seolangmova')->loadview();
+			}		
+			$data = $this->lm_replacedata($data, $this->registry->get('lm_replace_array'), $route);
+		}	
+    ]]></add>
+	</operation>
+
+</file>

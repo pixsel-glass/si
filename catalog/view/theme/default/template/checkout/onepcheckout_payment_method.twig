@@ -1,0 +1,150 @@
+<div class="checkout-payment-method h-100{% if payment_methods is empty %} hidden{% endif %}">
+	<div class="checkout-heading">{{ title_payment_method }}</div>
+	<div class="payment-method">
+		{% if payment_methods %}
+			{% for payment_method in payment_methods %}
+				<div class="radio chm-radio">
+					<label>
+						{% if (payment_method['code'] == payment_code or not payment_code) %}
+							{% set payment_code = payment_method['code'] %}
+							<input autocomplete="off" type="radio" name="payment_method" value="{{ payment_method['code'] }}" checked="checked" />
+						{% else %}
+							<input autocomplete="off" type="radio" name="payment_method" value="{{ payment_method['code'] }}" />
+						{% endif %}
+						{{ payment_method['title'] }}
+					</label>
+					{% if payment_method['image'] %}<div class="payment-method-img"><img src="{{ payment_method['image'] }}" alt=""></div>{% endif %}
+					{% if ((payment_method['code'] == payment_code or not payment_code) and (payment_method['pm_description'] is not empty)) %}
+					<div class="text-info-pm">
+						{{ payment_method['pm_description'] }}
+					</div>
+					{% endif %}
+					{% if payment_method['code'] == 'przelewy24' %}
+						<input type="hidden" name="payment_method_przelewy24" value="" />
+						<div class="przelewy24Bank">{{ text_przbank_online }} <a href="#" class="przelewy24BankSelect">{{ text_przbank_select }}</a></div>
+					{% endif %}
+					{% if payment_method['code'] == 'przelewygapay24' %}
+						<input type="hidden" name="payment_method_przelewygapay24" value="{{ przelewygapay24_method }}" />
+					{% endif %}
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+</div>
+
+<div class="modal fade" id="ft_prz_modal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered {{ size }}">
+		<div class="modal-content">
+			<div class="modal-header no-gutters">
+				<div class="col">
+					<div class="h5 modal-title">{{ text_przbank_heading }}</div>
+				</div>
+				<div class="col-auto">
+					<a href="#" class="d-block ml-2" data-dismiss="modal">
+						<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="przBanks">
+				{% for przBank in przBanks %}
+					{% if przBank['group'] == 'FastTransfers' or przBank['group'] == 'Installments' or przBank['group'] == 'eTransfer' %}
+					<div class="przBank" data-id="{{ przBank['id'] }}" data-name="{{ przBank['name']|replace({'(PIS)':''}) }}">
+						<div class="przBank-image"><img src="{{ przBank['imgUrl'] }}"></div>
+						<div class="przBank-name">{{ przBank['name']|replace({'(PIS)':''}) }}</div>
+					</div>
+					{% endif %}
+				{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="ft_pay_modal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered {{ size }}">
+		<div class="modal-content">
+			<div class="modal-header no-gutters">
+				<div class="col">
+					<div class="h5 modal-title">{{ text_przbank_convert }}</div>
+				</div>
+				<div class="col-auto">
+					<a href="#" class="d-block ml-2" data-dismiss="modal">
+						<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+						</svg>
+					</a>
+				</div>
+			</div>
+			<div class="modal-body">
+				{{ text_przbank_convert_acc }}
+				<div class="summ">{{ modal_total_eur }} = {{ modal_total }}</div>
+			</div>
+			<div class="modal-footer d-block px-0">
+				<div class="m-0 px-3">
+					<div class="row">
+						<div class="col">
+							<button type="button" class="btn btn-outline-primary btn-block prepaid" {# data-dismiss="modal" #}>{{ button_back }}</button>
+						</div>
+						<div class="col">
+							<div class="row no-gutters">
+								<div class="col">
+									<button type="button" id="qo-button-pay" data-loading="Ładowanie..." class="btn btn-primary btn-block mb-3 mb-sm-0 gotopay">
+										<span class="row no-gutters alig-items-center gotopay">
+											<span class="col-auto gotopay">
+												<span class="loading-icon mr-3 gotopay">
+													<span class="spinner-border ft-icon-18 d-block text-white mr-n3 gotopay"></span>
+												</span>
+											</span>
+											<span class="col gotopay">
+												<span class="loading-wrapper gotopay">{{ button_checkout }}</span>
+											</span>
+										</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$('.przelewy24BankSelect').on('click', function(e) {
+		e.preventDefault();
+
+		$(this).closest('.radio.chm-radio').find('input[type="radio"]').prop('checked', 'checked').trigger('click');
+
+		setTimeout(function() {
+			$('#ft_prz_modal').modal('show');
+
+			if ($('input[name="payment_method_przelewy24"]').val() != '') {
+				$('.przBank[data-id="'+$('input[name="payment_method_przelewy24"]').val()+'"]').addClass('selected');
+			}
+		}, 500)
+	});
+
+	$('.przBank').on('click', function(e) {
+		var bankID = $(this).data('id');
+		var bankName = $(this).data('name');
+
+		$('.przBank').each(function() {
+			$(this).removeClass('selected');
+		});
+
+		$('input[name="payment_method_przelewy24"]').val(bankID);
+		$('.przelewy24BankSelect').text(bankName);
+
+		$('#ft_prz_modal').modal('hide');
+	});
+
+	$('.prepaid').on('click', function(e) {
+		$('.loading_mask').hide();
+
+		$('#ft_pay_modal').modal('hide');
+	});
+</script>

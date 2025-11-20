@@ -1,0 +1,284 @@
+{{ header }}{{ column_left }}
+<div id="content">
+	<div class="page-header">
+		<div class="container-fluid">
+			<div class="pull-right form-inline">
+				<button type="submit" form="form-module" name="apply" data-toggle="tooltip" title="{{ button_apply }}" class="btn btn-success"><i class="fa fa-check"></i></button>
+				<button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+				<a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+			</div>
+			<h1>{{ heading_title }}</h1>
+			<ul class="breadcrumb">
+				{% for breadcrumb in breadcrumbs %}
+					<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		{% if error_warning %}
+			<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		{% if success %}
+			<div class="alert alert-success alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ success }}
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			</div>
+		{% endif %}
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab-main" data-toggle="tab">{{ tab_main }}</a></li>
+					<li><a href="#tab-text" data-toggle="tab">{{ tab_text }}</a></li>
+					<!--<li><a href="#tab-license" data-toggle="tab">{{ tab_license }}</a></li>-->
+				</ul>
+				<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+					<div class="tab-content">
+						<div class="tab-pane active form-horizontal" id="tab-main">
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+								<div class="col-sm-10">
+									<select name="module_gconsent_status" id="input-status" class="form-control">
+										<option value="0" {{ "0" == module_gconsent_status ? "selected" : "" }}>{{ text_disabled }}</option>
+										<option value="1" {{ "1" == module_gconsent_status ? "selected" : "" }}>{{ text_enabled }}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-status">{{ entry_position }}</label>
+								<div class="col-sm-10">
+									<select name="module_gconsent_position" id="input-status" class="form-control">
+										<option value="center" {{ "center" == module_gconsent_position ? "selected" : "" }}>{{ text_center }}</option>
+										<option value="top" {{ "top" == module_gconsent_position ? "selected" : "" }}>{{ text_top }}</option>
+										<option value="bottom" {{ "bottom" == module_gconsent_position ? "selected" : "" }}>{{ text_bottom }}</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-settings">{{ entry_settings }}</label>
+								<div class="col-sm-10">
+									{% for item in settings_data %}
+									<div class="checkbox">
+										<label><input type="checkbox" name="module_gconsent_settings[]" value="{{ item }}" {{ item in module_gconsent_settings ? "checked" : "" }}> {{ attribute(_context, 'entry_'~item) }}</label>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-background">{{ entry_background }}</label>
+								<div class="col-sm-10">
+									<input type="color" name="module_gconsent_background" value="{{ module_gconsent_background }}" placeholder="{{ entry_background }}" id="input-background"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-color">{{ entry_color }}</label>
+								<div class="col-sm-10">
+									<input type="color" name="module_gconsent_color" value="{{ module_gconsent_color }}" placeholder="{{ entry_color }}" id="input-color"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-agree-color">{{ entry_agree_color }}</label>
+								<div class="col-sm-10">
+									<input type="color" name="module_gconsent_agree_color" value="{{ module_gconsent_agree_color }}" placeholder="{{ entry_agree_color }}" id="input-agree-color"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-dis-color">{{ entry_dis_color }}</label>
+								<div class="col-sm-10">
+									<input type="color" name="module_gconsent_dis_color" value="{{ module_gconsent_dis_color }}" placeholder="{{ entry_dis_color }}" id="input-dis-color"/>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-set-color">{{ entry_set_color }}</label>
+								<div class="col-sm-10">
+									<input type="color" name="module_gconsent_set_color" value="{{ module_gconsent_set_color }}" placeholder="{{ entry_set_color }}" id="input-sets-color"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane form-horizontal" id="tab-text">
+							<div class="alert alert-info">{{ text_hint }}</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_title }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_title[{{ language.language_id }}]" value="{{ module_gconsent_title ? module_gconsent_title[language.language_id] : '' }}" placeholder="{{ entry_title }}" id="input-title{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_content }}</label>
+								<div class="col-sm-10">
+									<ul class="nav nav-tabs" id="content-language">
+										{% for language in languages %}
+											<li><a href="#content-language{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}"/> {{ language.name }}</a></li>
+										{% endfor %}
+									</ul>
+									<div class="tab-content">
+										{% for language in languages %}
+											<div class="tab-pane" id="content-language{{ language.language_id }}">
+												<textarea name="module_gconsent_content[{{ language.language_id }}]" id="input-content{{ language.language_id }}" class="form-control" data-toggle="summernote" rows="5">{{ module_gconsent_content[language.language_id] }}</textarea>
+											</div>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_button }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_button[{{ language.language_id }}]" value="{{ module_gconsent_button ? module_gconsent_button[language.language_id] : '' }}" placeholder="{{ entry_button }}" id="input-button{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_button_dis }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_button_dis[{{ language.language_id }}]" value="{{ module_gconsent_button_dis ? module_gconsent_button_dis[language.language_id] : '' }}" placeholder="{{ entry_button_dis }}" id="input-button-dis{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_button_set }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_button_set[{{ language.language_id }}]" value="{{ module_gconsent_button_set ? module_gconsent_button_set[language.language_id] : '' }}" placeholder="{{ entry_button_set }}" id="input-button-set{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_button_save }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_button_save[{{ language.language_id }}]" value="{{ module_gconsent_button_save ? module_gconsent_button_save[language.language_id] : '' }}" placeholder="{{ entry_button_save }}" id="input-button-set{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_title_cookie }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_title_cookie[{{ language.language_id }}]" value="{{ module_gconsent_title_cookie ? module_gconsent_title_cookie[language.language_id] : '' }}" placeholder="{{ entry_title_cookie }}" id="input-title_cookie{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_desc_cookie }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<textarea name="module_gconsent_desc_cookie[{{ language.language_id }}]" rows="3" placeholder="{{ entry_desc_cookie }}" id="input-desc_cookie{{ language.language_id }}" class="form-control">{{ module_gconsent_desc_cookie ? module_gconsent_desc_cookie[language.language_id] : "" }}</textarea>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_title_func }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_title_func[{{ language.language_id }}]" value="{{ module_gconsent_title_func ? module_gconsent_title_func[language.language_id] : '' }}" placeholder="{{ entry_title_func }}" id="input-title_func{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_desc_func }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<textarea name="module_gconsent_desc_func[{{ language.language_id }}]" rows="3" placeholder="{{ entry_desc_func }}" id="input-desc_func{{ language.language_id }}" class="form-control">{{ module_gconsent_desc_func ? module_gconsent_desc_func[language.language_id] : "" }}</textarea>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_title_track }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_title_track[{{ language.language_id }}]" value="{{ module_gconsent_title_track ? module_gconsent_title_track[language.language_id] : '' }}" placeholder="{{ entry_title_track }}" id="input-title_track{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_desc_track }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<textarea name="module_gconsent_desc_track[{{ language.language_id }}]" rows="3" placeholder="{{ entry_desc_track }}" id="input-desc_track{{ language.language_id }}" class="form-control">{{ module_gconsent_desc_track ? module_gconsent_desc_track[language.language_id] : "" }}</textarea>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_title_ads }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<input type="text" name="module_gconsent_title_ads[{{ language.language_id }}]" value="{{ module_gconsent_title_ads ? module_gconsent_title_ads[language.language_id] : '' }}" placeholder="{{ entry_title_ads }}" id="input-title_ads{{ language.language_id }}" class="form-control"/>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ entry_desc_ads }}</label>
+								<div class="col-sm-10">
+									{% for language in languages %}
+									<div class="input-group"><span class="input-group-addon"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /></span>
+										<textarea name="module_gconsent_desc_ads[{{ language.language_id }}]" rows="3" placeholder="{{ entry_desc_ads }}" id="input-desc_ads{{ language.language_id }}" class="form-control">{{ module_gconsent_desc_ads ? module_gconsent_desc_ads[language.language_id] : "" }}</textarea>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+
+						</div>
+						<div class="tab-pane form-horizontal" id="tab-license">
+							<div class="form-group">
+								<label class="col-sm-2 control-label" for="input-license">{{ entry_license }}</label>
+								<div class="col-sm-10">
+									<input type="text" name="module_gconsent_license" value="{{ module_gconsent_license }}" placeholder="{{ entry_license }}" id="input-license" class="form-control"/>
+									<br>
+									{{ text_copyright }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript"><!--
+	$('.nav[id*=language]').find('a:first').tab('show');
+//--></script>
+{{ footer }}

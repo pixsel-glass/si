@@ -1,0 +1,53 @@
+<file path="system/library/config.php" error="skip">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function get[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function get($2{
+		// code
+		if ($key == 'seolang_module') {
+            if (isset($this->data['seolanglib'])) {
+            	$modules = $this->data['seolanglib']->config_15();
+            	return $modules;
+            }
+        }
+		// End of code
+]]></add>
+    </operation>
+</file>
+
+<file path="{ADMIN}/controller/common/header.php">
+    <operation error="skip">
+        <search  position="before"><![CDATA[$this->render]]></search>
+        <add position="before"><![CDATA[
+			if (isset($this->request->get['route']) && ($this->request->get['route'] == 'seolang/seolang' || $this->request->get['route'] == 'module/seolang')) {
+				$this->data['seolang_work'] = true;
+			} else {
+				$this->data['seolang_work'] = false;
+			}
+
+			if (file_exists(DIR_APPLICATION. 'controller/extension/module/seolang.php')) {
+				@unlink(DIR_APPLICATION. 'controller/extension/module/seolang.php');
+			}
+			$files_extension_module = glob(DIR_APPLICATION. 'controller/extension/module/*.*');
+			if (!$files_extension_module && is_dir(DIR_APPLICATION. 'controller/extension/module')) {
+				rmdir(DIR_APPLICATION. 'controller/extension/module');
+			}
+
+    ]]></add>
+    </operation>
+</file>
+
+<!--
+<file path="{ADMIN}/view/template/common/header.tpl">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)script(.*?)jquery[/]jquery-1[.]7[.]1(.*)~]]></search>
+        <add position="replace"><![CDATA[
+<?php if (isset($seolang_work) && $seolang_work) { ?>
+$1script$2seolang/jquery-2.1.1$3
+<?php } else { ?>
+$1script$2jquery/jquery-1.7.1$3
+<?php } ?>
+    ]]></add>
+    </operation>
+</file>
+-->

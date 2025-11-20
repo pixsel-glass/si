@@ -1,0 +1,88 @@
+<file path="system/engine/loader.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)final class Loader(.*)~]]></search>
+        <add position="replace"><![CDATA[
+$1final class Loader$2
+protected $lm_replace = array();
+protected $lm_data = array();
+
+]]></add>
+	</operation>
+
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function library[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+// SEO multilang code - begin
+	public function lm_reset_replace() {
+		$this->lm_replace = array();
+	}
+
+	public function lm_reset_data() {
+		$this->lm_data = array();
+	}
+
+	public function lm_get_data() {
+		$data_return = $this->lm_data;
+		$this->lm_reset_data();
+		return $data_return;
+	}
+
+	public function lm_set_replacedata($replace, $route = 0) {
+		$this->lm_replace = array_merge($this->lm_replace, $replace);
+	}
+	
+	public function lm_get_replacedata() {
+		return $this->lm_replace; 
+	}	
+
+	public function lm_replacedata($data, $replace) {
+		if (!empty($replace)) {
+			$data = array_replace($data, $replace);
+		}
+		$this->lm_data = array_merge($this->lm_data, $data);
+		return $data;
+	}
+// SEO multilang code - end
+
+$1function library($2{
+
+    ]]></add>
+	</operation>
+</file>
+
+
+<file path="system/engine/controller.php" error="skip">
+	<operation error="skip">
+        <search position="before"><![CDATA[if (file_exists(DIR_TEMPLATE]]></search>
+        <add position="before"><![CDATA[
+		
+
+		if (!defined('DIR_CATALOG')) {
+			if (!defined('SC_VERSION')) define('SC_VERSION', substr(str_replace('.', '', VERSION), 0, 2));
+			$seolang_langmark_settings = $this->registry->get('config')->get('seolang_langmark_settings');
+			if (isset($seolang_langmark_settings) && $seolang_langmark_settings && $seolang_langmark_settings['langmark_widget_status']) {
+		
+				if (!is_object($this->registry->get('model_seolang_seolang'))) {
+					$this->registry->get('load')->model('seolang/seolang');
+				}
+		
+				if (!is_object($this->registry->get('controller_seolang_mova_mova'))) {
+					$this->registry->get('model_seolang_seolang')->control('seolang/mova/mova');
+				}
+				if (!$this->registry->get('seolangmova')) {
+					$this->registry->set('seolangmova', $this->registry->get('controller_seolang_mova_mova'));
+					if (SC_VERSION < 20) {
+						$this->registry->get('config')->set('seolangmova', $this->registry->get('controller_seolang_mova_mova'));
+					}
+				}
+			}
+		 
+			if (is_callable(array($this->registry, 'get')) && $this->registry->get('seolangmova')) {
+				$this->registry->get('seolangmova')->loadview();
+			}
+			$this->data = $this->load->lm_replacedata($this->data, $this->load->lm_get_replacedata());
+		}	
+
+    ]]></add>
+	</operation>
+</file>

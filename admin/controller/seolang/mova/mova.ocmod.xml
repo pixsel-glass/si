@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{NAME}<div class='uf'></div></name>
+    <code>{MOD}</code>
+    <id>{MOD}</id>
+    <version>{VERSION}</version>
+    <vqmver required="true">2.4.0</vqmver>
+    <author>{AUTHOR}</author>
+    <link>{LINK}</link>
+
+</modification>

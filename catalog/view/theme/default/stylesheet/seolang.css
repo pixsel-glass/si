@@ -1,0 +1,58 @@
+#seolang-informer {
+	font-size: 12px;
+}
+.sl-flex-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.sl-flex-container-left {
+	background-color: #16a9de;
+	color: #fff;
+	justify-content: flex-start;
+	align-items: flex-start;
+	text-align: left;
+}
+.sl-flex-container-right {
+	color: #129856;
+	background-color: #125689;
+	justify-content: flex-start;
+	align-items: flex-start;
+	text-align: right;
+}
+.sl-seolang-heading a {
+	font-size: 1.2em;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	color: #fff;
+	text-decoration: none;
+}
+.sl-seolang-bottom-heading {
+    background-color: #16a9de;
+    color: #fff;
+    overflow: hidden;
+    z-index: 10000;
+    bottom: 0;
+    width: 100%;
+    position: fixed;
+    text-align: center;
+    padding-left: 2px;
+    padding-right: 10px;
+}
+a.seolang-button-buy, a.seolang-button-buy:visited, a.seolang-button-buy:focus {
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    background-color: #21bef2;
+    color: #fff;
+    padding: 2px 8px;
+    border: 1px solid #fff;
+    text-decoration: none;
+    font-size: 1em;
+}
+a.seolang-button-buy:hover {
+    color: #21bef2;
+    background-color: #fff;
+}
+#round_cache_all {
+	display: none;
+}

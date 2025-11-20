@@ -1,0 +1,183 @@
+{{ header }}
+<div id="account-wishlist" class="container">
+  {% if success %}
+  <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ success }}
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+  </div>
+  {% endif %}
+  <div class="row">
+
+		{% if column_left %}
+		<div class="col-12 col-sm col-lg-3 order-lg-1 col-aside">
+			{{ column_left }}
+		</div>
+		{% endif %}
+
+		{% if column_right %}
+		<div class="col-12 col-sm col-lg-3 order-lg-3 col-aside">
+			{{ column_right }}
+		</div>
+		{% endif %}
+
+		{% if column_left and column_right %}
+    {% set class = 'col-lg-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-lg-9' %}
+    {% else %}
+    {% set class = 'col-lg' %}
+    {% endif %}
+
+    <div id="content" class="col-12 col-lg order-lg-2 mb-3">
+			{{ content_top }}
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-0 mb-3 mt-3 bg-transparent" itemscope itemtype="http://schema.org/BreadcrumbList">
+          {% for breadcrumb in breadcrumbs %}
+          {% if loop.index == 1 %}
+          <li class="breadcrumb-item p-0" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a class="text-dark" href="{{ breadcrumb.href }}"  itemprop="item">
+              <meta itemprop="name" content="{{ g_text_home }}" />
+            	<svg class="ft-icon-18 d-block" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            		<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            	</svg>
+            </a>
+            <meta itemprop="position" content="{{ loop.index }}" />
+          </li>
+          {% elseif breadcrumbs|length != loop.index %}
+          <li class="breadcrumb-item p-0" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a class="text-dark" href="{{ breadcrumb.href }}" itemprop="item">
+              <span itemprop="name">{{ breadcrumb.text }}</span>
+            </a>
+            <meta itemprop="position" content="{{ loop.index }}" />
+          </li>
+          {% else %}
+          <li class="breadcrumb-item p-0 active">
+            <span>{{ breadcrumb.text }}</span>
+          </li>
+          {% endif %}
+          {% endfor %}
+        </ol>
+      </nav>
+      <h1 class="h2 mb-4">{{ heading_title }}</h1>
+      {% if products %}
+        <div class="products-container wishlist-page">
+          <div class="row form-row price-view row-cols-1">
+            {% for product in products %}
+            <div class="col product-item d-flex mb-2">
+              <div class="bg-white w-100 d-flex flex-column border rounded shadow-sm mb-1">
+                <div class="product-image position-relative text-center px-2 px-sm-3 pt-2 pb-2">
+                  <div class="main-image">
+                    <div class="d-inline-block position-relative">
+                      <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-fluid">
+                    </div>
+                  </div>
+                </div>
+                <div class="product-description px-2 px-sm-3 pt-2 pb-1">
+                  <div class="product-name">
+                    <span role="button" class="text-dark h6 font-weight-normal line-clamp-2">{{ product.name }}</span>
+                  </div>
+                </div>
+                <div class="px-caption d-flex flex-column">
+                  {% if product.options %}
+                      <div class="product-options">
+                        {% for key_opt, option in product.options %}
+                          {% for option_value in option.product_option_value %}
+                            <div class="option-item d-flex">
+                              <div class="option-name">{{ option_value.name }}<span class="option-qty {% if option_value.option_status == 1 %}in_stock{% else %}out_stock{% endif %}"></span></div>
+                              <div class="option-price">
+                                {% if key_opt == 0 %}
+                                  <div class="col-head-price{% if pixsel_tax_status %} tax-col-head{% endif %}">{{ text_head_price }}</div>
+                                {% endif %}
+                                {% if product.price %}
+                                  {% if not product.special %}
+                                   {% if product.retail_price %}
+                                    <span class="old-price d-inline-block">{{ product.retail_price }}</span>
+                                  {% endif %}
+                                  {{ product.price }}
+
+                                {% else %}
+                                 <span class="old-price d-inline-block">{{ product.price }}</span>
+                                 <span class="new-price d-inline-block">{{ product.special }}</span>
+                               {% endif %}
+                             {% endif %}
+                           </div>
+                           <div class="option-sku">
+                            {% if key_opt == 0 %}
+                              <div class="col-head-sku">{{ text_sku_opt }}</div>
+                            {% endif %}
+                            {{ option_value.pixsel_sku }}</div>
+                            {% if option_value.option_status == 1 %}
+                              <div class="option-text-qty in_stock">{{ text_instock }}</div>
+                            {% else %}
+                             <div class="option-text-qty out_stock">{{ text_out_stock }}</div>
+                           {% endif %}
+                         </div>
+                       {% endfor %}
+                     {% endfor %}
+                   </div>
+                 {% endif %}
+                   <div class="product-controls mt-auto px-2 px-sm-3 pb-2 pb-sm-3">
+                    {% if product.price %}
+                      <div class="price">
+                        {% if product.retail_price %}
+                        <span class="old-price d-inline-block">{{ product.retail_price }}</span>
+                        {% endif %}
+                      {% if not product.special %}
+                        <div class="h6 mb-1">
+                          {% if pixsel_tax_status %}
+                            <span class="text-price-bruto">{{ text_head_price }}</span>
+                          {% endif %}
+                          {{ product.price }}
+                          {% if pixsel_tax_status %}
+                            <span class="netto-price d-inline-block">{{ product.tax_price }} {{ lang_without }}</span>
+                          {% endif %}
+                        </div>
+                      {% else %}
+                        <div class="h6 mb-1">
+                          <s class="d-inline-block text-danger font-weight-light">{{ product.price }}</s>
+                          <span class="d-inline-block">{{ product.special }}</span>
+                        </div>
+                      {% endif %}
+
+                      {% if product.tax %}
+                        <small class="font-weight-light text-muted d-block">{{ text_tax }} {{ product.tax }}</small>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  <div class="d-flex d-md-inline-flex dropup mt-2">
+                    <button type="button" class="btn btn-danger btn-cart-add py-2 px-2 pl-4 pr-4" onclick="cart.add('{{ product.product_id }}');" {% if product.quantity <=0 and disable_btn_status %}disabled{% endif %}>
+                      <span class="row no-gutters align-items-center justify-content-center flex-nowrap">
+                        <span class="col-auto">
+                          <svg class="d-block ft-icon-18 notfil" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                          </svg>
+                        </span>
+                        <span class="col-auto">
+                          <span class="text-truncate mx-2">{% if product.quantity <=0 and disable_btn_status %}{{ disable_btn_text }}{% else %}{{ button_cart }}{% endif %}</span>
+                        </span>
+                      </span>
+                    </button>
+                    <a href="{{ product.remove }}" data-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger ml-3">
+                      <svg class="d-block ft-icon-18 mt-1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                      </svg>
+                    </a>
+                  </div>
+                   </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+      <p>{{ text_empty }}</p>
+      {% endif %}
+
+      <div class="d-none">
+        <a href="{{ continue }}" class="btn btn-primary">{{ button_continue }}</a>
+      </div>
+    </div>
+	</div>
+	{{ content_bottom }}
+</div>
+{{ footer }}

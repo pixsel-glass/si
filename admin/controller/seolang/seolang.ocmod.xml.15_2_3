@@ -1,0 +1,163 @@
+<file path="system/library/response.php" error="skip">
+    <operation error="skip">
+        <search position="after"><![CDATA[private $output;]]></search>
+        <add position="after"><![CDATA[
+	//SEO multilang vars
+	private $lm_registry;
+	public $lm_ = true;
+	//End of SEO multilang vars
+    ]]></add>
+    </operation>
+    <operation error="skip">
+        <search position="before"><![CDATA[public function addHeader(]]></search>
+        <add position="before"><![CDATA[
+ 	public function lm_setRegistry($registry) {
+		$this->lm_registry = $registry;
+	}
+    ]]></add>
+    </operation>
+
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function output[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function output($2{
+
+		// SEO langmark code
+		if (!defined('DIR_CATALOG')) {
+			if (is_callable(array($this->lm_registry, 'get'))) {
+				$seolang_langmark_settings = $this->lm_registry->get('config')->get('seolang_langmark_settings');
+				if (isset($seolang_langmark_settings) && $seolang_langmark_settings && $seolang_langmark_settings['langmark_widget_status']) {
+
+					if (!is_object($this->lm_registry->get('model_seolang_seolang'))) {
+						$this->lm_registry->get('load')->model('seolang/seolang');
+					}
+
+					if (!is_object($this->lm_registry->get('controller_seolang_mova_mova'))) {
+						$this->lm_registry->get('model_seolang_seolang')->control('seolang/mova/mova');
+					}
+					if (!$this->lm_registry->get('seolangmova')) {
+						$this->lm_registry->set('seolangmova', $this->lm_registry->get('controller_seolang_mova_mova'));
+						if (SC_VERSION < 20) {
+							$this->lm_registry->get('config')->set('seolangmova', $this->lm_registry->get('controller_seolang_mova_mova'));
+						}
+					}
+				}
+			}
+		 
+			if (is_callable(array($this->lm_registry, 'get')) && $this->lm_registry->get('seolangmova')) {
+				$this->output = $this->lm_registry->get('seolangmova')->responseseolang($this->output);
+				unset($this->seolangmova);
+			}
+		}
+		// End SEO langmark code
+
+]]></add>
+    </operation>
+</file>
+
+
+<file path="system/library/url.php" error="skip">
+    <operation error="skip">
+        <search position="after"><![CDATA[private $ssl;]]></search>
+        <add position="after"><![CDATA[
+	// SEO langmark vars
+	private $lm_registry;
+	public $lm_ = true;
+	// End of SEO langmark vars
+    ]]></add>
+    </operation>
+
+    <operation error="skip">
+        <search position="before"><![CDATA[public function addRewrite]]></search>
+        <add position="before"><![CDATA[
+ 	// SEO langmark function
+ 	public function lm_setRegistry($registry) {
+		$this->lm_registry = $registry;
+	}
+	// End of SEO langmark function
+    ]]></add>
+    </operation>
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function __construct[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function __construct($2{
+		// SEO langmark code
+			if (!defined('DIR_CATALOG')) {
+            	if (is_callable(array($this->lm_registry, 'get'))) {
+					$seolang_langmark_settings = $this->lm_registry->get('config')->get('seolang_langmark_settings');
+					if (isset($seolang_langmark_settings) && $seolang_langmark_settings && isset($seolang_langmark_settings['langmark_widget_status']) && $seolang_langmark_settings['langmark_widget_status']) {
+						if (!is_object($this->model_seolang_seolang)) {
+							$this->load->model('seolang/seolang');
+						}					
+						if (!is_object($this->controller_seolang_mova_mova)) {
+							$this->model_seolang_seolang->control('seolang/mova/mova');
+						}						
+						if (!$this->lm_registry->get('seolangmova')) {
+							$this->lm_registry->set('seolangmova', $this->controller_seolang_mova_mova);
+							if (SC_VERSION < 20) {
+								$this->config->set('seolangmova', $this->controller_seolang_mova_mova);
+							}
+						} 		           	
+					}
+				}
+				if (is_callable(array($this->lm_registry, 'get')) && $this->lm_registry->get('seolangmova')) {
+					$url = $this->lm_registry->get('seolangmova')->after($url);
+				}
+            } 		
+		// End SEO langmark code
+]]></add>
+    </operation>
+
+    <operation error="skip">
+        <search position="before"><![CDATA[return $url;]]></search>
+        <add position="before"><![CDATA[
+		// SEO langmark code
+		if (!defined('DIR_CATALOG')) {
+			if (is_callable(array($this->lm_registry, 'get')) && $this->lm_registry->get('seolangmova')) {
+				$url = $this->lm_registry->get('seolangmova')->after($url, $route);
+			}
+		}
+		//End of SEO langmark code
+    ]]></add>
+    </operation>
+
+
+</file>
+
+<file path="catalog/controller/startup/seo_url.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[$this->response->redirect]]></search>
+        <add position="before"><![CDATA[
+		        if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/search') {
+		        	$lm_redirect = 302;
+		        } else {
+		        	$lm_redirect = 301;
+		        }
+]]></add>
+    </operation>
+
+    <operation error="skip">
+        <search position="replace"><![CDATA[, 301]]></search>
+        <add position="replace"><![CDATA[, $lm_redirect]]></add>
+    </operation>
+
+    <operation error="skip">
+        <search position="replace"><![CDATA[$this->response->redirect(HTTP_SERVER]]></search>
+        <add position="replace"><![CDATA[// WTF ?! HTTP_SERVER?! Seriously? F... // $this->response->redirect(HTTP_SERVER]]></add>
+    </operation>
+</file>
+
+<file path="catalog/controller/common/home.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[$this->document->addLink(HTTP_SERVER]]></search>
+        <add position="replace"><![CDATA[
+       $this->document->addLink($this->url->link('common/home')
+    ]]></add>
+    </operation>
+    <operation error="skip">
+        <search position="replace"><![CDATA[$this->document->addLink($this->config->get('config_url')]]></search>
+        <add position="replace"><![CDATA[
+       $this->document->addLink($this->url->link('common/home')
+    ]]></add>
+    </operation>
+</file>

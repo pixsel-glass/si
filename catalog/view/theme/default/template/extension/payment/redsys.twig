@@ -1,0 +1,19 @@
+<form action="{{ action }}" method="post" id="payment">
+    <input type="hidden" name="Ds_SignatureVersion" value="{{ version }}" />
+    <input type="hidden" name="Ds_MerchantParameters" value="{{ paramsBase64 }}" />
+    <input type="hidden" name="Ds_Signature" value="{{ signatureMac }}" />
+    {#<div class="buttons">
+        <div class="pull-right">
+            <input type="submit" value="{{ button_confirm }}" class="btn btn-primary" />
+        </div>
+    </div>#}
+    <script type='text/javascript'>
+        // document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("payment").submit();
+        // });
+        function popupW() {
+            window.open('about:blank','banco','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no');
+            return true;
+        }
+    </script>
+</form>

@@ -1,0 +1,10 @@
+<file path="admin/controller/common/header.php">
+    <operation error="skip">
+        <search  position="before"><![CDATA[$this->data['title']]]></search>
+        <add position="before"><![CDATA[
+            if (file_exists(DIR_APPLICATION . 'view/stylesheet/seolang/icons.css')) {
+                $this->document->addStyle('view/stylesheet/seolang/icons.css');
+            } 			
+		]]></add>
+    </operation>
+</file>

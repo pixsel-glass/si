@@ -1,0 +1,155 @@
+<div id="ftSearch" class="position-relative">
+	<div class="input-group border border-current text-gray-400 rounded bg-white">
+		<input type="search" name="search" value="{{ search }}" placeholder="{{ text_search }}" class="form-control border-left border-0 bg-transparent h-auto text-center text-md-left" autocomplete="off">
+		<input type="hidden" name="category_id" value="{{ category_id }}" />
+    {% if subcat_search %}
+    <input type="hidden" name="sub_category" value="true">
+    {% endif %}
+    {% if description_search %}
+    <input type="hidden" name="description" value="true">
+    {% endif %}
+		<div class="input-group-append">
+			<button type="button" class="search-button btn btn-light border-top-0 border-bottom-0 border-right-0 border-left py-2 px-3">
+				<span class="col-auto d-blok my-1 pl-0 pr-0">
+					<svg class="d-block ft-icon-24 text-secondary darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+					</svg>
+				</span>
+			</button>
+		</div>
+	</div>
+	<button id="closeSearchMob" type="button" class="btn d-block d-lg-none pl-0 pr-0 shadow-none">
+		<span class="col-auto">
+			<svg class="d-block ft-icon-40 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+				<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+			</svg>
+		</span>
+	</button>
+	{% if livesearch_toggle %}
+	<div class="dropdown w-100"><div class="livesearch dropdown-menu p-0 border w-100"></div></div>
+	{% endif %}
+</div>
+{% if livesearch_toggle %}
+{% if mask %}
+<div class="search-backdrop ft-backdrop bg-black position-fixed t-0 l-0"></div>
+{% endif %}
+<!--noindex-->
+<!--googleoff: all-->
+<template id="ftLivesearchResults">
+	<a class="product productlivesearch dropdown-item text-wrap border-bottom border-gray-150 py-2" href="">
+		<span class="row no-gutters">
+			<span class="col-auto">
+				<span class="d-block position-relative overflow-hidden rounded my-1 mr-4">
+					<svg width="100" height="100" class="d-block" viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg"></svg>
+					<img src="" srcset="" width="100" height="100" alt="" class="image d-block position-absolute t-0 l-0">
+				</span>
+			</span>
+			<span class="col">
+				<span class="name"></span>
+				<span class="subname"></span>
+				{% if show_description %}
+				<small class="description d-block"></small>
+				{% endif %}
+				{# <span class="d-block">
+					<s class="special text-danger mr-2"></s>
+					<span class="price text-dark mr-2"></span>
+				</span> #}
+			</span>
+		</span>
+	</a>
+	<a class="link-all dropdown-item text-wrap text-center result-text" href="">
+		<small class="d-block py-1">
+		{{ text_all_results }} (<span class="count"></span>)
+		</small>
+	</a>
+	<span class="spinner dropdown-item disabled text-center p-3">
+		<span class="d-block spinner-border text-gray-300 mx-auto"></span>
+	</span>
+	<span class="message dropdown-item text-wrap text-center disabled py-3 my-1">
+		<span class="error">{{ text_connection_error }}</span>
+		<span class="not-found">{{ text_no_results }}</span>
+	</span>
+</template>
+<!--/googleoff: all-->
+<!--/noindex-->
+{% endif %}
+
+<script>
+
+	window.addEventListener('DOMContentLoaded', function(e) {
+
+		var btn_search = document.querySelector('#ftSearch .search-button');
+
+		if (btn_search != null) {
+
+			btn_search.addEventListener('click', function(e) {
+				if (typeof ftSearch !== 'undefined' && typeof ftSearch.search == 'function') {
+					ftSearch.search(btn_search)
+				}
+			});
+
+		}
+
+		var caregories_selects = document.querySelectorAll('#ftSearch .select-list .dropdown-item');
+
+		if (caregories_selects != null) {
+
+			caregories_selects.forEach(function(item, i) {
+
+				var category_id = item.getAttribute('data-category');
+
+				item.addEventListener('click', function(e) {
+					if (typeof ftSearch !== 'undefined' && typeof ftSearch.category_select == 'function') {
+						ftSearch.category_select(e, category_id)
+					}
+				});
+
+			});
+		}
+
+		var	search_field = document.querySelector('#ftSearch [name=\'search\']');
+
+		if (search_field != null) {
+
+			search_field.addEventListener('keypress', function(e) {
+
+				if (typeof ftSearch !== 'undefined' && typeof ftSearch.key_enter == 'function') {
+					ftSearch.key_enter(e);
+
+				}
+			});
+
+			{% if livesearch_toggle %}
+			var ls_script = document.querySelector('#ftLiveSearchScript');
+
+			search_field.addEventListener('input', function(e) {
+
+				if (typeof ftLiveSearchDebounce == 'function') {
+					ftLiveSearchDebounce(e, '{{ subcat_search }}', '{{ description_search }}', '{{ characters }}');
+				}
+
+			});
+
+			search_field.addEventListener('focus', function(e) {
+
+				if (typeof ftLiveSearchDebounce == 'function') {
+					ftLiveSearchDebounce(e, '{{ subcat_search }}', '{{ description_search }}', '{{ characters }}');
+				}
+
+			});
+
+			search_field.addEventListener('blur', function(e) {
+
+				if (typeof ftLiveSearchDebounce == 'function') {
+					ftLiveSearchDebounce(e, '{{ subcat_search }}', '{{ description_search }}', '{{ characters }}');
+				}
+
+			});
+
+			{% endif %}
+
+		}
+
+	});
+
+</script>

@@ -1,0 +1,134 @@
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[, 301]]></search>
+        <add position="replace"><![CDATA[, $lm_redirect]]></add>
+    </operation>
+</file>
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[!$query]]></search>
+        <add position="replace"><![CDATA[!isset($query) || (isset($query) && !$query)]]></add>
+    </operation>
+</file>
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[$url = '';]]></search>
+        <add position="replace"><![CDATA[// $url = '';]]></add>
+    </operation>
+</file>
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[$this->response->redirect]]></search>
+        <add position="before"><![CDATA[
+	        if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/search') {
+	        	$lm_redirect = 302;
+	        } else {
+	        	$lm_redirect = 301;
+	        }
+]]></add>
+    </operation>
+</file>
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[$this->detectLanguage();]]></search>
+        <add position="replace"><![CDATA[$this->detectLanguage(); // Not replace for MFP. WTF MFP? Seriously? ]]></add>
+    </operation>
+</file>
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[if (isset($this->session->data['language']]]></search>
+        <add position="replace"><![CDATA[if (0 == 1 && isset($this->session->data['language']]]></add>
+    </operation>
+</file>
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[if($request_language_id]]></search>
+        <add position="replace"><![CDATA[if(0 == 1 && $request_language_id]]></add>
+    </operation>
+</file>
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[if ($keyword || $this->request->server['REQUEST_URI'] == '/')]]></search>
+        <add position="replace"><![CDATA[if (0 == 1 && ($keyword || $this->request->server['REQUEST_URI'] == '/'))]]></add>
+    </operation>
+</file>
+
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[$this->session->data['language'] = $request_language_code;]]></search>
+        <add position="replace"><![CDATA[//$this->session->data['language'] = $request_language_code;]]></add>
+    </operation>
+</file>
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[$host = rtrim($host, '/');]]></search>
+        <add position="replace"><![CDATA[//$host = rtrim($host, '/');]]></add>
+    </operation>
+</file>
+
+
+<file path="system/library/seopro.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function validate[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+
+$1function validate($2{
+		// SEO multilang FIX shit code - begin
+		$this->detectAjax();
+		// SEO multilang FIX shit code - end		
+
+    ]]></add>
+	</operation>
+
+</file>   
+
+<file path="catalog/controller/common/home.php" error="skip">
+
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~.*?addLink.*?canonical.*?\;~]]></search>
+        <add position="replace"><![CDATA[]]></add>
+	</operation>
+
+    <operation error="skip">
+        <search position="before"><![CDATA[$data['column_left']]]></search>
+        <add position="before"><![CDATA[$this->document->addLink($this->url->link('common/home'), 'canonical');]]></add>
+    </operation>
+
+</file>
+
+
+<file path="system/library/seopro.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[switch ($data['route']]]></search>
+        <add position="before"><![CDATA[
+        if (!isset($data['route'])) {
+            $data['route'] = '';
+        }
+        ]]></add>
+    </operation>
+</file>
+
+
+
+<file path="catalog/controller/startup/seo_url.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[parse_str($url_info['query']]]></search>
+        <add position="before"><![CDATA[
+        if (!isset($url_info['query'])) {
+            $url_info['query'] = '';
+        }
+        ]]></add>
+    </operation>
+</file>
+
+ 

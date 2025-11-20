@@ -1,0 +1,65 @@
+{% if languages|length > 1 %}
+	<div class="pull-left">
+		<div id="form-language">
+			<div class="open_btn btn-group">
+				<button class="serv2_none btn btnh btn-link dropdown-toggle" data-toggle="dropdown">
+					{% for language in languages %}
+						{% if (language['current']) %}
+							{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}
+								<img src="catalog/language/{{ language['code'] }}/{{ language['code'] }}.png" alt="{{ language['name'] }}" title="{{ language['name'] }}">
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+					<span class="{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}hidden-xs hidden-sm hidden-md{% endif %}">{{ text_language }}</span>
+					<i class="fa fa-caret-down"></i>
+				</button>
+				<ul class="serv2_pos dropdown-menu">
+					{% for language in languages %}
+						{% if language.main %}
+							<li {% if (language['current']) %} {{ 'class="active"' }} {% endif %}>
+								<button class="btn btnh btn-link btn-block btn_left language-select" type="button" onclick="lm_deleteCookie('languageauto'); window.location = '{{ language.url }}'">
+								{% else %}
+									<li {% if (language['current']) %} {{ 'class="active"' }} {% endif %}>
+										<button class="btn btnh btn-link btn-block btn_left language-select" type="button" onclick="lm_setCookie('languageauto', '1', {expires: 180}); window.location = '{{ language.url }}'">
+										{% endif %}
+										{% if (settings_widget['image_status'] is defined and settings_widget['image_status']) %}
+											<img src="catalog/language/{{ language['code'] }}/{{ language['code'] }}.png" alt="{{ language['name'] }}" title="{{ language['name'] }}"/>
+										{% endif %}
+										<span class="serv2_none">{{ language['name'] }}</span>
+									</li>
+								</button>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+
+			</div>
+		</div>
+<script>
+	function lm_setCookie(name, value, options = {}) {
+		options = {
+		path: '/',
+		...options
+		};
+
+		let date = new Date(Date.now() + (86400e3 * options.expires));
+		date = date.toUTCString();
+		options.expires = date;
+
+		let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+		for (let optionKey in options) {
+			updatedCookie += "; " + optionKey;
+			let optionValue = options[optionKey];
+			if (optionValue !== true) {
+				updatedCookie += "=" + optionValue;
+			}
+		}
+		document.cookie = updatedCookie;
+	}
+
+	function lm_deleteCookie(name) {
+		lm_setCookie(name, "", {'max-age': -1});
+	}
+</script>
+{% endif %}

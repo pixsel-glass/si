@@ -1,0 +1,739 @@
+<div class="modal-dialog modal-dialog-center modal-lg">
+  <div class="modal-content border-0 rounded-lg mh-100 h-100">
+    <div class="modal-header no-gutters">
+      <div class="col">
+        <div class="h5 modal-title">{{ text_edit }} №{{ order_id }}</div>
+      </div>
+      <div class="col-auto">
+            <a href="#" class="d-block ml-2" data-dismiss="modal">
+              <svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+              </svg>
+            </a>
+      </div>
+    </div>
+    <div class="modal-body dscmodal p-4">
+                <form id="quickOrderForm" method="post">
+                  <!-- Поле для вибору покупця -->
+                  <div class="form-group">
+                    <label>{{ text_customer }}</label>
+                    <input type="text" name="customer" id="input-customer" class="form-control" value="{{ customer_name_wbr }}" />
+                    <input type="hidden" name="customer_id" id="input-customer-id" value="0" />
+                    <input type="hidden" name="customer_new_name" id="input-customer-new-name" value="" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="input-order-nip" class="control-label">{{ entry_vat }}</label>
+                    <input autocomplete="off" id="input-order-nip" type="text" name="order_nip" value="{{ order_nip }}" placeholder="{{ entry_nip }}" class="form-control">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="control-label" for="input-country{{ address_row }}">{{ entry_country }}</label>
+                    <div class="">
+                      <select name="country_id" id="input-country" class="form-control">
+                      <option value="">{{ text_select }}</option>
+                      {% for country in countries %}
+                         {% if country.country_delivery_id == country_id %}
+                         <option value="{{ country.country_delivery_id }}" selected="selected">{{ country.name }}</option>
+                         {% else %}
+                         <option value="{{ country.country_delivery_id }}">{{ country.name }}</option>
+                         {% endif %}
+                      {% endfor %}
+                      </select>
+                  </div>
+
+                  <div id="paymentinfo" class="row mt-2">
+                    <div class="form-group col-xs-12 col-sm-6">
+                      <label>{{ text_payment_method }}</label>
+                      <select name="payment_method" id="input-payment-method" class="form-control">
+                        <option value="">{{ text_select }}</option>
+                        {% for method in payment_methods %}
+                          <option value="{{ method.code }}" {% if method.code == order_payment_method %}selected{% endif %}>{{ method.title }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group col-xs-12 col-sm-6">
+                      <label class="control-label" for="input-payed">{{ entry_payed }}</label>
+                      <select name="payed" id="input-payed" class="form-control">
+                        <option value="">{{ text_select }}</option>
+                        <option value="0" {% if payed == 0 %}selected="selected"{% endif %}>{{ text_no }}</option>
+                        <option value="1" {% if payed == 1 %}selected="selected"{% endif %}>{{ text_yes }}</option>
+                      </select>
+                      {% if payed_with is not empty %}<span class="text-muted font-size-12">{{ entry_spayed }} {{ payed_with }}</span>{% endif %}
+                    </div>
+                  </div>
+
+
+                  <div class="form-group">
+                    <label>{{ text_shipping_method }}</label>
+                    <select name="shipping_method" id="input-shipping-method" class="form-control">
+                      <option value="">{{ text_select }}</option>
+                      {% for method in shipping_methods %}
+                        {#{% if order_shipping_method == 'gls.gls' %}
+                          {% set order_shipping_method = 'gls' %}
+                        {% elseif order_shipping_method == 'dhl.dhl' %}
+                          {% set order_shipping_method = 'dhl' %}
+                        {% elseif order_shipping_method == 'hrx.hrx' %}
+                          {% set order_shipping_method = 'hrx' %}
+                        {% endif %}#}
+                        <option value="{{ method.code }}" {% if method.code == order_shipping_method %}selected{% endif %}>{{ method.title }}</option>
+                      {% endfor %}
+                    </select>
+
+                    <div id="opc-shipping-address" class="row mt-2 d-none">
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label for="input-payment-city" class="control-label opc-label">{{ entry_city }}</label>
+                            <input autocomplete="off" id="input-payment-city" type="text" name="city" value="{{ shipping_city }}" placeholder="{{ entry_city }}" class="form-control">
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label for="input-payment-address-1" class="control-label opc-label">{{ entry_address_1 }}</label>
+                            <input autocomplete="off" id="input-payment-address-1" type="text" name="address_1" value="{{ shipping_address_1 }}" placeholder="{{ entry_address_1 }}" class="form-control">
+                        </div>
+                        <div class="form-group col-xs-12 col-sm-6">
+                            <label for="input-payment-postcode" class="control-label opc-label">{{ entry_postcode }}</label>
+                            <input autocomplete="off" id="input-payment-postcode" type="text" name="postcode" value="{{ shipping_postcode }}" placeholder="{{ entry_postcode }}" class="form-control">
+                        </div>
+                    </div>
+                    <input type="hidden" name="parcelLocker" class="parcel-locker-value" value="{{ inpostParcelLocker }}">
+                    <div class="inpost_address">{{ parcelAddressLocker }}{% if parcelAddressLocker is empty %}{% else %}<svg fill="#000000" style="margin-left: 5px; width: 28px;" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M11.707,5.293A1,1,0,0,1,11,7H4V17H9a1,1,0,0,1,0,2H3a1,1,0,0,1-1-1V6A1,1,0,0,1,3,5H8.586L7.293,3.707A1,1,0,1,1,8.707,2.293ZM21,5H15a1,1,0,0,0,0,2h5V17H13a1,1,0,0,0-.707,1.707l3,3a1,1,0,0,0,1.414-1.414L15.414,19H21a1,1,0,0,0,1-1V6A1,1,0,0,0,21,5Z"></path></g></svg>{% endif %}</div>
+                  </div>
+                </form>
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <td class="text-left" style="width: 40%;">{{ column_product }}</td>
+              <td class="text-center">{{ column_model }}</td>
+              <td class="text-center" style="width: 10%;">{{ column_quantity }}</td>
+              <td class="text-right">{{ column_price }}{% if pixsel_tax_status %}</br>{{ lang_with }}{% endif %}</td>
+              <td class="text-right">{{ column_total }}{% if pixsel_tax_status %}</br>{{ lang_with }}{% endif %}</td>
+              <!-- pixsel start -->
+              <td class="text-right"></td>
+              <!-- pixsel end -->
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+              <tr>
+                <td class="text-left"><a href="{{ product.href }}">{{ product.name }}</a> {% for option in product.option %}
+                    <br/>
+                    {% if option.type != 'file' %}
+                      &nbsp;
+                      <small> - {{ option.name }}: <a href="#" id="editOption" onclick="editProductOpen({{ product.product_id }}, {{ option.product_option_value_id }}); return false" data-pid="{{ product.product_id }}" data-oid="{{ option.product_option_value_id }}">{{ option.value }}</a></small> {% else %}
+                      &nbsp;
+                      <small> - {{ option.name }}: <a href="{{ option.href }}">{{ option.value }}</a></small> {% endif %}
+                  {% endfor %}</td>
+                <td class="text-center" style="vertical-align: middle;">{{ product.model }}</td>
+                
+                <!-- pixsel start -->
+                <td class="text-right" style="vertical-align: middle;">
+                  <div class="product-qty" style="display: flex;">
+                    <input type="number" value="{{ product.quantity }}" class="form-control" min="1" id="product-qty-{{product.order_product_id}}">
+                    <button type="button" class="btn btn-primary btn-xs btn-update" data-id="{{product.order_product_id}}"><i class="fa fa-refresh"></i></button>
+                  </div>
+                </td>
+                <!-- pixsel end -->
+        
+                <td class="text-right" style="vertical-align: middle;">
+                {% if customer_group_id != 1 %}
+                <s>{{ product.rprice }}</s><br>
+                {% endif %}
+                <strong>{{ product.price }}</strong>
+                {% if pixsel_tax_status %}
+                </br><span class="text-gray-500">{{ product.tax_price }} {{ lang_without }}</span>
+                {% endif %}
+                </td>
+                <td class="text-right" style="vertical-align: middle;">
+                {% if customer_group_id != 1 %}
+                <s>{{ product.rtotal }}</s><br>
+                {% endif %}
+                <strong>{{ product.total }}</strong>
+                {% if pixsel_tax_status %}</br><span class="text-gray-500">{{ product.tax_total }} {{ lang_without }}</span>
+                {% endif %}
+                </td>
+
+                <!-- pixsel start -->
+                <td class="text-right" style="vertical-align: middle;">
+                  <button type="button" onclick="pixselDeleteProduct('{{ order_id }}', '{{ product.order_product_id }}', '{{product.product_id}}');" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                </td>
+                <!-- pixsel end -->
+        
+              </tr>
+            {% endfor %}
+            <!-- pixsel start -->
+            <tr>
+              <td class="text-right" colspan="7">
+                <button type="button" data-toggle="modal" data-target="#addProductModal" class="btn btn-primary"><i class="fa fa-plus"></i> {{ text_add_product }}</button>
+              </td>
+            </tr>
+            <!-- pixsel end -->
+            {% for voucher in vouchers %}
+              <tr>
+                <td class="text-left"><a href="{{ voucher.href }}">{{ voucher.description }}</a></td>
+                <td class="text-left"></td>
+                <td class="text-right">1</td>
+                <td class="text-right">{{ voucher.amount }}</td>
+                <td class="text-right">{{ voucher.amount }}</td>
+              </tr>
+            {% endfor %}
+            {% set shipcost = 0 %}
+            {% for total in totals %}
+              {% if total.code == 'shipping' %}
+                {% set shipcost = total.cleantext %}
+              {% endif %}
+              <tr class="font-size-12 {% if total.code == 'total' and shipcost == 0 or total.code == 'shipping' and shipcost == 0 %}d-none{% endif %}">
+                <td colspan="5" class="valign-middle text-right font-size-12 p-1 font-weight-600 {% if total.code != 'shipping' %}brutto-total{% endif %}">{{ total.title }} {% if total.code == 'sub_total' or total.code == 'total' or total.code == 'shipping' and pixsel_tax_status %} {{ lang_with }}{% endif %}{% if total.code == 'total' %}Brutto{% endif %}</td>
+                <td class="text-right font-size-12 p-1 {% if total.code != 'shipping' %}brutto-total{% endif %}">{{ total.text }}</td>
+              </tr>
+              {% if pixsel_tax_status and total.code == 'total' and shipcost > 0 %}
+                <tr>
+                  <td colspan="5" class="text-right font-size-12 text-muted p-1 netto-total">{{ lang_without }}</td>
+                  <td class="text-right text-muted p-1 netto-total">{{ total.tax_text }}</td>
+                </tr>
+              {% endif %}
+              {% if pixsel_tax_status and total.code != 'shipping' and total.code != 'total' %}
+                <tr>
+                  <td colspan="5" class="text-right font-size-12 text-muted p-1 netto-total">{{ total.title }}{% if total.code == 'sub_total' and pixsel_tax_status %} {{ lang_without }}{% endif %}</td>
+                  <td class="text-right font-size-12 text-muted p-1 netto-total">{{ total.tax_text }}</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+
+        </table>
+
+    </div>
+    <div class="modal-footer d-block px-0">
+      <div class="m-0 px-3">
+        <div class="row">
+          <div class="col-12 col-sm-4 ml-auto mr-auto">
+            <button type="button" id="save_edit_fileds" data-orderid="{{ order_id }}" data-loading="{{ text_loading }}" class="btn btn-primary btn-block text-truncate">{{ button_continue }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+            {% if inpostSandbox or geoWidgetToken %}
+            {% set geoWidgetToken = inpostSandbox ? inpostSandbox : geoWidgetToken %}
+            <div class="modal fade" id="inpostGeoWidgetModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document" style="height: 90%">
+                    <div class="modal-content" style="height: 100%">
+                        <div class="modal-body" style="height: 100%">
+                            <inpost-geowidget id="geoWidget" onpoint="afterPointSelected" token="{{ geoWidgetToken }}" language="en" config="parcelCollect"></inpost-geowidget>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+
+{#<script type="text/javascript" src="catalog/view/javascript/inpost/inpost.js"></script>
+<link rel="stylesheet" type="text/css" href="catalog/view/javascript/inpost/inpost.css">
+<link rel="stylesheet" type="text/css" href="catalog/view/javascript/inpost/inpost-geowidget.css">#}
+
+        <script type="text/javascript">
+
+          $('input[name=\'customer\']').on('input', function(e){
+            $('input[name=\'customer_id\']').val(0);
+            $('input[name=\'customer_new_name\']').val(e.target.value);
+          });
+          $('input[name=\'customer\']').autocomplete({
+            'source': function(request, response) {
+              $.ajax({
+                url: 'index.php?route=account/manager_list/autocomplete&filter_name=' + encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                  response($.map(json, function(item) {
+                    return {
+                      label: item['name'],
+                      value: item['customer_id']
+                    };
+                  }));
+                }
+              });
+            },
+            'select': function(item) {
+              $('input[name=\'customer\']').val(item['label']);
+              $('input[name=\'customer_id\']').val(item['value']);
+              $('input[name=\'customer_new_name\']').val('');
+
+              // save change and update modal
+              var order_id = $('#save_edit_fileds').data('orderid');
+              var formData = $("#quickOrderForm").serialize();
+
+              $.ajax({
+                url: 'index.php?route=account/manager_list/editOrder&order_id=' + order_id,
+                type: 'post',
+                data: formData,
+                dataType: 'json',
+                success: function(json) {
+                  if (json['error']) {
+                    $('#ft-order-edit-modal .modal-body').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+                  }
+
+                  if(json['success']){
+                    $('#ft-order-edit-modal .modal-body').prepend('<div class="alert alert-success alert-dismissible mt-4 mb-4">' + json['success'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+                    setTimeout(function () {
+                      $.ajax({
+                        url: 'index.php?route=account/manager_list/edit&order_id=' + order_id,
+                        type: 'GET',
+                        dataType: 'html',
+                        success: function(data) {
+                          $('#ft-order-edit-modal').html('');
+                          $('#ft-order-edit-modal').html(data);
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                          console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        }
+                      });
+                    }, 300);
+                  }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                  console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+              });
+            }
+          });
+
+
+            $(document).ready( function() {
+              if ($('#input-shipping-method').find('option:selected').val() == 'inpost_shipping_2.inpost_shipping_2_6' || $('#input-shipping-method').find('option:selected').val() == 'pickup.pickup') {
+                $('#opc-shipping-address').addClass('d-none');
+              } else {
+                $('#opc-shipping-address').removeClass('d-none');
+              }
+            });
+
+
+            $(document).on('change', '#input-shipping-method', function() {
+              if ($(this).find('option:selected').val() == 'inpost_shipping_2.inpost_shipping_2_6') {
+                $.getScript("../catalog/view/javascript/inpost/inpost-geowidget.js", function(data, textStatus, jqxhr) {
+                  console.log(data); //data returned
+                  console.log(textStatus); //success
+                  console.log(jqxhr.status); //200
+                  console.log('InPost loaded');
+                });
+
+                $('.parcel-locker, .parcel-locker-selection-data').each(function(){
+                  $(this).addClass('d-none');
+                });
+
+                setTimeout(function() {
+                  $('#ft-order-edit-modal').css('z-index', '1041');
+                  $('#inpostGeoWidgetModal').modal('show');
+                }, 500);
+              } else {
+                $('input[name="parcelLocker"]').val('');
+                $('.inpost_address').addClass('d-none');
+              }
+              if ($(this).find('option:selected').val() == 'inpost_shipping_2.inpost_shipping_2_6' || $(this).find('option:selected').val() == 'pickup.pickup') {
+                $('#opc-shipping-address').addClass('d-none');
+
+                $('#input-payment-city').val('');
+                $('#input-payment-address-1').val('');
+                $('#input-payment-postcode').val('');
+              } else {
+                $('#opc-shipping-address').removeClass('d-none');
+              }
+            });
+
+            $(document).on('click', '.inpost_address', function(e) {
+                $.getScript("../catalog/view/javascript/inpost/inpost-geowidget.js", function(data, textStatus, jqxhr) {
+                  console.log(data); //data returned
+                  console.log(textStatus); //success
+                  console.log(jqxhr.status); //200
+                  console.log('InPost loaded');
+                });
+
+                $('.parcel-locker, .parcel-locker-selection-data').each(function(){
+                  $(this).addClass('d-none');
+                });
+
+                setTimeout(function() {
+                  $('#ft-order-edit-modal').css('z-index', '1041');
+                  $('#inpostGeoWidgetModal').modal('show');
+                }, 500);
+            });
+
+
+        // PRODUCTS
+          // edit option
+          // $(document).on('click', '#editOption', function(e) {
+          function editProductOpen(pid, oid) {
+            // e.preventDefault();
+
+            $('#editProductModal').modal('show');
+            $('#ft-order-edit-modal').css('z-index', '1041');
+            $('.modal-backdrop:eq(1)').css('z-index', '1042');
+
+            // var product_id = $(this).data('pid');
+            // var product_option_value_id = $(this).data('oid');
+            var product_id = pid;
+            var product_option_value_id = oid;
+
+                setTimeout(function() {
+                  $.ajax({
+                    url: 'index.php?route=product/product/editAutocomplete&productid=' + product_id,
+                    dataType: 'json',
+                    success: function(json) {
+                      // var json = $.parseJSON(json);
+                      // console.log(json);
+
+                      $('#editProductModal input[name=\'product\']').val(json[0]['name']);
+                      $('#editProductModal input[name=\'product_id\']').val(json[0]['product_id']);
+
+                      var optionsHtml = '';
+                      for (var i = 0; i < json[0]['option'].length; i++) {
+                        optionsHtml += '<div class="form-group">';
+                        optionsHtml += '<label for="option-' + json[0]['option'][i]['product_option_id'] + '">' + json[0]['option'][i]['name'] + '</label>';
+                        optionsHtml += '<select id="option-' + json[0]['option'][i]['product_option_id'] + '" name="option[' + json[0]['option'][i]['product_option_id'] + ']" class="form-control">';
+
+                        for (var y = 0; y < json[0]['option'][i]['product_option_value'].length; y++) {
+                          var optionValue = json[0]['option'][i]['product_option_value'][y];
+                          
+                          if (optionValue['product_option_value_id'] == product_option_value_id) {
+                            optionsHtml += '<option value="' + optionValue['product_option_value_id'] + '" selected="selected">' + optionValue['name'] + '</option>';
+                          } else {
+                            optionsHtml += '<option value="' + optionValue['product_option_value_id'] + '">' + optionValue['name'] + '</option>';
+                          }
+                        }
+
+                        optionsHtml += '</select>';
+                        optionsHtml += '</div>';
+                      }
+                      $('#editProductModal #option-wrap').html(optionsHtml);
+                    }
+                  });
+                }, 200);
+
+            // $( '#editProductModal' ).on( 'shown.bs.modal', function(product_id, product_option_value_id){
+            //    var product_id = product_id;
+            //    var product_option_value_id = product_option_value_id;
+            //});
+          }
+          //});
+
+          $('#editProductModal').on('hidden.bs.modal', function () {
+            setTimeout(function () {
+              $('.modal-backdrop:eq(1)').hide();
+              $('.modal-backdrop:eq(1)').remove();
+              // $("body").removeClass("modal-open");
+              $("body").css("padding-right", "0");
+              $('#ft-order-edit-modal').css('z-index', '1050').css('height', '100%').css('position', 'fixed').css('overflow', 'auto');
+              $('.modal-backdrop').css('z-index', '1042');
+            }, 200);
+          });
+          // edit option
+
+          // add product
+          $('input[name=\'product\']').autocomplete({
+            'source': function(request, response) {
+              $.ajax({
+                url: 'index.php?route=product/product/autocomplete&filter_name=' + encodeURIComponent(request),
+                dataType: 'json',
+                success: function(json) {
+                  response($.map(json, function(item) {
+                    return {
+                      label: item['name'],
+                      value: item['product_id'],
+                      option: item['option'],
+                    }
+                  }));
+                }
+              });
+            },
+            'select': function(item) {
+              $('input[name=\'product\']').val(item['label']);
+              $('input[name=\'product_id\']').val(item['value']);
+              loadProductOptions(item['option']);
+            }
+          });
+
+          function loadProductOptions(options) {
+            var optionsHtml = '';
+            for (var i = 0; i < options.length; i++) {
+              optionsHtml += '<div class="form-group">';
+              optionsHtml += '<label for="option-' + options[i]['product_option_id'] + '">' + options[i]['name'] + '</label>';
+              optionsHtml += '<select id="option-' + options[i]['product_option_id'] + '" name="option[' + options[i]['product_option_id'] + ']" class="form-control">';
+
+              for (var y = 0; y < options[i]['product_option_value'].length; y++) {
+                var optionValue = options[i]['product_option_value'][y];
+                optionsHtml += '<option value="' + optionValue['product_option_value_id'] + '">' + optionValue['name'] + '</option>';
+              }
+
+              optionsHtml += '</select>';
+              optionsHtml += '</div>';
+            }
+            $('#option-wrap').html(optionsHtml);
+          }
+
+
+          function addProductToOrder(order_id) {
+            var productId = $('input[name="product_id"]').val();
+            var quantity = $('#quantity').val();
+            var options = {};
+            var allOptionsSelected = true;
+
+            $('#option-wrap select').each(function() {
+
+              var parts = $(this).attr('id').split('-');
+              var optionId = parts[1];
+              var optionValue = $(this).val();
+
+              if (!optionValue) {
+                allOptionsSelected = false;
+              }
+
+              options[optionId] = optionValue;
+            });
+
+
+            if (!productId || !quantity) {
+              alert('{{ text_select_quantity_product }}');
+              return;
+            }
+            if (!allOptionsSelected) {
+              alert('{{ text_select_all_options }}');
+              return;
+            }
+
+            var data = {
+              product_id: productId,
+              quantity: quantity,
+              options: options
+            };
+
+            $.ajax({
+              url: 'index.php?route=account/manager_list/pixselAddProduct&order_id=' + order_id,
+              type: 'post',
+              data: data,
+              dataType: 'json',
+              success: function(json) {
+                if (json['success']) {
+                  
+                  // Renew info in modal
+                  // location.reload();
+                  $.ajax({
+                    url: 'index.php?route=account/manager_list/edit&order_id=' + order_id,
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function(data) {
+                      $('#ft-order-edit-modal').html('');
+                      $('#ft-order-edit-modal').html(data);
+
+                      $('#addProductModal').modal('hide');
+                      // $('#addProductModal').remove();
+                      $('.modal-backdrop:eq(1)').hide();
+                      $('.modal-backdrop:eq(1)').remove();
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                      console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                  });
+
+
+                } else {
+                  console.log(json['error'] || 'Помилка при додаванні товару.');
+                }
+              },
+              error: function(xhr, ajaxOptions, thrownError) {
+                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+              }
+            });
+          }
+
+
+          function editProductToOrder(order_id) {
+            var productId = $('#editProductModal input[name="product_id"]').val();
+            var options = {};
+            var allOptionsSelected = true;
+
+            $('#editProductModal #option-wrap select').each(function() {
+
+              var parts = $(this).attr('id').split('-');
+              var optionId = parts[1];
+              var optionValue = $(this).val();
+
+              if (!optionValue) {
+                allOptionsSelected = false;
+              }
+
+              options[optionId] = optionValue;
+            });
+
+            if (!allOptionsSelected) {
+              alert('{{ text_select_all_options }}');
+              return;
+            }
+
+            var data = {
+              product_id: productId,
+              options: options
+            };
+
+            $.ajax({
+              url: 'index.php?route=account/manager_list/pixselEditProduct&order_id=' + order_id,
+              type: 'post',
+              data: data,
+              dataType: 'json',
+              success: function(json) {
+                if (json['success']) {
+                  // Renew info in modal
+                  $.ajax({
+                    url: 'index.php?route=account/manager_list/edit&order_id=' + order_id,
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function(data) {
+                      $('#ft-order-edit-modal').html('');
+                      $('#ft-order-edit-modal').html(data);
+
+                      $('#editProductModal').modal('hide');
+                      // $('#editProductModal').remove();
+                      $('.modal-backdrop:eq(1)').hide();
+                      $('.modal-backdrop:eq(1)').remove();
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                      console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                  });
+
+
+                } else {
+                  console.log(json['error'] || 'Error edit product');
+                }
+              },
+              error: function(xhr, ajaxOptions, thrownError) {
+                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+              }
+            });
+          }
+
+
+
+
+          $('#addProductModal').on('hidden.bs.modal', function () {
+            $('#input-product').val('');
+            $('input[name="product_id"]').val('');
+            $('#quantity').val(1);
+            $('#option-wrap').empty();
+
+            setTimeout(function () {
+              $('.modal-backdrop:eq(1)').hide();
+              $('.modal-backdrop:eq(1)').remove();
+              $("body").removeClass("modal-open");
+              $("body").css("padding-right", "0");
+              $('#ft-order-edit-modal').css('z-index', '1050').css('height', '100%').css('position', 'fixed').css('overflow', 'auto');
+              $('.modal-backdrop').css('z-index', '1042');
+            }, 200);
+          });
+
+          function pixselDeleteProduct(order_id, order_product_id, product_id) {
+            if (!confirm('{{ text_confirm_delete }}')) {
+              return;
+            }
+
+            $.ajax({
+              url: 'index.php?route=account/manager_list/pixselDeleteProduct&product_id='+product_id+'&order_id='+order_id+'&order_product_id=' + order_product_id,
+              type: 'post',
+              dataType: 'json',
+              success: function(json) {
+                if (json['success']) {
+                  // location.reload();
+
+                  $.ajax({
+                    url: 'index.php?route=account/manager_list/edit&order_id=' + order_id,
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function(data) {
+                      $('#ft-order-edit-modal').html('');
+                      $('#ft-order-edit-modal').html(data);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                      alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                  });
+                } else {
+                  console.log('Сталася помилка при видаленні товару');
+                }
+              },
+              error: function(xhr, ajaxOptions, thrownError) {
+                console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+              }
+            });
+          }
+
+
+          $(document).ready(function() {
+
+
+            $('.product-qty input[type="number"]').on('blur', function() {
+              $(this).val($(this).val().replace(/[^0-9]/g, ''));
+              if ($(this).val() < 1) $(this).val(1);
+            });
+
+            $('.product-qty').on('click', '.btn-update', function() {
+              var $btn = $(this);
+              var productId = $(this).data('id');
+              var input = $(this).siblings('input[type="number"]');
+              var currentValue = parseInt(input.val());
+              var order_id = $('#save_edit_fileds').data('orderid');
+
+              $.ajax({
+                url: 'index.php?route=account/manager_list/changeQtyProduct&order_id=' + order_id + '&order_product_id=' + productId + '&quantity=' + currentValue,
+                type: 'GET',
+                beforeSend: function() {
+                  $btn.button('loading');
+                },
+                success: function(response) {
+                  if(response.success) {
+                    // location.reload();
+
+                    $.ajax({
+                      url: 'index.php?route=account/manager_list/edit&order_id=' + order_id,
+                      type: 'GET',
+                      dataType: 'html',
+                      success: function(data) {
+                        $('#ft-order-edit-modal').html('');
+                        $('#ft-order-edit-modal').html(data);
+                      },
+                      error: function(xhr, ajaxOptions, thrownError) {
+                        console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                      }
+                    });
+                  }else{
+                    console.log(response.error);
+                  }
+                },
+                error: function(xhr, status, error) {
+                  console.error('Помилка AJAX запиту', error);
+                },
+                complete: function() {
+                  $btn.button('reset');
+                }
+              });
+
+            });
+
+          });
+
+        </script>
+
+        <style type="text/css">
+          #quickOrderForm table td {
+            padding: 0.25rem;
+            vertical-align: middle;
+          }
+
+          .product-qty input::-webkit-outer-spin-button,
+          .product-qty input::-webkit-inner-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+          }
+          .product-qty input[type=number] {
+              -moz-appearance: textfield;
+              padding: 0.15rem;
+          }
+        </style>

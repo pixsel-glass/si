@@ -1,0 +1,364 @@
+<div class="modal-dialog modal-dialog-center">
+	<div class="modal-content border-0 rounded-lg mh-100 h-100">
+		<div class="modal-header no-gutters">
+			<div class="col">
+				<div class="h5 modal-title">{{ new_customer }}</div>
+			</div>
+			<div class="col-auto">
+            <a href="#" class="d-block ml-2" data-dismiss="modal">
+        			<svg class="d-block ft-icon-24 m-0 text-gray-500 darker-on-hover" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        				<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+        			</svg>
+        		</a>
+			</div>
+		</div>
+		<div class="modal-body p-4">
+			<form id="register-data" enctype="multipart/form-data" class="form-horizontal">
+				<div class="form-group required">
+					<div class="form-group">
+						{% if customer_type %}
+							<div class="form-check form-check-inline">
+								<label class="form-check-label {{ customer_type }}">
+									<input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="0" />
+									{{ text_customer_private }}
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<label class="form-check-label">
+									<input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="1" {% if customer_type == 1 %}checked="checked"{% endif %} />
+									{{ text_customer_firma }}
+								</label>
+							</div>
+						{% else %}
+							<div class="form-check form-check-inline">
+								<label class="form-check-label {{ customer_type }}">
+									<input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="0" checked="checked" />
+									{{ text_customer_private }}
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<label class="form-check-label">
+									<input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="1" />
+									{{ text_customer_firma }}
+								</label>
+							</div>
+						{% endif %}
+					</div>
+				</div>
+				{#<div class="firma_fields d-none">
+					<div class="form-group d-flex mb-4 mt-4 position-relative">
+						<label class="col-3 text-right mb-0 pt-2" for="input-customer-group">{{ entry_company_name }}</label>
+						<div class="col-9">
+							<input type="text" name="company_name" value="{{ company_name }}" placeholder="{{ entry_company_name }}" id="input-company-name" class="form-control form-control-lg" />
+						</div>
+					</div>
+					<div class="form-group d-flex mb-4 mt-4 position-relative">
+						<label class="col-3 text-right mb-0 pt-2" for="input-customer-group">{{ NIP }}</label>
+						<div class="col-9">
+							<input type="text" name="company_nip" value="" placeholder="NIP" id="input-nip" class="form-control form-control-lg" />
+						</div>
+					</div>
+				</div>#}
+				<div class="form-group d-flex mb-4 mt-4 position-relative">
+					<label class="col-3 text-right mb-0 pt-2" for="input-country">{{ entry_country }}</label>
+					<div class="col-9">
+						<select autocomplete="off" class="form-control" name="country_id" id="input-country">
+							<option value="">{{ text_select }}</option>
+							{% for country in countries %}
+							<option value="{{ country.country_delivery_id }}">{{ country.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="firma_fields d-none">
+					{#<div class="form-group d-flex mb-4 mt-4 position-relative">
+						<label class="col-3 text-right mb-0 pt-2" for="input-customer-nip">{{ entry_company_nip }}</label>
+						<div class="col-9">
+							<div class="input-group">
+								<input type="text" name="company_nip" value="{{ company_nip }}" placeholder="{{ entry_company_nip }}" id="input-lascompany-nip" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg shadow-none" />
+								<span class="input-group-btn">
+									<button id="button-nip" class="btn btn-light" style="width: 42px; height: 42px; border-radius: 0 5px 5px 0;"><svg fill="#868383" height="18px" width="18px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330.006 330.006" xml:space="preserve" stroke="#868383"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M304.302,209.419c-7.594-3.318-16.435,0.148-19.751,7.739c-20.766,47.527-67.69,78.236-119.546,78.236 c-41.106,0-79.108-19.32-103.445-51.003l51.23,10.19c8.126,1.617,16.021-3.661,17.638-11.786 c1.616-8.125-3.661-16.022-11.786-17.638l-84.004-16.709c-8.125-1.612-16.021,3.661-17.638,11.786L0.291,304.238 c-1.616,8.125,3.661,16.022,11.786,17.638c0.988,0.196,1.972,0.291,2.942,0.291c7.01,0,13.276-4.94,14.696-12.077l9.148-45.992 c29.972,38.123,76.202,61.296,126.142,61.296c63.78,0,121.496-37.77,147.036-96.225 C315.358,221.579,311.893,212.736,304.302,209.419z"></path> <path d="M317.929,8.12c-8.125-1.614-16.022,3.661-17.638,11.786l-9.149,45.997C261.169,27.783,214.94,4.611,165.005,4.611 c-63.779,0-121.495,37.771-147.038,96.224c-3.317,7.591,0.148,16.434,7.739,19.751c1.956,0.854,3.993,1.259,5.999,1.259 c5.781,0,11.29-3.362,13.753-8.998c20.768-47.527,67.693-78.237,119.548-78.237c41.099,0,79.1,19.316,103.437,50.995 l-51.228-10.191c-8.127-1.615-16.022,3.66-17.639,11.785c-1.616,8.125,3.66,16.022,11.785,17.639l84.006,16.711 c0.971,0.193,1.951,0.288,2.927,0.288c2.945,0,5.849-0.868,8.333-2.528c3.308-2.21,5.602-5.644,6.378-9.546l16.709-84.006 C331.331,17.633,326.054,9.736,317.929,8.12z"></path> </g> </g></svg></button>
+								</span>
+							</div>
+						</div>
+					</div>#}
+					<div class="form-group mb-4 mt-4 position-relative cmvatcode d-none">
+						<label class="col-3 text-right mb-0 pt-2" for="input-customer-nip">{{ entry_company_vatcode }}</label>
+						<div class="col-9">
+							<input type="text" name="company_vatcode" value="{{ company_vatcode }}" placeholder="{{ entry_company_vatcode }}" id="input-lascompany-vatcode" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg shadow-none" />
+						</div>
+					</div>
+					<div class="form-group mb-4 mt-4 position-relative d-none">
+						<label class="col-3 text-right mb-0 pt-2" for="input-customer-nip">{{ entry_company }}</label>
+						<div class="col-9">
+							<input type="text" name="pl_company_name" value="{{ pl_company_name }}" placeholder="{{ entry_company }}" id="input-pl-company-name" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg shadow-none" />
+						</div>
+					</div>
+					<div class="form-group mb-4 mt-4 position-relative d-none">
+						<label class="col-3 text-right mb-0 pt-2" for="input-customer-city">{{ entry_city }}</label>
+						<div class="col-9">
+							<input type="text" name="company_region" value="{{ company_region }}" placeholder="{{ entry_city }}" id="input-company-region" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg shadow-none" />
+						</div>
+					</div>
+					<div class="form-group mb-4 mt-4 position-relative d-none">
+						<label class="col-3 text-right mb-0 pt-2" for="input-customer-address">{{ entry_address_1 }}</label>
+						<div class="col-9">
+							<input type="text" name="company_address" value="{{ company_address }}" placeholder="{{ entry_address_1 }}" id="input-company-address" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg shadow-none" />
+						</div>
+					</div>
+					<div class="form-group mb-4 mt-4 position-relative d-none">
+						<label class="col-3 text-right mb-0 pt-2" for="input-customer-zip">{{ entry_postcode }}</label>
+						<div class="col-9">
+							<input type="text" name="company_zip" value="{{ company_zip }}" placeholder="{{ entry_postcode }}" id="input-company-zip" class="form-control form-control-lg border-radius-4 border-2 border-gray white-bg shadow-none" />
+						</div>
+					</div>
+				</div>
+				<div class="form-group required d-flex mb-4 mt-4 position-relative">
+					<label class="col-3 text-right mb-0 pt-2" for="input-customer-group">{{ entry_firstname }}</label>
+					<div class="col-9">
+						<input type="text" name="firstname" class="form-control form-control-lg" placeholder="{{ entry_firstname }}">
+					</div>
+				</div>
+				<div class="form-group required d-flex mb-4 mt-4 position-relative">
+					<label class="col-3 text-right mb-0 pt-2" for="input-customer-group">{{ entry_lastname }}</label>
+					<div class="col-9">
+						<input type="text" name="lastname" class="form-control form-control-lg" placeholder="{{ entry_lastname }}">
+					</div>
+				</div>
+				<div class="form-group required d-flex mb-4 mt-2 position-relative">
+					<label class="col-3 text-right mb-0 pt-2" for="input-customer-group">{{ entry_email }}</label>
+					<div class="col-9">
+						<input type="email" name="email" class="form-control form-control-lg" placeholder="{{ entry_email }}">
+					</div>
+				</div>
+				<div class="form-group required d-flex mb-4 mt-2 position-relative">
+					<label class="col-3 text-right mb-0 pt-2" for="input-customer-group">{{ entry_telephone }}</label>
+					<div class="col-9">
+						<input type="tel" id="input-telephone-register" name="telephone" class="form-control form-control-lg" placeholder="{{ entry_telephone }}">
+					</div>
+				</div>
+				<div class="form-group required d-flex mb-4 position-relative">
+					<label class="col-3 text-right mb-0 pt-2" for="input-customer-group">{{ entry_password }}</label>
+					<div class="col-9">
+					    <div class="input-group">
+						    {#<input type="text" name="password" rel="gp" data-size="8" data-character-set="a-z,A-Z,0-9,#" class="form-control form-control-lg" placeholder="{{ entry_password }}">#}
+							<input type="text" name="password" rel="gp" data-size="8" data-character-set="a-z,A-Z,0-9,#" class="form-control form-control-lg" placeholder="{{ entry_password }}">
+                            <span class="input-group-btn">
+                                <button id="button-pass-gen" class="btn btn-primary" style="width: 42px; height: 42px; border-radius: 0 5px 5px 0;"><i class="fa fa-refresh"></i></button>
+                            </span>
+                        </div>
+					</div>
+				</div>
+				<div class="form-group d-flex">
+					<label class="col-3 text-right mb-0 pt-2" for="input-customer-group">{{ entry_customer_group }}</label>
+					<div class="col-9">
+						<select name="customer_group_id" id="input-customer-group" class="form-control form-control-lg">
+							{% for customer_group in customer_groups %}
+								<option value="{{ customer_group.customer_group_id }}">{{ customer_group.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer d-block px-0">
+			<div class="m-0 px-3">
+				<div class="row">
+					<div class="col-12 col-sm-4 ml-auto">
+						<a class="btn btn-outline-primary btn-block text-truncate mb-3 mb-sm-0" data-dismiss="modal" href="javascript:void(0);">{{ text_return }}</a>
+					</div>
+					<div class="col-12 col-sm-4 mr-auto">
+						<button type="button" id="button-register-modal" data-loading="{{ text_loading }}" class="btn btn-primary btn-block text-truncate">{{ text_add_new_client }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+function randString(id){
+  var dataSet = $(id).attr('data-character-set').split(',');  
+  var possible = '';
+  if($.inArray('a-z', dataSet) >= 0){
+    possible += 'abcdefghijklmnopqrstuvwxyz';
+  }
+  if($.inArray('A-Z', dataSet) >= 0){
+    possible += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  }
+  if($.inArray('0-9', dataSet) >= 0){
+    possible += '0123456789';
+  }
+  if($.inArray('#', dataSet) >= 0){
+    possible += '![]{}()%&*$#^<>~@|';
+  }
+  var text = '';
+  for(var i=0; i < $(id).attr('data-size'); i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
+
+$("#button-pass-gen").click(function(e){
+    e.preventDefault();
+    var field = $(this).closest('div').find('input[rel="gp"]');
+    field.val(randString(field));
+});
+
+/*const inputd_tel = document.querySelector("#ft-register-modal #register-data #input-telephone-register");
+const itid_tel = window.intlTelInput(inputd_tel, {
+    allowDropdown: true,
+    autoPlaceholder: "polite",
+    fixDropdownWidth: true,
+    formatAsYouType: true,
+    formatOnDisplay: true,
+  	initialCountry: "es",
+    nationalMode: true,
+    onlyCountries: ["at", "be", "bg", "hr", "cz", "dk", "ee", "fl", "fr", "de", "gr", "hu", "ie", "it", "lt", "lv", "lu", "nl", "pl", "pt", "ro", "sk", "sl", "se", "es", "si", "globe"],
+    placeholderNumberType: "MOBILE",
+    showFlags: true,
+    separateDialCode: false,
+    strictMode: true,
+    useFullscreenPopup: false,
+    validationNumberType: "MOBILE",
+});*/
+$('#ft-register-modal #register-data #input-telephone-register').mask('+999999999999');
+
+$(document).on('change', '#ft-register-modal #register-data #input-country', function (e) {
+    // var country_arr = {14:'at',21:'be',33:'bg',53:'hr',56:'cz',57:'dk',67:'ee',72:'fl',74:'fr',81:'de',84:'gr',97:'hu',103:'ie',105:'it',117:'lv',123:'lt',124:'lu',150:'nl',170:'pl',171:'pt',175:'ro',189:'sk',190:'sl',195:'es',203:'se',386:'si'};
+    // window.intlTelInput.getInstance(document.querySelector("#ft-register-modal #register-data #input-telephone-register")).setCountry(country_arr[$('#ft-register-modal #register-data #input-country option:selected').val()]);
+
+    // checkFirma();
+});
+
+function checkFirma(){
+	var selectedValue = $('#ft-register-modal #register-data input[name="customer_type"]:checked').val();
+
+	// rest country
+	// $('#ft-register-modal #register-data select[name="country_id"] option:selected').removeAttr('selected');
+	// $('#ft-register-modal #register-data select[name="country_id"]').removeAttr('readonly');
+	// $('#ft-register-modal #register-data select[name="country_id"]').val('').prop('selected', true);
+
+	// reset all fields states
+	$('#ft-register-modal #register-data input[name="firstname"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+	$('#ft-register-modal #register-data input[name="lastname"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+	$('#ft-register-modal #register-data input[name="email"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+	$('#ft-register-modal #register-data input[name="telephone"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+	$('#ft-register-modal #register-data input[name="password"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+	$('#ft-register-modal #register-data select[name="customer_group_id"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+	$('#ft-register-modal #register-data select[name="pixsel_group_id"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+	$('#ft-register-modal #register-data input[name="customer_my_sklad"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+
+	if (selectedValue == 1) {
+		$('#ft-register-modal #register-data .firma_fields').removeClass('d-none');
+
+		//if ($('#ft-register-modal #register-data select[id="input-country"] option:selected').val() != 170 && $('#ft-register-modal #register-data select[id="input-country"] option:selected').val() != '') {
+			$('#ft-register-modal #register-data input[name="company_nip"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+			$('#ft-register-modal #register-data #button-nip').addClass('d-none');
+			$('#ft-register-modal #register-data .cmvatcode').removeClass('d-none').addClass('d-flex');
+
+			// if ($('#ft-register-modal #register-data select[name="country_id"] option:selected').val() > 0) {
+				$('#ft-register-modal #register-data input[name="pl_company_name"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+				$('#ft-register-modal #register-data input[name="company_region"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+				$('#ft-register-modal #register-data input[name="company_address"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+				$('#ft-register-modal #register-data input[name="company_zip"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			// }
+		/*} else {
+			$('#ft-register-modal #register-data input[name="company_nip"]').closest('.form-group').removeClass('d-none').addClass('d-flex');
+			$('#ft-register-modal #register-data #button-nip').removeClass('d-none');
+			$('#ft-register-modal #register-data .cmvatcode').removeClass('d-flex').addClass('d-none');
+
+			if ($('#ft-register-modal #register-data select[name="country_id"] option:selected').val() > 0) {
+				$('#ft-register-modal #register-data input[name="pl_company_name"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-register-modal #register-data input[name="company_region"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-register-modal #register-data input[name="company_address"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+				$('#ft-register-modal #register-data input[name="company_zip"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+			}
+		}*/
+	/*} else if (selectedValue == 3) {
+		$('#ft-register-modal #register-data .firma_fields').removeClass('d-none');
+
+		$('#ft-register-modal #register-data select[name="country_id"] option:selected').removeAttr('selected');
+		$('#ft-register-modal #register-data select[name="country_id"]').attr('readonly', 'readonly');
+		$('#ft-register-modal #register-data select[name="country_id"]').val(170).prop('selected', true);
+
+		$('#ft-register-modal #register-data input[name="firstname"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+		$('#ft-register-modal #register-data input[name="lastname"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+		$('#ft-register-modal #register-data input[name="email"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+		$('#ft-register-modal #register-data input[name="telephone"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+		$('#ft-register-modal #register-data input[name="password"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+		$('#ft-register-modal #register-data input[name="customer_my_sklad"]').closest('.form-group').removeClass('d-flex').addClass('d-none');
+		*/
+	} else {
+		$('#ft-register-modal #register-data .firma_fields').addClass('d-none');
+	}
+}
+
+$(document).on('change', '#ft-register-modal #register-data input[name="customer_type"]', function () {
+	checkFirma();
+});
+
+function loading_mask(action){
+	if (action) {
+		if(!$('.loading_mask').length){
+			$('body').append('<div class="loading_mask"></div>');
+		}
+		$('.loading_mask').html('<div class="center-body"><div class="opc-loader-circle"></div></div>');
+		$('.loading_mask').show();
+	} else {
+		$('.loading_mask').html('');
+		$('.loading_mask').hide();
+	}
+};
+
+checkFirma();
+
+$(document).on('click', '#ft-register-modal #button-register-modal', function(e) {
+	var $btn = $('#button-register-modal');
+   var originalText = $btn.text();
+
+	$.ajax({
+		url: 'index.php?route=common/login_modal/validate_register',
+		type: 'post',
+		data: $('#ft-register-modal #register-data').serialize(),
+		dataType: 'json',
+		beforeSend: function() {
+    		$btn.text($btn.attr('data-loading'));
+		},
+		complete: function() {
+			$btn.text(originalText);
+		},
+		success: function(json) {
+
+			if (json['error']) {
+				$('#ft-register-modal #register-data').prepend('<div class="alert alert-danger alert-dismissible mt-4 mb-4">' + json['error'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+			}
+
+			setTimeout(function () {
+				$('#ft-register-modal #register-data .alert').remove();
+			}, 3000);
+
+			if(json['success']){
+
+				if($('#button-add-client').length){
+					$('input[name=\'client_name_tel\']').val(json['client_info']);
+					$('input[name=\'client_id\']').val(json['client_id']);
+					setTimeout(function () {
+						$('#button-add-client').trigger('click');
+					}, 500);
+				}
+
+				$('#ft-register-modal #register-data').prepend('<div class="alert alert-success alert-dismissible mt-4 mb-4">' + json['success'] + ' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>');
+				setTimeout(function () {
+					$('#ft-register-modal').modal('hide');
+				}, 1500);
+			}
+
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+</script>

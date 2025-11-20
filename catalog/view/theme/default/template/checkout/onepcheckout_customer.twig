@@ -1,0 +1,328 @@
+<div class="checkout-сustomer register_block">
+	<div class="checkout-heading">
+		<div class="title-customer dflex">{{ text_op_сustomer }}{% if register_status %}<a class="opc_login" href="javascript:;" data-load-url="index.php?route=common/login_modal">{{ text_i_am_registered }}</a>{% endif %}</div>
+	</div>
+
+	<div class="checkout-address-info">
+		<div class="row">
+			<div class="form-group col-xs-12 col-sm-6 {#{% if shipping_field_country == 'required' %}#}required{#{% endif %}#}">
+				<label for="input-payment-country-delivery" class="control-label opc-label">{{ entry_country }}</label>
+				<select id="input-payment-country-delivery" name="country_delivery_id" class="form-control">
+					<option value="">{{ text_select }}</option>
+					{% for country in countries %}
+						<option value="{{ country.country_delivery_id }}" data-country-id="{{ country.country_id }}"
+							{% if country.country_delivery_id == country_id %}selected{% endif %}>
+							{{ country.name }}
+						</option>
+					{% endfor %}
+				</select>
+				<input type="hidden" name="country_id" id="input-hidden-country-id" value="0">
+			</div>
+
+			{#<div class="form-group col-xs-12 col-sm-6">
+				<label for="input-payment-zone" class="d-block control-label opc-label">&nbsp;</label>
+			 	<span class="d-flex align-items-center" style="height: 40px; color: #E51D1D; font-weight: 600;">{{ module_price_product_free }}</span>
+			</div>#}
+			<div class="form-group col-xs-12 col-sm-6 {% if shipping_field_zone_id == 'required' %}required{% endif %} hidden">
+				<label for="input-payment-zone" class="control-label opc-label">{{ entry_zone }}</label>
+				<select {% if (shipping_field['type'] == 'select2') %}data-type="select2"{% endif %} id="input-payment-zone" name="zone_id" class="form-control">
+					{% if zones is not empty  %}
+						<option value="">{{ text_select }}</option>
+						{% for zone in zones %}
+							{% if zone['zone_id'] == zone_id %}
+								<option value="{{ zone['zone_id'] }}" selected="selected">{{ zone['name'] }}</option>
+							{% else %}
+								<option value="{{ zone['zone_id'] }}">{{ zone['name'] }}</option>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<div class="row-flex checkout-сustomer-info">
+		{% if customer_fields is not empty %}
+			{% for field_name,customer_field in customer_fields %}
+				{% if field_name == 'firstname' %}
+					<div class="form-group col-xs-12 col-sm-6 {% if customer_field['status'] == 'required' %}required{% endif %}">
+						<label for="input-opc-firstname" class="control-label opc-label">{{ entry_firstname }}</label>
+						<input autocomplete="off" id="input-opc-firstname" type="text" name="firstname" value="{% if firstname is defined %}{{ firstname }}{% endif %}" placeholder="{{ entry_ph_firstname }}" class="form-control" {% if (type_client == 3) %}readonly{% endif %} />
+					</div>
+				{% endif %}
+				{% if field_name == 'lastname' %}
+					<div class="form-group col-xs-12 col-sm-6 {% if customer_field['status'] == 'required' %}required{% endif %}">
+						<label for="input-opc-lastname" class="control-label opc-label">{{ entry_lastname }}</label>
+						<input autocomplete="off" id="input-opc-lastname" type="text" name="lastname" value="{% if lastname is defined %}{{ lastname }}{% endif %}" placeholder="{{ entry_ph_lastname }}" class="form-control" {% if (type_client == 3) %}readonly{% endif %} />
+					</div>
+				{% endif %}
+				{% if field_name == 'telephone' %}
+					<div class="form-group col-xs-12 col-sm-6 {% if customer_field['status'] == 'required' %}required{% endif %}">
+						<label for="input-opc-telephone" class="control-label opc-label">{{ entry_telephone }}</label>
+						<input autocomplete="off" id="input-opc-telephone" type="text" inputmode="tel" name="telephone" value="{% if telephone is defined %}{{ telephone }}{% endif %}" placeholder="{{ entry_ph_telephone }}" class="form-control" {% if (type_client == 3) %}readonly{% endif %} />
+					</div>
+				{% endif %}
+				{% if field_name == 'email' %}
+					<div class="form-group col-xs-12 col-sm-6 {% if customer_field['status'] == 'required' %}required{% endif %}">
+						<label for="input-opc-email" class="control-label opc-label">{{ entry_email }}</label>
+						<input autocomplete="off" id="input-opc-email" type="text" name="email" value="{% if email is defined %}{{ email }}{% endif %}" placeholder="{{ entry_ph_email }}" class="form-control" {% if customer_id is defined or type_client == 3 %}readonly{% endif %}/>
+					</div>
+				{% endif %}
+				{% if field_name == 'fax' %}
+					<div class="form-group col-xs-12 col-sm-6 {% if customer_field['status'] == 'required' %}required{% endif %}">
+						<label for="input-opc-fax" class="control-label opc-label">{{ entry_fax }}</label>
+						<input id="input-opc-fax" type="text" name="fax" value="{% if fax is defined %}{{ fax }}{% endif %}" placeholder="{{ entry_ph_fax }}" class="form-control" {% if (type_client == 3) %}readonly{% endif %} />
+					</div>
+				{% endif %}
+				{% if customer_field['location'] is defined and customer_field['location'] == 'opc_customer' %}
+					{% if customer_field['type'] == 'select' %}
+						<div class="form-group col-xs-12 col-sm-6 custom-field{{ customer_field['required'] ? ' required' : '' }}" id="customer-custom-field{{ customer_field['custom_field_id'] }}">
+							<label class="control-label opc-label" for="input-customer-custom-field{{ customer_field['custom_field_id'] }}">{{ customer_field['name'] }}</label>
+							<select name="custom_field[{{ customer_field['location'] }}][{{ customer_field['custom_field_id'] }}]" id="input-customer-custom-field{{ customer_field['custom_field_id'] }}" class="form-control">
+								<option value="">{{ text_select }}</option>
+								{% for custom_field_value in customer_field['custom_field_value'] %}
+									<option value="{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					{% endif %}
+					{% if customer_field['type'] == 'radio' %}
+						<div class="form-group col-xs-12 col-sm-6 custom-field{{ customer_field['required'] ? ' required' : '' }}" id="customer-custom-field{{ customer_field['custom_field_id'] }}">
+							<label class="control-label opc-label">{{ customer_field['name'] }}</label>
+							<div id="input-customer-custom-field{{ customer_field['custom_field_id'] }}">
+								{% for custom_field_value in customer_field['custom_field_value'] %}
+									<div class="radio">
+										<label class="chm-radio">
+											<input class="checkbox-input" type="radio" name="custom_field[{{ customer_field['location'] }}][{{ customer_field['custom_field_id'] }}]" value="{{ custom_field_value['custom_field_value_id'] }}" />
+											<span class="checkbox-radio"></span>
+											{{ custom_field_value['name'] }}
+										</label>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					{% endif %}
+					{% if customer_field['type'] == 'checkbox' %}
+						<div class="form-group col-xs-12 col-sm-6 custom-field{{ customer_field['required'] ? ' required' : '' }}" id="customer-custom-field{{ customer_field['custom_field_id'] }}">
+							<label class="control-label opc-label">{{ customer_field['name'] }}</label>
+							<div id="input-customer-custom-field{{ customer_field['custom_field_id'] }}">
+								{% for custom_field_value in customer_field['custom_field_value'] %}
+									<div class="checkbox">
+										<label class="chm-checkbox">
+											<input class="checkbox-input" type="checkbox" name="custom_field[{{ customer_field['location'] }}][{{ customer_field['custom_field_id'] }}][]" value="{{ custom_field_value['custom_field_value_id'] }}" />
+											<span class="checkbox-check"></span>
+											{{ custom_field_value['name'] }}
+										</label>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					{% endif %}
+					{% if customer_field['type'] == 'text' %}
+						<div class="form-group col-xs-12 col-sm-6 custom-field{{ customer_field['required'] ? ' required' : '' }}" id="customer-custom-field{{ customer_field['custom_field_id'] }}">
+							<label class="control-label opc-label" for="input-customer-custom-field{{ customer_field['custom_field_id'] }}">{{ customer_field['name'] }}</label>
+							<input type="text" name="custom_field[{{ customer_field['location'] }}][{{ customer_field['custom_field_id'] }}]" value="{{ guest_custom_field[customer_field['custom_field_id']] ?? customer_field['value'] }}" placeholder="{{ customer_field['name'] }}" id="input-customer-custom-field{{ customer_field['custom_field_id'] }}" class="form-control" />
+						</div>
+					{% endif %}
+					{% if customer_field['type'] == 'textarea' %}
+						<div class="form-group col-xs-12 col-sm-6 custom-field{{ customer_field['required'] ? ' required' : '' }}" id="customer-custom-field{{ customer_field['custom_field_id'] }}">
+							<label class="control-label opc-label" for="input-customer-custom-field{{ customer_field['custom_field_id'] }}">{{ customer_field['name'] }}</label>
+							<textarea name="custom_field[{{ customer_field['location'] }}][{{ customer_field['custom_field_id'] }}]" rows="1" placeholder="{{ customer_field['name'] }}" id="input-customer-custom-field{{ customer_field['custom_field_id'] }}" class="form-control">{{ guest_custom_field[customer_field['custom_field_id']] ?? customer_field['value'] }}</textarea>
+						</div>
+					{% endif %}
+					{% if customer_field['type'] == 'date' %}
+						<div class="form-group col-xs-12 col-sm-6 custom-field{{ customer_field['required'] ? ' required' : '' }}" id="customer-custom-field{{ customer_field['custom_field_id'] }}">
+							<label class="control-label opc-label" for="input-customer-custom-field{{ customer_field['custom_field_id'] }}">{{ customer_field['name'] }}</label>
+							<div class="input-group date">
+								<input type="text" name="custom_field[{{ customer_field['location'] }}][{{ customer_field['custom_field_id'] }}]" value="{{ guest_custom_field[customer_field['custom_field_id']] ?? customer_field['value'] }}" placeholder="{{ customer_field['name'] }}" data-date-format="YYYY-MM-DD" id="input-customer-custom-field{{ customer_field['custom_field_id'] }}" class="form-control" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+					{% endif %}
+					{% if customer_field['type'] == 'time' %}
+						<div class="form-group col-xs-12 col-sm-6 custom-field{{ customer_field['required'] ? ' required' : '' }}" id="customer-custom-field{{ customer_field['custom_field_id'] }}">
+							<label class="control-label opc-label" for="input-customer-custom-field{{ customer_field['custom_field_id'] }}">{{ customer_field['name'] }}</label>
+							<div class="input-group time">
+								<input type="text" name="custom_field[{{ customer_field['location'] }}][{{ customer_field['custom_field_id'] }}]" value="{{ guest_custom_field[customer_field['custom_field_id']] ?? customer_field['value'] }}" placeholder="{{ customer_field['name'] }}" data-date-format="HH:mm" id="input-customer-custom-field{{ customer_field['custom_field_id'] }}" class="form-control" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+					{% endif %}
+					{% if customer_field['type'] == 'datetime' %}
+						<div class="form-group col-xs-12 col-sm-6 custom-field{{ customer_field['required'] ? ' required' : '' }}" id="customer-custom-field{{ customer_field['custom_field_id'] }}">
+							<label class="control-label opc-label" for="input-customer-custom-field{{ customer_field['custom_field_id'] }}">{{ customer_field['name'] }}</label>
+							<div class="input-group datetime">
+								<input type="text" name="custom_field[{{ customer_field['location'] }}][{{ customer_field['custom_field_id'] }}]" value="{{ guest_custom_field[customer_field['custom_field_id']] ?? customer_field['value'] }}" placeholder="{{ customer_field['name'] }}" data-date-format="YYYY-MM-DD HH:mm" id="input-customer-custom-field{{ customer_field['custom_field_id'] }}" class="form-control" />
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+								</span>
+							</div>
+						</div>
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+
+		{# {% if type_customer != 2 %} #}
+		<div class="form-group col-xs-12 col-sm-12 mb-0">
+			<div class="checkout-heading">
+				<div class="title-customer dflex">{{ text_infakt_title }}</div>
+			</div>
+		</div>
+		<div class="row-flex checkout-сustomer-info col-xs-12 col-sm-12 mb-0">
+			<div class="form-group col-xs-12 col-sm-4 col-lg-4 mb-0">
+				<label class="chm-checkbox mb-0">
+					<input class="checkbox-input" onclick="$('.infakt-form').toggle()" type="checkbox" name="infakt_faktyre" value="1" {% if infakt_faktyre is defined and infakt_faktyre > 0  %}checked="checked"{% endif %} />
+					<span class="checkbox-check"></span>{{ text_infakt_create }}
+				</label>
+			</div>
+			<div class="form-group col-xs-12 col-sm-8 col-lg-8 mb-0 {% if country_id != 170 %}d-none{% endif %}">
+				<span class="infakt-help text-gray-500">{{ text_infakt_help }}</span>
+			</div>
+		</div>
+		<div class="form-group col-xs-12 col-sm-12 infakt-form" {% if infakt_faktyre is not defined or infakt_faktyre <= 0 %}style="display:none"{% endif %}>
+      <div class="form-row">
+          <div class="firmafields row-flex aicenter fxnowrap col-12 col-sm-12">
+            <div class="form-group required col-xs-8 col-sm-6 col-lg-4 infakt-form-nip {% if country_id != 170 %}d-none{% endif %}">
+              <label class="control-label opc-label" for="input-company-nip">{{ entry_company_nip }}</label>
+              <input type="text" {% if infakt_privat_faktyre is defined and infakt_privat_faktyre > 0 %}disabled="disabled"{% endif %} name="company_nip_inf" value="{{ company_nip }}" placeholder="{{ entry_company_nip }}" id="input-lascompany-nip" class="form-control" />
+           	</div>
+            <div class="form-group required col-xs-8 col-sm-6 col-lg-4 infakt-form-vatcode {% if country_id == 170 %}d-none{% endif %}">
+              <label class="control-label opc-label" for="input-company-vatcode">{{ entry_company_vatcode }}</label>
+              <input type="text" name="company_vatcode" value="{{ company_vatcode }}" placeholder="{{ entry_company_vatcode }}" id="input-lascompany-vatcode" class="form-control" />
+           	</div>
+			<div class="form-group col-xs-4 col-sm-6 col-lg-8 mb-0 privateosobe">
+				<label class="chm-checkbox mb-0" style="margin: 15px 0 0 0 !important;">
+					<input class="checkbox-input" type="checkbox" name="infakt_privat_faktyre" value="1" {% if infakt_privat_faktyre is defined and infakt_privat_faktyre > 0  %}checked="checked"{% endif %} />
+					<span class="checkbox-check"></span>{{ text_infakt_private }}
+					{# $('.infakt-form-nip').toggle(); $('.infakt-form-name').toggle() #}
+				</label>
+			</div>
+           	{#<div class="form-group mb-0 col-12 col-sm-6 infakt-form-name">
+              <label class="control-label opc-label" for="input-company-name">{{ entry_company_name }}</label>
+              <input type="text" name="company_name" value="{{ company_name }}" placeholder="{{ entry_company_name }}" id="input-company-name" class="form-control" />
+            </div>#}
+        </div>
+			</div>
+		</div>
+		{# {% endif %} #}
+
+		{% if register_status %}
+			<div class="form-group col-xs-12 col-sm-12 mb-0" {% if register_required %}style="display:none"{% endif %}>
+				<label class="chm-checkbox mb-0">
+					<input class="checkbox-input" onclick="$('.register-form').toggle()" {% if register_checked %}checked="checked"{% endif %} type="checkbox" name="register" value="1" />
+					<span class="checkbox-check"></span>{{ text_register }}
+				</label>
+			</div>
+			<div class="form-group col-xs-12 col-sm-12 register-form" {% if register_checked is empty %}style="display:none"{% endif %}>
+				<div class="form-group col-xs-12" style="display: {% if customer_groups|length > 1 %}block{% else %}none{% endif %}">
+					<label class="control-label">{{ entry_customer_group }}:&nbsp;</label>
+					{% for customer_group in customer_groups %}
+						{% if customer_group['customer_group_id'] == customer_group_id %}
+							<div class="radio chm-radio">
+								<label>
+									<input type="radio"  name="customer_group_id" value="{{ customer_group['customer_group_id'] }}" checked="checked" />
+									{{ customer_group['name'] }}
+								</label>
+							</div>
+						{% else %}
+							<div class="radio chm-radio">
+								<label>
+									<input type="radio" name="customer_group_id" value="{{ customer_group['customer_group_id'] }}" />
+									{{ customer_group['name'] }}
+								</label>
+							</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+				<div class="form-group required">
+	            <label><b>{{ entry_customer_type }}</b></label>
+	            <div class="form-group">
+	              {% if customer_type %}
+	              <div class="form-check form-check-inline">
+	                <label class="form-check-label {{ customer_type }}">
+	                  <input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="0" />
+	                  {{ text_customer_private }}
+	                </label>
+	              </div>
+	              <div class="form-check form-check-inline">
+	                <label class="form-check-label">
+	                  <input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="1" checked="checked" />
+	                  {{ text_customer_firma }}
+	                </label>
+	              </div>
+	              {% else %}
+	                <div class="form-check form-check-inline">
+	                  <label class="form-check-label {{ customer_type }}">
+	                    <input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="0" checked="checked" />
+	                    {{ text_customer_private }}
+	                  </label>
+	                </div>
+	                <div class="form-check form-check-inline">
+	                  <label class="form-check-label">
+	                    <input autocomplete="off" type="radio" class="form-check-input" name="customer_type" value="1" />
+	                    {{ text_customer_firma }}
+	                  </label>
+	                </div>
+	              {% endif %}
+	            </div>
+	          </div>
+	         <div class="form-row">
+              <div class="col-12 col-sm-6">
+              	<div class="form-group required">
+              		<label for="input-payment-password" class="control-label opc-label">{{ entry_password }}</label>
+              		<input id="input-payment-password" type="password" name="password" value="" placeholder="{{ entry_password }}" class="form-control" />
+              	</div>
+              	<div class="form-group required mb-0">
+              		<label for="input-payment-confirm" class="control-label opc-label">{{ entry_confirm }}</label>
+              		<input id="input-payment-confirm" type="password" name="confirm" value="" placeholder="{{ entry_confirm }}"  class="form-control" />
+              	</div>
+              </div>
+              <div class="firma_fields d-none col-12 col-sm-6">
+              	<div class="form-group required">
+                  <label class="control-label opc-label" for="input-company-name">{{ entry_company_name }}</label>
+                  <input type="text" name="company_name" value="{{ company_name }}" placeholder="{{ entry_company_name }}" id="input-company-name" class="form-control" />
+                </div>
+                <div class="form-group required mb-0">
+                  <label class="control-label opc-label" for="input-company-nip">{{ entry_company_nip }}</label>
+                  <input type="text" name="company_nip" value="{{ company_nip }}" placeholder="{{ entry_company_nip }}" id="input-lascompany-nip" class="form-control" role="presentation" autocomplete="off" autofill="off" />
+                </div>
+              </div>
+            </div>
+			</div>
+		{% endif %}
+	</div>
+</div>
+
+<script type="text/javascript">
+	$('input[name="infakt_privat_faktyre"]').on('change', function() {
+		if ($(this).prop('checked')) {
+			$('input[name="company_nip_inf"]').prop('disabled', 'disabled');
+			$('input[name="company_vatcode"]').prop('disabled', 'disabled');
+		} else {
+			$('input[name="company_nip_inf"]').removeAttr('disabled');
+			$('input[name="company_vatcode"]').removeAttr('disabled');
+		}
+	});
+
+	// nip validate
+	//$("#input-lascompany-nip").keypress(function (e) {
+	//	if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+	//    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+	//	}
+	//});
+	//$("#input-lascompany-nip").keyup(function (e) {
+	//	if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+	//    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+	//	}
+	//});
+	//$("#input-lascompany-nip").keydown(function (e) {
+	//	if ( e.keyCode == 65 || e.keyCode == 46 || e.keyCode == 35 || e.keyCode == 8 ) {} else {
+	//    	if (String.fromCharCode(e.keyCode).match(/[^0-9]/g)) return false;
+	//	}
+	//});
+</script>

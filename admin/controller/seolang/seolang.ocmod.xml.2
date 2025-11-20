@@ -1,0 +1,28 @@
+<file path="catalog/model/extension/module.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)this->db->query(.*?)module_id(.*?)\;~]]></search>
+        <add position="replace"><![CDATA[
+		// Code
+		if (strpos($module_id, 'seolang|') !== false) {
+       		if ($this->registry->get('seolanglib')) {
+       			$query = new stdClass();
+       			$query->row = $this->seolanglib->getModule(str_replace('seolang|', '', $module_id));
+       		}
+		} else {
+		// End of code
+	$1this->db->query$2module_id$3;	
+    ]]></add>
+	</operation>
+</file>
+
+
+<file path="catalog/model/extension/module.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[if ($query->row)]]></search>
+        <add position="before"><![CDATA[
+		// Code
+		}
+		// End of code
+]]></add>
+    </operation>
+</file>

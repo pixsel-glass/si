@@ -1,0 +1,56 @@
+{% if (langmark is defined) %}
+<div id="cmswidget-{{ cmswidget }}" class="cmswidget">
+{{langmark }}
+</div>
+
+{% if (settings_widget['anchor'] is defined and settings_widget['anchor'] != '') %}
+<script>
+	$('#cmswidget-{{ cmswidget }}').hide();
+	{% if (settings_widget['doc_ready'] is defined and settings_widget['doc_ready']) %}
+	$(document).ready(function(){
+	 {% endif %}
+		var prefix = '{{ prefix }}';
+		var cmswidget = '{{ cmswidget }}';
+		var heading_title = '{{ heading_title }}';
+		var data = $('#cmswidget-{{ cmswidget }}').html();
+		{{ settings_widget['anchor'] }};
+		$('#cmswidget-{{ cmswidget }}').show();
+		delete data;
+		delete prefix;
+		delete cmswidget;
+	{% if (settings_widget['doc_ready'] is defined and settings_widget['doc_ready']) %}
+	});
+	 {% endif %}
+</script>
+
+ {% endif %}
+ {% else %}
+{% if languages|length > 1 and settings_widget['autoredirect'] is defined and settings_widget['autoredirect'] %}
+
+<script>
+lm_{{ settings_widget['cmswidget'] }}_afterLoad_state = false;
+function lm_{{ settings_widget['cmswidget'] }}_afterload_auto(){
+	if (!lm_{{ settings_widget['cmswidget'] }}_afterLoad_state) {
+		document.body.removeEventListener('touchstart', lm_{{ settings_widget['cmswidget'] }}_afterload_auto); document.body.removeEventListener('touchmove', lm_{{ settings_widget['cmswidget'] }}_afterload_auto); document.body.removeEventListener('mouseover', lm_{{ settings_widget['cmswidget'] }}_afterload_auto); document.removeEventListener('mousemove', lm_{{ settings_widget['cmswidget'] }}_afterload_auto);
+
+        // Redirecting users who do not have language cookies to the main language of the site, as required by law
+        lm_{{ settings_widget['cmswidget'] }}_autoredirect();
+		lm_{{ settings_widget['cmswidget'] }}_afterLoad_state = true;
+	}
+}
+var lm_{{ settings_widget['cmswidget'] }}_userAgent = navigator.userAgent || navigator.vendor || window.opera;
+if (/Android|iPhone|iPad|iPod|Windows Phone|webOS|BlackBerry/i.test(lm_{{ settings_widget['cmswidget'] }}_userAgent)) {
+	document.body.addEventListener('touchstart', lm_{{ settings_widget['cmswidget'] }}_afterload_auto); document.body.addEventListener('touchmove', lm_{{ settings_widget['cmswidget'] }}_afterload_auto); document.addEventListener('DOMContentLoaded', function() { setTimeout(lm_{{ settings_widget['cmswidget'] }}_afterload_auto, {{ settings_widget['autoredirect_delay_mobile'] }}) });
+} else {document.body.addEventListener('mouseover', lm_{{ settings_widget['cmswidget'] }}_afterload_auto); document.addEventListener('mousemove', lm_{{ settings_widget['cmswidget'] }}_afterload_auto); document.addEventListener('DOMContentLoaded', function() { setTimeout(lm_{{ settings_widget['cmswidget'] }}_afterload_auto, {{ settings_widget['autoredirect_delay_desktop'] }}); }); }
+
+function lm_{{ settings_widget['cmswidget'] }}_autoredirect() {
+{% for language in languages %}
+	{% if (language['main'] is defined and language['main'] and not language['current'] and settings_widget['autoredirect'] is defined and settings_widget['autoredirect']) %}
+window.location = '{{ language['url'] }}';
+	{% endif %}
+{% endfor %}
+}
+</script>
+
+{% endif %}
+{% endif %}

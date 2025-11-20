@@ -1,0 +1,31 @@
+<div class="modal-dialog chm-modal sm-modal-4 modal-dialog-centered">
+	<div class="modal-content">
+		<form id="opc_authorization" enctype="multipart/form-data" method="post">
+			<div class="modal-header">
+				<div class="modal-title">{{ text_login }}</div>
+				<button type="button" class="close-modal" data-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group field_required">
+					<input type="text" name="emailpopup" value="" placeholder="{{ entry_email }}" id="input-email-popup" class="form-control" />
+					<label class="chm-input-icon" for="input-email-popup"><img src="catalog/view/javascript/opc/image/email-icon.svg" alt=""></label>
+				</div>
+				<div class="form-group field_required">
+					<input type="password" name="passwordpopup" value="" placeholder="{{ entry_password }}" id="input-password-popup" class="form-control" />
+					<label class="chm-input-icon" for="input-email-popup"><img src="catalog/view/javascript/opc/image/password-icon.svg" alt=""></label>
+					<div class="forgotten-pass"><a class="forgotten" href="{{ forgotten }}">{{ text_forgotten }}</a></div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div class="row">
+					<div class="col-xs-12 col-sm-6">
+						<button class="opc-btn opc-btn-primary w-100 xs-mb-20 sm-mb-0" type="button" id="button-login-popup" >{{ button_login }}</button>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<button class="opc-btn opc-btn-grey w-100" type="button" onclick="location='{{ register }}'">{{ text_register }}</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
