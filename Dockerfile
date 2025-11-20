@@ -38,7 +38,32 @@ RUN apt-get update && apt-get install -y \
 # Установка mysqli
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
+# --- Включаємо потрібні Apache модулі ---
+RUN a2enmod rewrite headers
 
+# --- SSL-сертифікат ---
+#RUN a2enmod ssl
+#RUN mkdir -p /etc/apache2/ssl
+#RUN openssl req -x509 -nodes -days 365 \
+#    -subj "/C=UA/ST=Kyiv/L=Kyiv/O=Prodbaza/OU=IT/CN=localhost" \
+#    -newkey rsa:2048 \
+#    -keyout /etc/apache2/ssl/apache-selfsigned.key \
+#    -out /etc/apache2/ssl/apache-selfsigned.crt
+#RUN ls -l /etc/apache2/ssl
+
+#    RUN echo '<VirtualHost *:443>\n\
+#    ServerAdmin admin@localhost\n\
+#    DocumentRoot /var/www/html\n\
+#    SSLEngine on\n\
+#    SSLCertificateFile /etc/apache2/ssl/apache-selfsigned.crt\n\
+#    SSLCertificateKeyFile /etc/apache2/ssl/apache-selfsigned.key\n\
+#    <Directory /var/www/html>\n\
+#        AllowOverride All\n\
+#        Require all granted\n\
+#    </Directory>\n\
+#</VirtualHost>' > /etc/apache2/sites-available/default-ssl.conf
+#RUN a2ensite default-ssl
+# --- END SSL-сертифікат ---
 
 # Xdebug налаштування
 RUN pecl install xdebug-3.1.6 && docker-php-ext-enable xdebug
@@ -84,7 +109,5 @@ RUN curl -sSL https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin
     && cp /tmp/ioncube/ioncube_loader_lin_7.4.so /usr/local/lib/php/extensions/no-debug-non-zts-20190902/ \
     && echo "zend_extension=ioncube_loader_lin_7.4.so" > /usr/local/etc/php/conf.d/00-ioncube.ini
 
-# Включение модуля rewrite для Apache
-RUN a2enmod rewrite
 
 CMD ["apache2-foreground"]

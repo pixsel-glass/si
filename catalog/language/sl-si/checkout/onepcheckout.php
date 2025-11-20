@@ -30,7 +30,7 @@ $_['column_price']							= 'Cena na enoto';
 
 $_['client_info_plc']						=  'Ime ali telefonska številka';
 $_['text_przbank_convert']					=  'Potrditev nakupa';
-$_['text_przbank_convert_acc']				=  'Znesek naročila bo pretvorjen v eure in preusmerjeni boste na plačilni obrazec'';
+$_['text_przbank_convert_acc']				=  'Znesek naročila bo pretvorjen v eure in preusmerjeni boste na plačilni obrazec';
 
 $_['text_novat']						=  'Brez DDV';
 $_['entry_company_vatcode']        = 'DDV številka';
