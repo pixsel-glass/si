@@ -24,7 +24,7 @@ class ModelExtensionShippingPickup extends Model {
 				'cost'         => 0.00,
 				'tax_class_id' => 0,
 				// 'text'         => $this->currency->format(0.00, $this->session->data['currency'])
-				'text'         => ''
+				'text'         => $this->language->get('text_subtitle'),
 			);
 
 			$method_data = array(
