@@ -5,7 +5,7 @@
 $_['heading_title']            = 'Košarica';
 
 // Text
-$_['text_success']             = 'USPEŠNO: Ste dodali <a href="%s">%s</a> v vašo <a href="%s">košarico</a>!';
+$_['text_success']             = 'USPEŠNO: Ste dodali <a href="%s">%s</a> v vašo košarico!';
 $_['text_remove']              = 'USPEŠNO: Ste spremenili vsebino vaše košarice!';
 $_['text_login']               = 'POZOR: Morate se <a href="%s">Prijaviti</a> ali <a href="%s"> Registrirati</a> da lahko vidite cene izdelkov!';
 $_['text_items']               = '%s izdelkov - %s';
