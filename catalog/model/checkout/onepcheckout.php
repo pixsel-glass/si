@@ -20,7 +20,7 @@ class ModelCheckoutOnepcheckout extends Model {
 		$sql = "SELECT cd.*, cdd.name, c.name AS country_name FROM " . DB_PREFIX . "country_delivery cd
 		LEFT JOIN " . DB_PREFIX . "country_delivery_description cdd ON (cd.country_delivery_id = cdd.country_delivery_id)
 		LEFT JOIN " . DB_PREFIX . "country c ON (cd.country_id = c.country_id)
-		WHERE cdd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		WHERE cdd.language_id = '" . (int)$this->config->get('config_language_id') . "' and cd.status='1' ";
 
 		$sql .= " ORDER BY cd.sort_order ASC, cdd.name ASC";
 
