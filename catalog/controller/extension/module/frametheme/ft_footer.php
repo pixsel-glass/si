@@ -161,7 +161,7 @@ class ControllerExtensionModuleFramethemeFTFooter extends Controller {
 
 		// $data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time())).$this->language->get('g_theme_powered');
 		// $data['powered'] = sprintf($this->language->get('text_powered'), date('Y', time()) . '' . $this->language->get('g_theme_powered'));
-		$data['powered'] = sprintf($this->language->get('text_powered'), date('Y', time()));
+		$data['powered'] = '';//sprintf($this->language->get('text_powered'), date('Y', time()));
 
 
 
