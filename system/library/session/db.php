@@ -8,7 +8,7 @@ final class DB {
 		$this->db = $registry->get('db');
 
 		// $this->maxlifetime = ini_get('session.gc_maxlifetime') !== null ? (int)ini_get('session.gc_maxlifetime') : 1440;
-		$this->maxlifetime = 359001440;
+		$this->maxlifetime = 7776000;
 
 		$this->gc();
 	}

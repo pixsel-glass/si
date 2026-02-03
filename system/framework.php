@@ -1,4 +1,11 @@
 <?php
+
+$GLOBALS['page_start'] = microtime(true);
+require_once DIR_SYSTEM . 'library/profiler.php';
+
+Profiler::start('total');
+Profiler::start('init');
+
 // Registry
 $registry = new Registry();
 
@@ -79,6 +86,23 @@ $registry->set('response', $response);
 if ($config->get('db_autostart')) {
 	$db = new DB($config->get('db_engine'), $config->get('db_hostname'), $config->get('db_username'), $config->get('db_password'), $config->get('db_database'), $config->get('db_port'));
 	$registry->set('db', $db);
+
+//    require_once DIR_SYSTEM . 'library/db/mysqli_logger.php';
+//    $dbLogger = new \DB\MySQLiLogger($db);
+//    $registry->set('db', $dbLogger);
+//
+//    // ѕри завершенн≥ скрипта збер≥гаЇмо лог
+//    register_shutdown_function(function () use ($dbLogger) {
+//        if (isset($_GET['sqllog'])) {
+//            $file = $dbLogger->dumpToFile();
+//
+//            // якщо sqllog=html - показати в браузер≥
+//            if ($_GET['sqllog'] === 'html') {
+//                echo $dbLogger->dumpToHtml();
+//                exit;
+//            }
+//        }
+//    });
 
 	// Sync PHP and DB time zones
 	$db->query("SET time_zone = '" . $db->escape(date('P')) . "'");
@@ -170,3 +194,5 @@ $route->dispatch(new Action($config->get('action_router')), new Action($config->
 
 // Output
 $response->output();
+
+Profiler::end('init');
