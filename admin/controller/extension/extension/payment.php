@@ -75,7 +75,7 @@ class ControllerExtensionExtensionPayment extends Controller {
 
 		foreach ($extensions as $key => $value) {
 			if (!is_file(DIR_APPLICATION . 'controller/extension/payment/' . $value . '.php') && !is_file(DIR_APPLICATION . 'controller/payment/' . $value . '.php')) {
-				$this->model_setting_extension->uninstall('payment', $value);
+				//$this->model_setting_extension->uninstall('payment', $value);//for bankart payment have virtual sub method controllers. dont use uninstall!!
 
 				unset($extensions[$key]);
 			}
