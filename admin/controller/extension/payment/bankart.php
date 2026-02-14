@@ -121,6 +121,37 @@ final class ControllerExtensionPaymentBankart extends Controller
         if ($this->request->server['REQUEST_METHOD'] == 'POST') {
             if ($this->validate($this->request->post)) {
                 $this->model_setting_setting->editSetting(rtrim($this->prefix, '_'), $this->request->post);
+                $card_type_map = array(
+                    'cc' => 'bankart_cc',
+                    'mcvisa' => 'bankart_mcvisa',
+                    'flik' => 'bankart_flik'
+                );
+
+                foreach ($card_type_map as $card_type => $method_code) {
+                    $status_key = $this->prefix . 'cc_status_' . $card_type;
+
+                    // Перевіряємо чи метод вже зареєстрований
+                    $existing = $this->db->query("SELECT * FROM " . DB_PREFIX . "extension WHERE `type` = 'payment' AND `code` = '" . $this->db->escape($method_code) . "'");
+
+                    if (isset($this->request->post[$status_key]) && $this->request->post[$status_key]) {
+                        // Якщо тип увімкнений і метод не зареєстрований - реєструємо
+                        if (!$existing->num_rows) {
+                            $this->db->query("INSERT INTO " . DB_PREFIX . "extension SET `type` = 'payment', `code` = '" . $this->db->escape($method_code) . "'");
+                        }
+
+                        // Створюємо/оновлюємо налаштування payment_METHODCODE_status = 1
+                        $setting_data = array(
+                            'payment_' . $method_code . '_status' => 1
+                        );
+                        $this->model_setting_setting->editSetting('payment_' . $method_code, $setting_data);
+                    } else {
+                        // Якщо тип вимкнений - вимикаємо метод
+                        $setting_data = array(
+                            'payment_' . $method_code . '_status' => 0
+                        );
+                        $this->model_setting_setting->editSetting('payment_' . $method_code, $setting_data);
+                    }
+                }
                 $this->session->data['success'] = $this->language->get('text_success');
 
                 $this->response->redirect($this->url->link('marketplace/extension',

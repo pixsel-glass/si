@@ -3100,6 +3100,11 @@ class ControllerCheckoutOnepcheckout extends Controller {
 		} else {
 			$zone_id = $pm_address['zone_id'] = $pm_address['zone_country_id'] = $pm_address['payment_zone_id'] = $this->config->get('config_zone_id');
 		}
+        if(isset($this->request->post['payment_method'])) {
+         //   $this->session->data['payment_method'] = $this->request->post['payment_method'];
+        }elseif(isset($this->session->data['payment_method'])){
+
+        }
 
 		if(!empty($zone_id)){
 			$this->load->model('localisation/zone');
@@ -3172,21 +3177,48 @@ class ControllerCheckoutOnepcheckout extends Controller {
 			$country_delivery_id = 0;
 		}
 
-		$allowed_p_methods = [];
+        $allowed_p_methods = [];
 
-		if ($country_delivery_id) {
-			$delivery_info = $this->model_checkout_onepcheckout->getCountryDelivery($country_delivery_id);
+        if ($country_delivery_id) {
+            $delivery_info = $this->model_checkout_onepcheckout->getCountryDelivery($country_delivery_id);
 
-			if ($delivery_info && !empty($delivery_info['payment_methods'])) {
-				$allowed_p_methods = json_decode($delivery_info['payment_methods'], true);
+            if ($delivery_info && !empty($delivery_info['payment_methods'])) {
+                $allowed_p_methods = json_decode($delivery_info['payment_methods'], true);
 
-				if (!is_array($allowed_p_methods)) {
-					$allowed_p_methods = [];
-				}
-			}
-		}
+                if (!is_array($allowed_p_methods)) {
+                    $allowed_p_methods = [];
+                }
 
-		$results = $this->model_setting_extension->getExtensions('payment');
+                // ====== ЛОГІКА ІНТЕГРАЦІЇ BANKART MULTIPLE METHODS ======
+                // Якщо 'bankart' дозволено, але окремі методи НЕ вказані явно,
+                // додаємо їх автоматично для зворотної сумісності
+
+                if (in_array('bankart', $allowed_p_methods)) {
+                    $bankart_methods = ['bankart_cc', 'bankart_mcvisa', 'bankart_flik'];
+
+                    // Перевіряємо чи хоч один з окремих методів вже доданий явно
+                    $has_explicit_bankart = false;
+                    foreach ($bankart_methods as $bm) {
+                        if (in_array($bm, $allowed_p_methods)) {
+                            $has_explicit_bankart = true;
+                            break;
+                        }
+                    }
+
+                    // Якщо немає явних налаштувань, додаємо всі автоматично
+                    if (!$has_explicit_bankart) {
+                        $allowed_p_methods = array_merge($allowed_p_methods, $bankart_methods);
+                    }
+                    // Інакше використовуємо тільки ті, що явно вказані
+                }
+
+                // Видаляємо дублікати
+                $allowed_p_methods = array_unique($allowed_p_methods);
+                // ====== КІНЕЦЬ ЛОГІКИ ІНТЕГРАЦІЇ ======
+            }
+        }
+
+        $results = $this->model_setting_extension->getExtensions('payment');
 
 		$recurring = $this->cart->hasRecurringProducts();
 

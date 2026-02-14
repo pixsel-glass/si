@@ -101,7 +101,12 @@ final class ControllerExtensionPaymentBankart extends Controller
         /**
          * switch card types
          */
-        $cardType = $this->request->post['card_type'];
+        // Підтримка нових окремих методів оплати
+        if (isset($this->request->post['payment_type'])) {
+            $cardType = $this->request->post['payment_type'];
+        } else {
+            $cardType = $this->request->post['card_type'];
+        }
 
         $instalments = 0;
         $message = '';
@@ -383,6 +388,7 @@ final class ControllerExtensionPaymentBankart extends Controller
     {
         $this->model_checkout_order->addOrderHistory($order['order_id'], $this->bankart_order_states['failed'], 'Error :' . $message, $notifyCustomer);
         $this->session->data['error'] = $this->language->get('order_error');
+        $this->log->write('bankart -'.$message);
         $this->response->redirect($this->url->link('checkout/checkout'));
     }
 
