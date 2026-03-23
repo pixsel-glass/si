@@ -14,6 +14,14 @@ $_['text_newsletter']      = 'E-novice';
 $_['text_your_password']   = 'Geslo';
 $_['text_agree']           = 'Prebral sem in se strinjam s <a href="%s" class="agree"><b>%s</b></a>';
 
+$_['entry_customer_type']  = 'Registriram se kot:';
+$_['text_customer_private']= 'Fizična oseba';
+$_['text_customer_firma']  = 'Pravna oseba';
+$_['entry_company_name']   = 'Naziv podjetja';
+$_['entry_company_nip']    = 'ID za DDV';
+$_['error_company_name']   = 'Naziv podjetja mora vsebovati od 1 do 100 znakov';
+$_['error_company_nip']    = 'ID za DDV mora vsebovati od 1 do 100 znakov';
+
 // Entry
 $_['entry_customer_group'] = 'Vrsta uporabnika';
 $_['entry_firstname']      = 'Ime';
