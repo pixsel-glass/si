@@ -31,6 +31,14 @@ $_['entry_newsletter']     = 'Prijava';
 $_['entry_password']       = 'Lozinka';
 $_['entry_confirm']        = 'Potvrda lozinke';
 
+$_['entry_customer_type']  = 'Registriram se kao:';
+$_['text_customer_private']= 'Fizička osoba';
+$_['text_customer_firma']  = 'Pravna osoba';
+$_['entry_company_name']   = 'Naziv tvrtke';
+$_['entry_company_nip']    = 'PDV ID';
+$_['error_company_name']   = 'Naziv tvrtke mora sadržavati od 1 do 100 znakova';
+$_['error_company_nip']    = 'PDV ID mora sadržavati od 1 do 100 znakova';
+
 // Error
 $_['error_exists']         = 'Upozorenje: Ova e-mail adresa je već registrirana kod nas!';
 $_['error_firstname']      = 'Ime mora sadržavati između 1 i 32 znaka!';
